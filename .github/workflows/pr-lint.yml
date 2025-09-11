@@ -1,0 +1,30 @@
+---
+# yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
+name: Lint Code Base
+
+on:
+  push:
+    branches: [master, main]
+  pull_request:
+    branches: [master, main]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions: read-all
+
+jobs:
+  Linter:
+    name: PR Lint
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      statuses: write
+      contents: read
+      packages: read
+
+    steps:
+      - name: Run PR Lint
+        # https://github.com/ivuorinen/actions
+        uses: ivuorinen/actions/pr-lint@22e6add79fabcca4bf5761452a51e4fa0207e155 # 25.9.8
