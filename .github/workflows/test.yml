@@ -1,5 +1,5 @@
 ---
-# yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
+# yaml-language-server: $schema=https://www.schemastore.org/github-workflow.json
 name: CI
 
 on:
@@ -34,21 +34,58 @@ jobs:
         uses: actions/setup-node@7c12f8017d5436eb855f1ed4399f037a36fbd9e8 # v5.2.1
         with:
           node-version: ${{ matrix.node-version }}
-          cache: npm
+
+      - name: Cache Node.js dependencies
+        uses: actions/cache@dfa6ed13c88fe79b56c4ffc79a42db2e8d2b15a5 # v4.2.0
+        id: cache-npm
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ matrix.node-version }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-${{ matrix.node-version }}-
+            ${{ runner.os }}-node-
 
       - name: Install Dependencies
         run: npm ci || { echo "❌ npm install failed"; npm install; }
         shell: bash
 
+      - name: Cache Tree-sitter CLI
+        uses: actions/cache@dfa6ed13c88fe79b56c4ffc79a42db2e8d2b15a5 # v4.2.0
+        id: cache-tree-sitter
+        with:
+          path: ~/.npm/_npx
+          key: ${{ runner.os }}-tree-sitter-cli-${{ hashFiles('package.json') }}
+
       - name: Install Tree-sitter CLI
         run: npm install -g tree-sitter-cli
         shell: bash
 
+      - name: Cache Generated Grammar
+        uses: actions/cache@dfa6ed13c88fe79b56c4ffc79a42db2e8d2b15a5 # v4.2.0
+        id: cache-grammar
+        with:
+          path: |
+            src/parser.c
+            src/tree_sitter/
+            binding.gyp
+          key: ${{ runner.os }}-grammar-${{ hashFiles('grammar.js', 'package.json') }}
+
       - name: Generate Grammar
+        if: steps.cache-grammar.outputs.cache-hit != 'true'
         run: npm run generate
         shell: bash
 
+      - name: Cache Built Parser
+        uses: actions/cache@dfa6ed13c88fe79b56c4ffc79a42db2e8d2b15a5 # v4.2.0
+        id: cache-parser
+        with:
+          path: |
+            build/
+            node_modules/
+          key: ${{ runner.os }}-parser-${{ matrix.node-version }}-${{ hashFiles('src/parser.c', 'binding.gyp', 'package.json') }}
+
       - name: Build Parser
+        if: steps.cache-parser.outputs.cache-hit != 'true'
         run: npm run build
         shell: bash
 
@@ -91,7 +128,7 @@ jobs:
           End
           EOF
 
-          tree-sitter parse test_sample.shellspec --quiet || {
+          tree-sitter parse --language=shellspec test_sample.shellspec --quiet || {
             echo "❌ Parser failed on sample ShellSpec code"
             exit 1
           }
@@ -111,7 +148,15 @@ jobs:
         uses: actions/setup-node@7c12f8017d5436eb855f1ed4399f037a36fbd9e8 # v5.2.1
         with:
           node-version: 24
-          cache: npm
+
+      - name: Cache Node.js dependencies
+        uses: actions/cache@dfa6ed13c88fe79b56c4ffc79a42db2e8d2b15a5 # v4.2.0
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-24-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-24-
+            ${{ runner.os }}-node-
 
       - name: Install Dependencies
         run: npm ci || { echo "❌ npm install failed"; npm install; }
@@ -134,7 +179,18 @@ jobs:
         uses: actions/setup-node@7c12f8017d5436eb855f1ed4399f037a36fbd9e8 # v5.2.1
         with:
           node-version: 24
-          cache: npm
+
+      - name: Cache Node.js dependencies
+        uses: actions/cache@dfa6ed13c88fe79b56c4ffc79a42db2e8d2b15a5 # v4.2.0
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-24-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-24-
+            ${{ runner.os }}-node-
+
+      - name: Install Dependencies
+        run: npm ci || { echo "❌ npm install failed"; npm install; }
 
       - name: Test Coverage Analysis
         id: coverage
@@ -142,11 +198,15 @@ jobs:
           echo "## Test Coverage Report" > coverage_report.md
           echo "" >> coverage_report.md
 
-          # Run tests and capture output
+          # Run tests and capture output with exit code
+          set +e  # Don't exit on test failure
           TEST_OUTPUT=$(npm test 2>&1)
-          TOTAL_TESTS=$(echo "$TEST_OUTPUT" | grep -cE "^\s+[0-9]+\.")
-          PASSING_TESTS=$(echo "$TEST_OUTPUT" | grep -cE "^\s+[0-9]+\. ✓")
-          FAILING_TESTS=$(echo "$TEST_OUTPUT" | grep -cE "^\s+[0-9]+\. ✗")
+          TEST_EXIT=$?
+          set -e  # Re-enable exit on error
+
+          TOTAL_TESTS=$(echo "$TEST_OUTPUT" | grep -cE "^\s+[0-9]+\." || echo "0")
+          PASSING_TESTS=$(echo "$TEST_OUTPUT" | grep -cE "^\s+[0-9]+\. ✓" || echo "0")
+          FAILING_TESTS=$(echo "$TEST_OUTPUT" | grep -cE "^\s+[0-9]+\. ✗" || echo "0")
 
           {
             echo "- **Total Tests:** $TOTAL_TESTS"
@@ -165,7 +225,7 @@ jobs:
             echo ""
             echo "### Test Files"
           } >> coverage_report.md
-          echo "$TEST_OUTPUT" | grep -E "^\s+[a-z_]+:" | sed 's/^/- /' >> coverage_report.md
+          echo "$TEST_OUTPUT" | grep -E "^[[:space:]]+[A-Za-z0-9._/\\-]+:" | sed 's/^/- /' >> coverage_report.md
 
           cat coverage_report.md
 
@@ -177,13 +237,13 @@ jobs:
           } >> "$GITHUB_OUTPUT"
 
           # Validate test coverage requirements
-          if [ "$TOTAL_TESTS" -lt 55 ]; then
-            echo "❌ Expected at least 55 tests, found $TOTAL_TESTS"
+          if [ "${TOTAL_TESTS:-0}" -lt 55 ]; then
+            echo "❌ Expected at least 55 tests, found ${TOTAL_TESTS:-0}"
             exit 1
           fi
 
-          if [ "$FAILING_TESTS" -gt 0 ]; then
-            echo "❌ Found $FAILING_TESTS failing tests"
+          if [ "${FAILING_TESTS:-0}" -gt 0 ] || [ "$TEST_EXIT" -ne 0 ]; then
+            echo "❌ Found ${FAILING_TESTS:-0} failing tests or test runner failed (exit code: $TEST_EXIT)"
             exit 1
           fi
 

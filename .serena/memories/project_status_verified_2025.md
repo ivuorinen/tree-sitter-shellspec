@@ -2,7 +2,7 @@
 
 ## Current Status: PRODUCTION READY ✅
 
-This memory contains only verified, accurate information about the current project state as of December 2025.
+This memory contains only verified, accurate information about the current project state as of September 2025.
 
 ## Core Project Facts
 
@@ -141,7 +141,8 @@ src/
 ### Configuration Files (Verified)
 
 ```text
-├── .editorconfig            # Code formatting rules
+├── .coderabbit.yaml        # CodeRabbit config
+├── .editorconfig           # Code formatting rules
 ├── .gitignore              # Git ignore patterns
 ├── .markdownlint.json      # Markdown linting config
 ├── .mega-linter.yml        # MegaLinter configuration
@@ -235,8 +236,11 @@ src/
 
 ## Summary
 
-The tree-sitter-shellspec project is a **professionally developed, production-ready** grammar that successfully parses all documented ShellSpec constructs.
-With 61/61 tests passing, zero grammar warnings, optimized CI/CD workflows, and comprehensive tooling, it represents a high-quality open source project ready for immediate use in development workflows and editor integrations.
+The tree-sitter-shellspec project is a **professionally developed, production-ready**
+grammar that successfully parses all documented ShellSpec constructs.
+With 61/61 tests passing, zero grammar warnings, optimized CI/CD workflows,
+and comprehensive tooling, it represents a high-quality open source project
+ready for immediate use in development workflows and editor integrations.
 
 **Last Verified**: December 2025
 **Status**: All claims in this memory have been verified against the actual project state.
