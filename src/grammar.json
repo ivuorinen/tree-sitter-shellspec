@@ -7848,6 +7848,29 @@
       "pipeline"
     ],
     [
+      "_expression",
+      "command_name"
+    ],
+    [
+      "command",
+      "variable_assignments"
+    ],
+    [
+      "redirected_statement",
+      "command"
+    ],
+    [
+      "redirected_statement",
+      "command_substitution"
+    ],
+    [
+      "function_definition",
+      "command_name"
+    ],
+    [
+      "pipeline"
+    ],
+    [
       "command_name",
       "shellspec_data_block"
     ],

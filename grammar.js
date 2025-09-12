@@ -13,18 +13,19 @@ module.exports = grammar(bashGrammar, {
   name: "shellspec",
 
   // Add conflicts to handle ambiguity between commands and ShellSpec constructs
-  conflicts: ($) => [
-    // Essential bash conflicts only
-    [$._expression, $.command_name],
-    [$.command, $.variable_assignments],
-    [$.redirected_statement, $.command],
-    [$.redirected_statement, $.command_substitution],
-    [$.function_definition, $.command_name],
-    [$.pipeline],
-    // Required ShellSpec conflicts
-    [$.command_name, $.shellspec_data_block],
-    [$.shellspec_hook_block],
-  ],
+  conflicts: ($, previous) =>
+    previous.concat([
+      // Essential bash conflicts only
+      [$._expression, $.command_name],
+      [$.command, $.variable_assignments],
+      [$.redirected_statement, $.command],
+      [$.redirected_statement, $.command_substitution],
+      [$.function_definition, $.command_name],
+      [$.pipeline],
+      // Required ShellSpec conflicts
+      [$.command_name, $.shellspec_data_block],
+      [$.shellspec_hook_block],
+    ]),
 
   rules: {
     // Extend the main statement rule to include ShellSpec blocks and directives
