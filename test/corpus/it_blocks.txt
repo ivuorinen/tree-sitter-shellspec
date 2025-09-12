@@ -1,0 +1,213 @@
+================================================================================
+Basic It block
+================================================================================
+
+It "should work correctly"
+  echo "test"
+End
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_it_block
+    description: (string
+      (string_content))
+    (command
+      name: (command_name
+        (word))
+      argument: (string
+        (string_content)))))
+
+================================================================================
+Example block
+================================================================================
+
+Example "example behavior"
+  echo "example"
+End
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_it_block
+    description: (string
+      (string_content))
+    (command
+      name: (command_name
+        (word))
+      argument: (string
+        (string_content)))))
+
+================================================================================
+Specify block
+================================================================================
+
+Specify "specific behavior"
+  echo "specify"
+End
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_it_block
+    description: (string
+      (string_content))
+    (command
+      name: (command_name
+        (word))
+      argument: (string
+        (string_content)))))
+
+================================================================================
+Focused It block
+================================================================================
+
+fIt "focused test"
+  echo "focused"
+End
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_it_block
+    description: (string
+      (string_content))
+    (command
+      name: (command_name
+        (word))
+      argument: (string
+        (string_content)))))
+
+================================================================================
+Focused Example block
+================================================================================
+
+fExample "focused example"
+  echo "focused"
+End
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_it_block
+    description: (string
+      (string_content))
+    (command
+      name: (command_name
+        (word))
+      argument: (string
+        (string_content)))))
+
+================================================================================
+Focused Specify block
+================================================================================
+
+fSpecify "focused specify"
+  echo "focused"
+End
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_it_block
+    description: (string
+      (string_content))
+    (command
+      name: (command_name
+        (word))
+      argument: (string
+        (string_content)))))
+
+================================================================================
+Skipped It block
+================================================================================
+
+xIt "skipped test"
+  echo "skipped"
+End
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_it_block
+    description: (string
+      (string_content))
+    (command
+      name: (command_name
+        (word))
+      argument: (string
+        (string_content)))))
+
+================================================================================
+Skipped Example block
+================================================================================
+
+xExample "skipped example"
+  echo "skipped"
+End
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_it_block
+    description: (string
+      (string_content))
+    (command
+      name: (command_name
+        (word))
+      argument: (string
+        (string_content)))))
+
+================================================================================
+Skipped Specify block
+================================================================================
+
+xSpecify "skipped specify"
+  echo "skipped"
+End
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_it_block
+    description: (string
+      (string_content))
+    (command
+      name: (command_name
+        (word))
+      argument: (string
+        (string_content)))))
+
+================================================================================
+It with complex assertions
+================================================================================
+
+It "should handle complex logic"
+  local result
+  result=$(some_function "param")
+  [ "$result" = "expected" ]
+End
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_it_block
+    description: (string
+      (string_content))
+    (declaration_command
+      (variable_name))
+    (variable_assignment
+      name: (variable_name)
+      value: (command_substitution
+        (command
+          name: (command_name
+            (word))
+          argument: (string
+            (string_content)))))
+    (test_command
+      (binary_expression
+        left: (string
+          (simple_expansion
+            (variable_name)))
+        right: (string
+          (string_content))))))

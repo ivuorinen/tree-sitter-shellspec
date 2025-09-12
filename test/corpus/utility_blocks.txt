@@ -1,0 +1,258 @@
+================================================================================
+Data block
+================================================================================
+
+Data
+  item1
+  item2
+  item3
+End
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_data_block
+    statements: (command
+      name: (command_name
+        (word)))
+    statements: (command
+      name: (command_name
+        (word)))
+    statements: (command
+      name: (command_name
+        (word)))))
+
+================================================================================
+Data block with label
+================================================================================
+
+Data "test data"
+  "value 1"
+  "value 2"
+End
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_data_block
+    statements: (command
+      name: (command_name
+        (string
+          (string_content))))
+    statements: (command
+      name: (command_name
+        (string
+          (string_content))))
+    statements: (command
+      name: (command_name
+        (string
+          (string_content))))))
+
+================================================================================
+Parameters block
+================================================================================
+
+Parameters
+  param1
+  param2
+End
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_utility_block
+    (command
+      name: (command_name
+        (word)))
+    (command
+      name: (command_name
+        (word)))))
+
+================================================================================
+Parameters with label
+================================================================================
+
+Parameters "test parameters"
+  "first param"
+  "second param"
+End
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_utility_block
+    (command
+      name: (command_name
+        (string
+          (string_content))))
+    (command
+      name: (command_name
+        (string
+          (string_content))))
+    (command
+      name: (command_name
+        (string
+          (string_content))))))
+
+================================================================================
+Skip block
+================================================================================
+
+Skip
+  echo "this is skipped"
+End
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_utility_block
+    label: (word)
+    (command
+      name: (command_name
+        (string
+          (string_content))))))
+
+================================================================================
+Skip with reason
+================================================================================
+
+Skip "not implemented yet"
+  echo "this test"
+End
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_utility_block
+    (command
+      name: (command_name
+        (string
+          (string_content))))
+    (command
+      name: (command_name
+        (word))
+      argument: (string
+        (string_content)))))
+
+================================================================================
+Pending block
+================================================================================
+
+Pending
+  echo "pending implementation"
+End
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_utility_block
+    label: (word)
+    (command
+      name: (command_name
+        (string
+          (string_content))))))
+
+================================================================================
+Pending with reason
+================================================================================
+
+Pending "waiting for fix"
+  echo "test"
+End
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_utility_block
+    (command
+      name: (command_name
+        (string
+          (string_content))))
+    (command
+      name: (command_name
+        (word))
+      argument: (string
+        (string_content)))))
+
+================================================================================
+Todo block
+================================================================================
+
+Todo
+  echo "todo item"
+End
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_utility_block
+    label: (word)
+    (command
+      name: (command_name
+        (string
+          (string_content))))))
+
+================================================================================
+Todo with description
+================================================================================
+
+Todo "implement feature X"
+  echo "feature X"
+End
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_utility_block
+    (command
+      name: (command_name
+        (string
+          (string_content))))
+    (command
+      name: (command_name
+        (word))
+      argument: (string
+        (string_content)))))
+
+================================================================================
+Empty utility block
+================================================================================
+
+Data "empty data"
+End
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_data_block
+    statements: (command
+      name: (command_name
+        (string
+          (string_content))))))
+
+
+
+================================================================================
+Data string argument style
+================================================================================
+
+Data "inline data"
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_data_block
+    argument: (string
+      (string_content))))
+
+================================================================================
+Data function argument style
+================================================================================
+
+Data get_test_data
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_data_block
+    argument: (word)))
