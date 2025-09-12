@@ -16,17 +16,6 @@ concurrency:
 permissions: read-all
 
 jobs:
-  checkout:
-    name: Checkout Repository
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
-        with:
-          fetch-depth: 0
-
   test:
     name: 🧪 Test Suite
     runs-on: ubuntu-latest
@@ -38,6 +27,9 @@ jobs:
       fail-fast: false
 
     steps:
+      - name: Checkout Repository
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+
       - name: Setup Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@7c12f8017d5436eb855f1ed4399f037a36fbd9e8 # v5.2.1
         with:
