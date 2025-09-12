@@ -1,38 +1,44 @@
 ---
 name: Bug report
-about: Create a report to help us improve
-title: ''
+about: Report a parsing issue or bug in tree-sitter-shellspec
+title: "[BUG] "
 labels: bug
 assignees: ivuorinen
-
 ---
 
 **Describe the bug**
-A clear and concise description of what the bug is.
+A clear and concise description of the parsing issue or bug.
 
-**To Reproduce**
-Steps to reproduce the behavior:
-1. Go to '...'
-2. Click on '....'
-3. Scroll down to '....'
-4. See error
+**ShellSpec code that doesn't parse correctly**
+Please provide the ShellSpec code that causes the issue:
 
-**Expected behavior**
-A clear and concise description of what you expected to happen.
+```shellspec
+# Paste your ShellSpec code here
+```
 
-**Screenshots**
-If applicable, add screenshots to help explain your problem.
+**Expected parsing behavior**
+A clear description of how the code should be parsed or what syntax highlighting you expected.
 
-**Desktop (please complete the following information):**
- - OS: [e.g. iOS]
- - Browser [e.g. chrome, safari]
- - Version [e.g. 22]
+**Actual behavior**
+What actually happens when the parser encounters this code? Include any error messages.
 
-**Smartphone (please complete the following information):**
- - Device: [e.g. iPhone6]
- - OS: [e.g. iOS8.1]
- - Browser [e.g. stock browser, safari]
- - Version [e.g. 22]
+**Environment:**
 
-**Additional context**
-Add any other context about the problem here.
+- OS: [e.g. Linux, macOS, Windows]
+- Editor: [e.g. Neovim, VS Code, Emacs]
+- tree-sitter-shellspec version: [e.g. 0.1.0]
+- tree-sitter version: [e.g. 0.20.0]
+- ShellSpec version: [e.g. 0.28.1]
+
+**Tree-sitter parse output (if applicable)**
+If you can run `tree-sitter parse`, please include the output:
+
+```text
+# tree-sitter parse output here
+```
+
+## Additional context
+
+- Is this code from a real ShellSpec test file?
+- Does the code work correctly with the ShellSpec test runner?
+- Any other context that might help debug the issue.
