@@ -36,7 +36,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
 
       - name: Cache Node.js dependencies
-        uses: actions/cache@dfa6ed13c88fe79b56c4ffc79a42db2e8d2b15a5 # v4.2.0
+        uses: actions/cache@0400d5f644dc74513175e3cd8d07132dd4860809 # v4.2.4
         id: cache-npm
         with:
           path: ~/.npm
@@ -50,7 +50,7 @@ jobs:
         shell: bash
 
       - name: Cache Tree-sitter CLI
-        uses: actions/cache@dfa6ed13c88fe79b56c4ffc79a42db2e8d2b15a5 # v4.2.0
+        uses: actions/cache@0400d5f644dc74513175e3cd8d07132dd4860809 # v4.2.4
         id: cache-tree-sitter
         with:
           path: ~/.npm/_npx
@@ -61,7 +61,7 @@ jobs:
         shell: bash
 
       - name: Cache Generated Grammar
-        uses: actions/cache@dfa6ed13c88fe79b56c4ffc79a42db2e8d2b15a5 # v4.2.0
+        uses: actions/cache@0400d5f644dc74513175e3cd8d07132dd4860809 # v4.2.4
         id: cache-grammar
         with:
           path: |
@@ -76,7 +76,7 @@ jobs:
         shell: bash
 
       - name: Cache Built Parser
-        uses: actions/cache@dfa6ed13c88fe79b56c4ffc79a42db2e8d2b15a5 # v4.2.0
+        uses: actions/cache@0400d5f644dc74513175e3cd8d07132dd4860809 # v4.2.4
         id: cache-parser
         with:
           path: |
@@ -150,7 +150,7 @@ jobs:
           node-version: 24
 
       - name: Cache Node.js dependencies
-        uses: actions/cache@dfa6ed13c88fe79b56c4ffc79a42db2e8d2b15a5 # v4.2.0
+        uses: actions/cache@0400d5f644dc74513175e3cd8d07132dd4860809 # v4.2.4
         with:
           path: ~/.npm
           key: ${{ runner.os }}-node-24-${{ hashFiles('**/package-lock.json') }}
@@ -181,7 +181,7 @@ jobs:
           node-version: 24
 
       - name: Cache Node.js dependencies
-        uses: actions/cache@dfa6ed13c88fe79b56c4ffc79a42db2e8d2b15a5 # v4.2.0
+        uses: actions/cache@0400d5f644dc74513175e3cd8d07132dd4860809 # v4.2.4
         with:
           path: ~/.npm
           key: ${{ runner.os }}-node-24-${{ hashFiles('**/package-lock.json') }}
