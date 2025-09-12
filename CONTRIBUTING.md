@@ -81,11 +81,8 @@ npm run rebuild
 
 # Check code style
 npm run lint
-npm run format -- --check
-
-# Fix code style issues
-npm run lint:fix
-npm run format -- --write
+npm run lint:yaml
+npm run lint:markdown
 ```
 
 ## Grammar Development

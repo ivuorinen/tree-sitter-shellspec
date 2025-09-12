@@ -20,7 +20,7 @@ assignees: ivuorinen
 # Paste the problematic ShellSpec code here
 ```
 
-###  Current parse tree output
+### Current parse tree output
 
 If you can run `tree-sitter parse`, please include the current output:
 
@@ -29,6 +29,7 @@ If you can run `tree-sitter parse`, please include the current output:
 ```
 
 ### Expected parse tree structure
+
 Describe or show what the parse tree should look like:
 
 ```text

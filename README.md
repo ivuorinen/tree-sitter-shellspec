@@ -222,8 +222,8 @@ End
 
 ### Prerequisites
 
-- [Node.js](https://nodejs.org/) (v16 or later)
-- [Tree-sitter CLI](https://github.com/tree-sitter/tree-sitter/tree/master/cli) (`npm install -g tree-sitter-cli`)
+- [Node.js](https://nodejs.org/) (v22 or later)
+- Tree-sitter CLI (provided via devDependency) — use `npx tree-sitter <cmd>`
 
 ### Setup
 
