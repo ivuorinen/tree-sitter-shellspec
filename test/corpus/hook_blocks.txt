@@ -1,0 +1,219 @@
+================================================================================
+BeforeEach hook
+================================================================================
+
+BeforeEach
+  setup_environment
+End
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_hook_block
+    (command
+      name: (command_name
+        (word)))))
+
+================================================================================
+BeforeEach with label
+================================================================================
+
+BeforeEach "setup database"
+  init_database
+End
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_hook_block
+    (command
+      name: (command_name
+        (string
+          (string_content))))
+    (command
+      name: (command_name
+        (word)))))
+
+================================================================================
+AfterEach hook
+================================================================================
+
+AfterEach
+  cleanup_environment
+End
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_hook_block
+    (command
+      name: (command_name
+        (word)))))
+
+================================================================================
+AfterEach with label
+================================================================================
+
+AfterEach "cleanup database"
+  cleanup_database
+End
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_hook_block
+    (command
+      name: (command_name
+        (string
+          (string_content))))
+    (command
+      name: (command_name
+        (word)))))
+
+================================================================================
+BeforeAll hook
+================================================================================
+
+BeforeAll
+  global_setup
+End
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_hook_block
+    (command
+      name: (command_name
+        (word)))))
+
+================================================================================
+BeforeAll with raw string label
+================================================================================
+
+BeforeAll 'global setup'
+  global_setup
+End
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_hook_block
+    (command
+      name: (command_name
+        (raw_string)))
+    (command
+      name: (command_name
+        (word)))))
+
+================================================================================
+AfterAll hook
+================================================================================
+
+AfterAll
+  global_cleanup
+End
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_hook_block
+    (command
+      name: (command_name
+        (word)))))
+
+================================================================================
+BeforeCall hook
+================================================================================
+
+BeforeCall
+  prepare_call
+End
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_hook_block
+    (command
+      name: (command_name
+        (word)))))
+
+================================================================================
+AfterCall hook
+================================================================================
+
+AfterCall
+  verify_call
+End
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_hook_block
+    (command
+      name: (command_name
+        (word)))))
+
+================================================================================
+BeforeRun hook
+================================================================================
+
+BeforeRun
+  prepare_run
+End
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_hook_block
+    (command
+      name: (command_name
+        (word)))))
+
+================================================================================
+AfterRun hook
+================================================================================
+
+AfterRun
+  verify_run
+End
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_hook_block
+    (command
+      name: (command_name
+        (word)))))
+
+================================================================================
+Hook with multiple statements
+================================================================================
+
+BeforeEach "complex setup"
+  export TEST_VAR="value"
+  mkdir -p /tmp/test
+  touch /tmp/test/file
+End
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_hook_block
+    (command
+      name: (command_name
+        (string
+          (string_content))))
+    (declaration_command
+      (variable_assignment
+        name: (variable_name)
+        value: (string
+          (string_content))))
+    (command
+      name: (command_name
+        (word))
+      argument: (word)
+      argument: (word))
+    (command
+      name: (command_name
+        (word))
+      argument: (word))))

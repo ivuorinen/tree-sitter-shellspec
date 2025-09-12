@@ -1,0 +1,31 @@
+{
+  "name": "@ivuorinen/tree-sitter-shellspec",
+  "version": "0.1.0",
+  "description": "ShellSpec grammar for tree-sitter (extends bash)",
+  "main": "grammar.js",
+  "author": "Ismo Vuorinen",
+  "license": "MIT",
+  "scripts": {
+    "generate": "tree-sitter generate",
+    "test": "tree-sitter test",
+    "parse": "tree-sitter parse",
+    "web": "tree-sitter web-ui",
+    "build": "npm run generate",
+    "dev": "npm run generate && npm run test",
+    "dev:watch": "nodemon --watch grammar.js --watch test/ --ext js,txt --exec 'npm run dev'",
+    "lint": "npx mega-linter-runner",
+    "lint:yaml": "yamllint .",
+    "lint:markdown": "markdownlint . --config .markdownlint.json --ignore node_modules --fix",
+    "precommit": "pre-commit run --all-files",
+    "clean": "rm -rf src/parser.c src/grammar.json src/node-types.json",
+    "rebuild": "npm run clean && npm run generate"
+  },
+  "dependencies": {
+    "tree-sitter-bash": "^0.25.0"
+  },
+  "devDependencies": {
+    "markdownlint-cli": "^0.42.0",
+    "nodemon": "^3.0.1",
+    "tree-sitter-cli": "^0.24.2"
+  }
+}

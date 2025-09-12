@@ -1,0 +1,143 @@
+================================================================================
+Basic Describe block
+================================================================================
+
+Describe "basic functionality"
+  echo "test"
+End
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_describe_block
+    description: (string
+      (string_content))
+    (command
+      name: (command_name
+        (word))
+      argument: (string
+        (string_content)))))
+
+================================================================================
+Focused Describe block
+================================================================================
+
+fDescribe "focused test"
+  echo "focused"
+End
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_describe_block
+    description: (string
+      (string_content))
+    (command
+      name: (command_name
+        (word))
+      argument: (string
+        (string_content)))))
+
+================================================================================
+Skipped Describe block
+================================================================================
+
+xDescribe "skipped test"
+  echo "skipped"
+End
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_describe_block
+    description: (string
+      (string_content))
+    (command
+      name: (command_name
+        (word))
+      argument: (string
+        (string_content)))))
+
+================================================================================
+Describe with raw string
+================================================================================
+
+Describe 'raw string test'
+  echo "test"
+End
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_describe_block
+    description: (raw_string)
+    (command
+      name: (command_name
+        (word))
+      argument: (string
+        (string_content)))))
+
+================================================================================
+Describe with word description
+================================================================================
+
+Describe simple_test
+  echo "test"
+End
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_describe_block
+    description: (word)
+    (command
+      name: (command_name
+        (word))
+      argument: (string
+        (string_content)))))
+
+================================================================================
+Empty Describe block
+================================================================================
+
+Describe "empty test"
+End
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_describe_block
+    description: (string
+      (string_content))))
+
+================================================================================
+Describe with multiple statements
+================================================================================
+
+Describe "multiple statements"
+  echo "first"
+  echo "second"
+  local var="value"
+End
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_describe_block
+    description: (string
+      (string_content))
+    (command
+      name: (command_name
+        (word))
+      argument: (string
+        (string_content)))
+    (command
+      name: (command_name
+        (word))
+      argument: (string
+        (string_content)))
+    (declaration_command
+      (variable_assignment
+        name: (variable_name)
+        value: (string
+          (string_content))))))
