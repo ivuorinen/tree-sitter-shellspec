@@ -56,10 +56,6 @@ jobs:
           path: ~/.npm/_npx
           key: ${{ runner.os }}-tree-sitter-cli-${{ hashFiles('package.json') }}
 
-      - name: Install Tree-sitter CLI
-        run: npm install -g tree-sitter-cli
-        shell: bash
-
       - name: Cache Generated Grammar
         uses: actions/cache@0400d5f644dc74513175e3cd8d07132dd4860809 # v4.2.4
         id: cache-grammar
@@ -128,7 +124,7 @@ jobs:
           End
           EOF
 
-          tree-sitter parse --language=shellspec test_sample.shellspec --quiet || {
+          npx tree-sitter parse --language=shellspec test_sample.shellspec --quiet || {
             echo "❌ Parser failed on sample ShellSpec code"
             exit 1
           }
