@@ -1,5 +1,7 @@
+---
+# yaml-language-server: $schema=https://www.coderabbit.ai/integrations/schema.v2.json
 remote_config:
-  url: "https://raw.githubusercontent.com/ivuorinen/coderabbit/refs/heads/main/coderabbit.yaml"
+  url: "https://raw.githubusercontent.com/ivuorinen/coderabbit/main/coderabbit.yaml"
 path_instructions:
   - path: ".serena/**/*"
     instructions: >-
