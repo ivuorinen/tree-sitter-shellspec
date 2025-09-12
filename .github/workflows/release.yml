@@ -100,8 +100,17 @@ jobs:
     needs: validate
 
     steps:
-      - name: 🏗️ Setup Node.js Environment
-        uses: ./.github/actions/setup-node
+      - name: Checkout Repository
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+
+      - name: Setup Node.js 24
+        uses: actions/setup-node@7c12f8017d5436eb855f1ed4399f037a36fbd9e8 # v5.2.1
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install Dependencies
+        run: npm ci || { echo "❌ npm install failed"; npm install; }
 
       - name: 🔍 Run Security Audit
         run: npm audit --audit-level=high
@@ -124,11 +133,21 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: 🏗️ Setup Development Environment
-        uses: ./.github/actions/setup-dev
+      - name: Setup Node.js 24
+        uses: actions/setup-node@7c12f8017d5436eb855f1ed4399f037a36fbd9e8 # v5.2.1
         with:
+          node-version: 24
+          cache: npm
           registry-url: "https://registry.npmjs.org"
-          skip-checkout: "true"
+
+      - name: Install Dependencies
+        run: npm ci || { echo "❌ npm install failed"; npm install; }
+
+      - name: Install Tree-sitter CLI
+        run: npm install -g tree-sitter-cli
+
+      - name: Generate Grammar
+        run: npm run generate
 
       - name: 🏗️ Build Parser
         run: npm run build
