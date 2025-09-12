@@ -18,6 +18,17 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  checkout:
+    name: Checkout Repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        with:
+          fetch-depth: 0
+
   validate:
     name: 🔍 Validate Release
     runs-on: ubuntu-latest
@@ -64,7 +75,7 @@ jobs:
 
     steps:
       - name: 📋 Check CI Workflow Status
-        uses: actions/github-script@e1ec48de9e3eaf9b93b1c5f88eaf97ae19d7b7bb # v7.0.5
+        uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8
         with:
           script: |
             const { data: workflows } = await github.rest.actions.listWorkflowRuns({
