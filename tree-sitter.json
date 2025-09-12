@@ -1,0 +1,41 @@
+{
+  "grammars": [
+    {
+      "name": "shellspec",
+      "camelcase": "Shellspec",
+      "scope": "source.shellspec",
+      "path": ".",
+      "file-types": [
+        "shellspec"
+      ],
+      "highlights": [
+        "queries/highlights.scm"
+      ],
+      "locals": [
+        "queries/locals.scm"
+      ],
+      "injection-regex": "shellspec"
+    }
+  ],
+  "metadata": {
+    "version": "0.1.0",
+    "license": "MIT",
+    "description": "ShellSpec grammar for tree-sitter (extends bash)",
+    "authors": [
+      {
+        "name": "Ismo Vuorinen"
+      }
+    ],
+    "links": {
+      "repository": "https://github.com/ivuorinen/tree-sitter-shellspec"
+    }
+  },
+  "bindings": {
+    "c": true,
+    "go": true,
+    "node": true,
+    "python": true,
+    "rust": true,
+    "swift": true
+  }
+}
