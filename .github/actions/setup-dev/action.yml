@@ -34,5 +34,10 @@ runs:
       run: npm ci || { echo "❌ npm install failed" && npm install }
       shell: bash
 
-    - name: Setup Tree-sitter Environment
-      uses: ./.github/actions/setup-treesitter
+    - name: Install Tree-sitter CLI
+      run: npm install -g tree-sitter-cli
+      shell: bash
+
+    - name: Generate Grammar
+      run: npm run generate
+      shell: bash
