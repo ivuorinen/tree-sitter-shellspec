@@ -20,12 +20,23 @@
     "clean": "rm -rf src/parser.c src/grammar.json src/node-types.json",
     "rebuild": "npm run clean && npm run generate"
   },
+  "tree-sitter": [
+    {
+      "scope": "source.shellspec",
+      "file-types": [
+        "shellspec"
+      ],
+      "path": ".",
+      "grammar-path": "grammar.js",
+      "highlights": "queries/highlights.scm"
+    }
+  ],
   "dependencies": {
     "tree-sitter-bash": "^0.25.0"
   },
   "devDependencies": {
     "markdownlint-cli": "^0.42.0",
     "nodemon": "^3.0.1",
-    "tree-sitter-cli": "^0.24.2"
+    "tree-sitter-cli": "^0.25.0"
   }
 }

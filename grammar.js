@@ -124,9 +124,9 @@ module.exports = grammar(bashGrammar, {
     // ShellSpec Data blocks with advanced syntax support
     shellspec_data_block: ($) =>
       choice(
-        // Block style with #| lines
+        // Block style with #| lines - highest precedence to ensure #| lines are parsed correctly
         prec.right(
-          4,
+          5,
           seq(
             "Data",
             optional(seq(":", field("modifier", choice("raw", "expand")))),
@@ -140,9 +140,9 @@ module.exports = grammar(bashGrammar, {
             "End",
           ),
         ),
-        // Block style with regular statements - highest precedence to ensure End is captured
+        // Block style with regular statements
         prec.right(
-          5,
+          4,
           seq(
             "Data",
             optional(seq(":", field("modifier", choice("raw", "expand")))),
