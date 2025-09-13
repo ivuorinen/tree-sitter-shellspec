@@ -1868,28 +1868,6 @@
           }
         ]
       },
-      "filter": {
-        "multiple": true,
-        "required": false,
-        "types": [
-          {
-            "type": "raw_string",
-            "named": true
-          },
-          {
-            "type": "string",
-            "named": true
-          },
-          {
-            "type": "word",
-            "named": true
-          },
-          {
-            "type": "|",
-            "named": false
-          }
-        ]
-      },
       "label": {
         "multiple": false,
         "required": false,
