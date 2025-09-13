@@ -7236,12 +7236,12 @@
             ]
           },
           {
-            "type": "FIELD",
-            "name": "label",
-            "content": {
-              "type": "CHOICE",
-              "members": [
-                {
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "FIELD",
+                "name": "label",
+                "content": {
                   "type": "CHOICE",
                   "members": [
                     {
@@ -7257,12 +7257,12 @@
                       "name": "word"
                     }
                   ]
-                },
-                {
-                  "type": "BLANK"
                 }
-              ]
-            }
+              },
+              {
+                "type": "BLANK"
+              }
+            ]
           },
           {
             "type": "REPEAT",
@@ -7306,12 +7306,12 @@
             ]
           },
           {
-            "type": "FIELD",
-            "name": "label",
-            "content": {
-              "type": "CHOICE",
-              "members": [
-                {
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "FIELD",
+                "name": "label",
+                "content": {
                   "type": "CHOICE",
                   "members": [
                     {
@@ -7327,12 +7327,12 @@
                       "name": "word"
                     }
                   ]
-                },
-                {
-                  "type": "BLANK"
                 }
-              ]
-            }
+              },
+              {
+                "type": "BLANK"
+              }
+            ]
           },
           {
             "type": "REPEAT",

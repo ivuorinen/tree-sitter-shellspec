@@ -1,4 +1,4 @@
-#shellcheck shell=sh
+# shellcheck shell=sh
 
 Describe 'matcher example'
   Describe 'status matchers'

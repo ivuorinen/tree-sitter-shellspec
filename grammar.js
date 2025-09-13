@@ -103,7 +103,7 @@ module.exports = grammar(bashGrammar, {
             "BeforeRun",
             "AfterRun",
           ),
-          field("label", optional(choice($.string, $.raw_string, $.word))),
+          optional(field("label", choice($.string, $.raw_string, $.word))),
           repeat($._terminated_statement),
           "End",
         ),
@@ -115,7 +115,7 @@ module.exports = grammar(bashGrammar, {
         1,
         seq(
           choice("Parameters", "Skip", "Pending", "Todo"),
-          field("label", optional(choice($.string, $.raw_string, $.word))),
+          optional(field("label", choice($.string, $.raw_string, $.word))),
           repeat($._terminated_statement),
           "End",
         ),

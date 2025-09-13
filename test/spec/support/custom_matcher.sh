@@ -1,4 +1,4 @@
-#shellcheck shell=sh
+# shellcheck shell=sh
 
 # imported by "spec_helper.sh"
 

@@ -1,4 +1,4 @@
-#shellcheck shell=sh
+# shellcheck shell=sh
 
 Describe 'include helper example'
   Describe 'include helper'

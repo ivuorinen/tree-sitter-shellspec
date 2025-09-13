@@ -1,4 +1,4 @@
-#shellcheck shell=sh
+# shellcheck shell=sh
 
 Describe 'expectation example'
   It 'is succeeds because expectation is successful'

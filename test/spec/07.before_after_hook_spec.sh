@@ -1,4 +1,4 @@
-#shellcheck shell=sh
+# shellcheck shell=sh
 
 # shellspec has Before and After hook.
 # Those hooks are execute for each example (It/Example/Specify).

@@ -124,7 +124,7 @@ jobs:
           End
           EOF
 
-          npx tree-sitter parse --language=shellspec test_sample.shellspec --quiet || {
+          npx tree-sitter parse --scope=source.shellspec test_sample.shellspec --quiet || {
             echo "❌ Parser failed on sample ShellSpec code"
             exit 1
           }
