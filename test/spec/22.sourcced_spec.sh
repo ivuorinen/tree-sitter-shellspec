@@ -1,4 +1,4 @@
-#shellcheck shell=sh
+# shellcheck shell=sh
 
 # Sometime, functions are defined in a single shell script.
 # You will want to test it. but you do not want to run the script.

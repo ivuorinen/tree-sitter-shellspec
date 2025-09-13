@@ -1,4 +1,4 @@
-#shellcheck shell=sh
+# shellcheck shell=sh
 
 Describe 'this is "example group"'
   Context 'this is also "example group"'

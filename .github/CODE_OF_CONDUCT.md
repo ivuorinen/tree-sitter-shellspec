@@ -142,4 +142,4 @@ the [Geek Feminism Anti-Harassment Policy][geek-feminism].
 [stumptown]: https://github.com/stumpsyn
 [cc-by-sa]: https://creativecommons.org/licenses/by-sa/3.0/
 [django]: https://www.djangoproject.com/conduct/
-[geek-feminism]: http://geekfeminism.wikia.com/wiki/Conference_anti-harassment/Policy
+[geek-feminism]: https://geekfeminism.wikia.com/wiki/Conference_anti-harassment/Policy
