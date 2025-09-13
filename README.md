@@ -263,7 +263,7 @@ npm run rebuild      # Clean + generate + build
 
 The grammar includes comprehensive test coverage:
 
-- **59 test cases** covering all ShellSpec constructs
+- **Comprehensive test cases** covering all ShellSpec constructs
 - **Real-world patterns** from official ShellSpec repository
 - **Edge cases** and complex nesting scenarios
 - **Mixed content** (ShellSpec + bash code)

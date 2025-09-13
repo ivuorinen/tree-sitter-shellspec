@@ -1,4 +1,4 @@
-#shellcheck shell=sh disable=SC2016
+# shellcheck shell=sh disable=SC2016
 
 Describe 'evaluation example'
   Describe 'call evaluation'
@@ -21,7 +21,7 @@ Describe 'evaluation example'
 
     It 'must be one call each example'
       When call echo 1
-      When call echo 2 # can not be called more than once.
+      When call echo 2 # cannot be called more than once.
       The output should eq 1
     End
 
@@ -29,9 +29,9 @@ Describe 'evaluation example'
       The value 123 should eq 123
     End
 
-    It 'can not be called after expectation'
+    It 'cannot be called after expectation'
       The value 123 should eq 123
-      When call echo 1 # can not be called after expectation.
+      When call echo 1 # cannot be called after expectation.
     End
 
     It 'calls external command'
@@ -48,7 +48,7 @@ Describe 'evaluation example'
       The status should be failure
     End
 
-    It 'can not modify variable because it run with in subshell'
+    It 'cannot modify variable because it run with in subshell'
       set_value() { SHELLSPEC_VERSION=$1; }
       When run set_value 'no-version'
       The value "$SHELLSPEC_VERSION" should not eq 'no-version'

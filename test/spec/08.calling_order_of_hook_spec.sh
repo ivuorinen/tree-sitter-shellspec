@@ -1,4 +1,4 @@
-#shellcheck shell=sh
+# shellcheck shell=sh
 
 hook() { %logger "$1 $2 ${SHELLSPEC_EXAMPLE_ID}"; }
 
