@@ -1,4 +1,4 @@
-#shellcheck shell=sh
+# shellcheck shell=sh
 
 %const NAME: value
 # shellcheck disable=SC2288
@@ -7,11 +7,11 @@
 
 # %const (% is short hand) directive is define constant value.
 # The characters that can be used for variable name is upper capital, number
-# and underscore only. It can not be define inside of the example group or
+# and underscore only. It cannot be define inside of the example group or
 # the example.
 #
 # The timing of evaluation of the value is the specfile translation process.
-# So you can access shellspec variables, but you can not access variable or
+# So you can access shellspec variables, but you cannot access variable or
 # function in the specfile.
 #
 # This feature assumed use with conditional skip. The conditional skip may runs

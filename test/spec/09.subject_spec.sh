@@ -1,4 +1,4 @@
-#shellcheck shell=sh
+# shellcheck shell=sh
 
 Describe 'subject example'
   Describe 'stdout'

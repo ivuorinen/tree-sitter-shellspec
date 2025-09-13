@@ -1,4 +1,4 @@
-#shellcheck shell=sh
+# shellcheck shell=sh
 
 # regexp custom matcher is defined in "support/custom_matcher.sh" and
 # imported by "spec_helper.sh"
