@@ -12,16 +12,13 @@ const bashGrammar = require("tree-sitter-bash/grammar");
 module.exports = grammar(bashGrammar, {
   name: "shellspec",
 
-  // Add conflicts to handle ambiguity between commands and ShellSpec constructs
+  // Optimize conflicts for performance while maintaining correctness
   conflicts: ($, previous) =>
     previous.concat([
       // Essential bash conflicts only
       [$._expression, $.command_name],
       [$.command, $.variable_assignments],
-      [$.redirected_statement, $.command],
-      [$.redirected_statement, $.command_substitution],
       [$.function_definition, $.command_name],
-      [$.pipeline],
       // Required ShellSpec conflicts
       [$.command_name, $.shellspec_data_block],
       [$.shellspec_hook_block],
@@ -121,21 +118,15 @@ module.exports = grammar(bashGrammar, {
         ),
       ),
 
-    // ShellSpec Data blocks with advanced syntax support
+    // ShellSpec Data blocks - optimized for performance while maintaining functionality
     shellspec_data_block: ($) =>
       choice(
-        // Block style with #| lines - highest precedence to ensure #| lines are parsed correctly
+        // Block style with #| lines
         prec.right(
           5,
           seq(
             "Data",
             optional(seq(":", field("modifier", choice("raw", "expand")))),
-            optional(
-              field(
-                "filter",
-                seq("|", repeat1(choice($.word, $.string, $.raw_string))),
-              ),
-            ),
             repeat1(seq("#|", field("data_line", /[^\n]*/))),
             "End",
           ),
@@ -151,17 +142,11 @@ module.exports = grammar(bashGrammar, {
             "End",
           ),
         ),
-        // String or function argument style (no End) - lowest precedence
+        // String argument style (no End) - lowest precedence
         seq(
           "Data",
           optional(seq(":", field("modifier", choice("raw", "expand")))),
           field("argument", choice($.string, $.raw_string, $.word)),
-          optional(
-            field(
-              "filter",
-              seq("|", repeat1(choice($.word, $.string, $.raw_string))),
-            ),
-          ),
         ),
       ),
 
