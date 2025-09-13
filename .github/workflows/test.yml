@@ -87,6 +87,9 @@ jobs:
 
       - name: Test Parser with Sample Code
         run: |
+          # Ensure parser is built
+          npm run build
+
           cat << 'EOF' > test_sample.shellspec
           #!/usr/bin/env shellspec
 
@@ -124,7 +127,7 @@ jobs:
           End
           EOF
 
-          npx tree-sitter parse --scope=source.shellspec test_sample.shellspec --quiet || {
+          npx tree-sitter parse test_sample.shellspec --quiet || {
             echo "❌ Parser failed on sample ShellSpec code"
             exit 1
           }
