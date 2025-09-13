@@ -1,0 +1,131 @@
+================================================================================
+Basic Context block
+================================================================================
+
+Context "when condition is true"
+  echo "test"
+End
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_context_block
+    description: (string
+      (string_content))
+    (command
+      name: (command_name
+        (word))
+      argument: (string
+        (string_content)))))
+
+================================================================================
+ExampleGroup block
+================================================================================
+
+ExampleGroup "group of examples"
+  echo "test"
+End
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_context_block
+    description: (string
+      (string_content))
+    (command
+      name: (command_name
+        (word))
+      argument: (string
+        (string_content)))))
+
+================================================================================
+Focused Context block
+================================================================================
+
+fContext "focused context"
+  echo "focused"
+End
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_context_block
+    description: (string
+      (string_content))
+    (command
+      name: (command_name
+        (word))
+      argument: (string
+        (string_content)))))
+
+================================================================================
+Skipped Context block
+================================================================================
+
+xContext "skipped context"
+  echo "skipped"
+End
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_context_block
+    description: (string
+      (string_content))
+    (command
+      name: (command_name
+        (word))
+      argument: (string
+        (string_content)))))
+
+================================================================================
+Context with raw string
+================================================================================
+
+Context 'raw string context'
+  local var="test"
+End
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_context_block
+    description: (raw_string)
+    (declaration_command
+      (variable_assignment
+        name: (variable_name)
+        value: (string
+          (string_content))))))
+
+================================================================================
+Context with word description
+================================================================================
+
+Context simple_context
+  echo "test"
+End
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_context_block
+    description: (word)
+    (command
+      name: (command_name
+        (word))
+      argument: (string
+        (string_content)))))
+
+================================================================================
+Empty Context block
+================================================================================
+
+Context "empty context"
+End
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_context_block
+    description: (string
+      (string_content))))
