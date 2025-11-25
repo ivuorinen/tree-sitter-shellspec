@@ -4,7 +4,8 @@
 # See all available variables at
 # https://megalinter.io/configuration/ and in linters documentation
 
-APPLY_FIXES: all
+APPLY_FIXES: none
+FLAVOR_SUGGESTIONS: true
 SHOW_ELAPSED_TIME: false # Show elapsed time at the end of MegaLinter run
 PARALLEL: true
 VALIDATE_ALL_CODEBASE: true
