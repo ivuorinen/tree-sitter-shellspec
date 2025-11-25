@@ -1,12 +1,12 @@
 # shellcheck shell=sh
 
-# Sometime, functions are defined in a single shell script.
+# Sometimes, functions are defined in a single shell script.
 # You will want to test it. but you do not want to run the script.
 # You want to test only the function, right?
 Describe 'sourced return example'
   Include ./count_lines.sh
 
-  Example 'test cpunum.sh with stubbed cat /cpu/info'
+  Example 'test count_lines with stubbed data'
     Data
       #|1
       #|2
@@ -19,7 +19,7 @@ Describe 'sourced return example'
     The stdout should eq 5
   End
 
-  Example 'test cpunum.sh with stubbed cat /cpu/info'
+  Example 'test count_lines with stubbed data'
     Data data
     data() {
       %putsn "line1"

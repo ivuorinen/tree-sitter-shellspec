@@ -16,11 +16,11 @@ Describe 'example example'
     The output should eq 'baz'
   End
 
-  Example 'this is "Not yot implemented" example block'
+  Example 'this is "Not yet implemented" example block'
     :
   End
 
-  Todo 'what to do' # same as "Not yot implemented" example but not block
+  Todo 'what to do' # same as "Not yet implemented" example but not block
 
   It 'not allows define "example group" in "example"'
     # Describe 'example group'
