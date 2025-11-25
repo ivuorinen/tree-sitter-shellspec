@@ -16,6 +16,8 @@
     "lint": "npx mega-linter-runner",
     "lint:yaml": "yamllint .",
     "lint:markdown": "markdownlint . --config .markdownlint.json --ignore node_modules --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "precommit": "pre-commit run --all-files",
     "clean": "rm -rf src/parser.c src/grammar.json src/node-types.json",
     "rebuild": "npm run clean && npm run generate"
@@ -37,6 +39,7 @@
   "devDependencies": {
     "markdownlint-cli": "^0.46.0",
     "nodemon": "^3.0.1",
+    "prettier": "^3.6.2",
     "tree-sitter-cli": "^0.25.0"
   }
 }

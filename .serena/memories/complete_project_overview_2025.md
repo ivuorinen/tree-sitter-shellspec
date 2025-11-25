@@ -30,20 +30,20 @@ module.exports = grammar(bashGrammar, {
     [$.pipeline],
     // 2 essential ShellSpec conflicts
     [$.command_name, $.shellspec_data_block],
-    [$.shellspec_hook_block]
+    [$.shellspec_hook_block],
   ],
   rules: {
     // 8 ShellSpec rule extensions
-    shellspec_describe_block,    // Describe/fDescribe/xDescribe
-    shellspec_context_block,     // Context/ExampleGroup variants
-    shellspec_it_block,          // It/Example/Specify variants
-    shellspec_hook_block,        // BeforeEach/AfterEach/etc blocks
-    shellspec_utility_block,     // Parameters/Skip/Pending/Todo
-    shellspec_data_block,        // Data blocks with statements/arguments
-    shellspec_hook_statement,    // Before/After statements
-    shellspec_directive_statement // Include/Skip if
-  }
-})
+    shellspec_describe_block, // Describe/fDescribe/xDescribe
+    shellspec_context_block, // Context/ExampleGroup variants
+    shellspec_it_block, // It/Example/Specify variants
+    shellspec_hook_block, // BeforeEach/AfterEach/etc blocks
+    shellspec_utility_block, // Parameters/Skip/Pending/Todo
+    shellspec_data_block, // Data blocks with statements/arguments
+    shellspec_hook_statement, // Before/After statements
+    shellspec_directive_statement, // Include/Skip if
+  },
+});
 ```
 
 ### Supported ShellSpec Constructs
