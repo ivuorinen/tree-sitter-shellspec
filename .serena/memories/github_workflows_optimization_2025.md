@@ -139,7 +139,7 @@ check-ci:
 
 ### 2. Release Workflow (`release.yml`)
 
-- **Triggers**: tags (v*.*.*), manual dispatch
+- **Triggers**: tags (v*.*.\*), manual dispatch
 - **Jobs**: validate, check-ci, security, release
 - **Purpose**: Streamlined release process with CI dependency
 

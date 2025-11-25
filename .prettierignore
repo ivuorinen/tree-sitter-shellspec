@@ -1,0 +1,24 @@
+# Dependencies
+node_modules/
+
+# Generated files
+src/parser.c
+src/grammar.json
+src/node-types.json
+src/tree_sitter/
+
+# Build artifacts
+build/
+dist/
+
+# Logs
+*.log
+megalinter-reports/
+
+# Test specs (shell scripts have specific formatting)
+test/spec/
+
+# Lock files
+package-lock.json
+pnpm-lock.yaml
+yarn.lock
