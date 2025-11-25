@@ -1,9 +1,9 @@
 # shellcheck shell=sh
 
-# shellspec has Before and After hook.
-# Those hooks are execute for each example (It/Example/Specify).
-# There is no hooks execute for each example group (Describe/Context).
-# In other words, There is no BeforeAll / AfterAll hooks. It is design policy.
+# ShellSpec has Before and After hooks.
+# Those hooks are executed for each example (It/Example/Specify).
+# There are no hooks executed for each example group (Describe/Context).
+# In other words, there are no BeforeAll / AfterAll hooks by design.
 
 Describe 'before / after hook example'
   Describe '1: before hook'
@@ -15,7 +15,7 @@ Describe 'before / after hook example'
       echo "$value"
     }
 
-    It 'is called before execute example'
+    It 'is called before executing the example'
       When call add_value 10
       The output should eq 20
     End
@@ -46,7 +46,7 @@ Describe 'before / after hook example'
 
     echo_value() { echo "$value"; }
 
-    It 'can also specify code instead of function'
+    It 'can also specify code instead of a function'
       When call echo_value
       The output should eq 10
     End
@@ -57,7 +57,7 @@ Describe 'before / after hook example'
     Before 'setup'
     echo_ok() { echo ok; }
 
-    It 'is fails because before hook fails'
+    It 'fails because the before hook fails'
       When call echo_ok
       The output should eq 'ok'
     End
@@ -67,9 +67,9 @@ Describe 'before / after hook example'
 
   Describe '5: after hook'
     cleanup() { :; } # clean up something
-    Before 'cleanup'
+    After 'cleanup'
 
-    It 'is called after execute example'
+    It 'is called after executing the example'
       When call echo ok
       The output should eq 'ok'
     End
