@@ -3,6 +3,7 @@
 
 #include <assert.h>
 #include <ctype.h>
+#include <stdlib.h>
 #include <string.h>
 #include <wctype.h>
 
@@ -124,6 +125,13 @@ static unsigned serialize(Scanner *scanner, char *buffer) {
 
 static void deserialize(Scanner *scanner, const char *buffer, unsigned length) {
   if (length == 0) {
+    // Fully clear heredocs to avoid stale stack entries after reset
+    for (uint32_t i = 0; i < scanner->heredocs.size; i++) {
+      Heredoc *h = array_get(&scanner->heredocs, i);
+      array_delete(&h->current_leading_word);
+      array_delete(&h->delimiter);
+    }
+    array_clear(&scanner->heredocs);
     reset(scanner);
   } else {
     uint32_t size = 0;
@@ -147,12 +155,18 @@ static void deserialize(Scanner *scanner, const char *buffer, unsigned length) {
 
       memcpy(&heredoc->delimiter.size, &buffer[size], sizeof(uint32_t));
       size += sizeof(uint32_t);
-      array_reserve(&heredoc->delimiter, heredoc->delimiter.size);
+      array_reserve(&heredoc->delimiter, heredoc->delimiter.size > 0 ? heredoc->delimiter.size : 1);
 
       if (heredoc->delimiter.size > 0) {
         memcpy(heredoc->delimiter.contents, &buffer[size],
                heredoc->delimiter.size);
         size += heredoc->delimiter.size;
+        // Ensure NUL termination for safety
+        if (heredoc->delimiter.contents[heredoc->delimiter.size - 1] != '\0') {
+          array_reserve(&heredoc->delimiter, heredoc->delimiter.size + 1);
+          heredoc->delimiter.contents[heredoc->delimiter.size] = '\0';
+          heredoc->delimiter.size++;
+        }
       }
     }
     assert(size == length);
