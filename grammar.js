@@ -28,6 +28,7 @@ module.exports = grammar(bashGrammar, {
     // Extend the main statement rule to include ShellSpec blocks and directives
     _statement_not_subshell: ($, original) =>
       choice(
+        // @ts-ignore
         original,
         $.shellspec_describe_block,
         $.shellspec_context_block,
