@@ -116,7 +116,7 @@ static unsigned serialize(Scanner *scanner, char *buffer) {
     size += sizeof(uint32_t);
     if (heredoc->delimiter.size > 0) {
       memcpy(&buffer[size], heredoc->delimiter.contents,
-             heredoc->delimiter.size);
+            heredoc->delimiter.size);
       size += heredoc->delimiter.size;
     }
   }
@@ -159,7 +159,7 @@ static void deserialize(Scanner *scanner, const char *buffer, unsigned length) {
 
       if (heredoc->delimiter.size > 0) {
         memcpy(heredoc->delimiter.contents, &buffer[size],
-               heredoc->delimiter.size);
+              heredoc->delimiter.size);
         size += heredoc->delimiter.size;
         // Ensure NUL termination for safety
         if (heredoc->delimiter.contents[heredoc->delimiter.size - 1] != '\0') {
@@ -190,9 +190,9 @@ static bool advance_word(TSLexer *lexer, String *unquoted_word) {
   }
 
   while (lexer->lookahead &&
-         !(quote ? lexer->lookahead == quote || lexer->lookahead == '\r' ||
-                       lexer->lookahead == '\n'
-                 : iswspace(lexer->lookahead))) {
+        !(quote ? lexer->lookahead == quote || lexer->lookahead == '\r' ||
+                      lexer->lookahead == '\n'
+                : iswspace(lexer->lookahead))) {
     if (lexer->lookahead == '\\') {
       advance(lexer);
       if (!lexer->lookahead) {
@@ -214,7 +214,7 @@ static bool advance_word(TSLexer *lexer, String *unquoted_word) {
 
 static inline bool scan_bare_dollar(TSLexer *lexer) {
   while (iswspace(lexer->lookahead) && lexer->lookahead != '\n' &&
-         !lexer->eof(lexer)) {
+        !lexer->eof(lexer)) {
     skip(lexer);
   }
 
@@ -223,7 +223,7 @@ static inline bool scan_bare_dollar(TSLexer *lexer) {
     lexer->result_symbol = BARE_DOLLAR;
     lexer->mark_end(lexer);
     return iswspace(lexer->lookahead) || lexer->eof(lexer) ||
-           lexer->lookahead == '\"';
+          lexer->lookahead == '\"';
   }
 
   return false;
@@ -253,8 +253,8 @@ static bool scan_heredoc_end_identifier(Heredoc *heredoc, TSLexer *lexer) {
   int32_t size = 0;
   if (heredoc->delimiter.size > 0) {
     while (lexer->lookahead != '\0' && lexer->lookahead != '\n' &&
-           (int32_t)*array_get(&heredoc->delimiter, size) == lexer->lookahead &&
-           heredoc->current_leading_word.size < heredoc->delimiter.size) {
+          (int32_t)*array_get(&heredoc->delimiter, size) == lexer->lookahead &&
+          heredoc->current_leading_word.size < heredoc->delimiter.size) {
       array_push(&heredoc->current_leading_word, lexer->lookahead);
       advance(lexer);
       size++;
@@ -262,14 +262,14 @@ static bool scan_heredoc_end_identifier(Heredoc *heredoc, TSLexer *lexer) {
   }
   array_push(&heredoc->current_leading_word, '\0');
   return heredoc->delimiter.size == 0
-             ? false
-             : strcmp(heredoc->current_leading_word.contents,
+            ? false
+            : strcmp(heredoc->current_leading_word.contents,
                       heredoc->delimiter.contents) == 0;
 }
 
 static bool scan_heredoc_content(Scanner *scanner, TSLexer *lexer,
-                                 enum TokenType middle_type,
-                                 enum TokenType end_type) {
+                                enum TokenType middle_type,
+                                enum TokenType end_type) {
   bool did_advance = false;
   Heredoc *heredoc = array_back(&scanner->heredocs);
 
@@ -451,7 +451,7 @@ static bool scan(Scanner *scanner, TSLexer *lexer, const bool *valid_symbols) {
       advance(lexer);
       lexer->mark_end(lexer);
       while (lexer->lookahead == '#' || lexer->lookahead == '=' ||
-             lexer->lookahead == '!') {
+            lexer->lookahead == '!') {
         advance(lexer);
       }
       while (iswspace(lexer->lookahead)) {
@@ -473,7 +473,7 @@ static bool scan(Scanner *scanner, TSLexer *lexer, const bool *valid_symbols) {
   }
 
   if ((valid_symbols[HEREDOC_BODY_BEGINNING] ||
-       valid_symbols[SIMPLE_HEREDOC_BODY]) &&
+      valid_symbols[SIMPLE_HEREDOC_BODY]) &&
       scanner->heredocs.size > 0 && !array_back(&scanner->heredocs)->started &&
       !in_error_recovery(valid_symbols)) {
     return scan_heredoc_content(scanner, lexer, HEREDOC_BODY_BEGINNING,
@@ -580,12 +580,12 @@ static bool scan(Scanner *scanner, TSLexer *lexer, const bool *valid_symbols) {
   }
 
   if ((valid_symbols[VARIABLE_NAME] || valid_symbols[FILE_DESCRIPTOR] ||
-       valid_symbols[HEREDOC_ARROW]) &&
+      valid_symbols[HEREDOC_ARROW]) &&
       !valid_symbols[REGEX_NO_SLASH] && !in_error_recovery(valid_symbols)) {
     for (;;) {
       if ((lexer->lookahead == ' ' || lexer->lookahead == '\t' ||
-           lexer->lookahead == '\r' ||
-           (lexer->lookahead == '\n' && !valid_symbols[NEWLINE])) &&
+          lexer->lookahead == '\r' ||
+          (lexer->lookahead == '\n' && !valid_symbols[NEWLINE])) &&
           !valid_symbols[EXPANSION_WORD]) {
         skip(lexer);
       } else if (lexer->lookahead == '\\') {
@@ -616,8 +616,8 @@ static bool scan(Scanner *scanner, TSLexer *lexer, const bool *valid_symbols) {
     // no '*', '@', '?', '-', '$', '0', '_'
     if (!valid_symbols[EXPANSION_WORD] &&
         (lexer->lookahead == '*' || lexer->lookahead == '@' ||
-         lexer->lookahead == '?' || lexer->lookahead == '-' ||
-         lexer->lookahead == '0' || lexer->lookahead == '_')) {
+        lexer->lookahead == '?' || lexer->lookahead == '-' ||
+        lexer->lookahead == '0' || lexer->lookahead == '_')) {
       lexer->mark_end(lexer);
       advance(lexer);
       if (lexer->lookahead == '=' || lexer->lookahead == '[' ||
@@ -707,10 +707,10 @@ static bool scan(Scanner *scanner, TSLexer *lexer, const bool *valid_symbols) {
       }
       if (lexer->lookahead == '=' || lexer->lookahead == '[' ||
           (lexer->lookahead == ':' && !valid_symbols[CLOSING_BRACE] &&
-           !valid_symbols
-               [OPENING_PAREN]) || // TODO(amaanq): more cases for regular word
-                                   // chars but not variable names for function
-                                   // words, only handling : for now? #235
+          !valid_symbols
+              [OPENING_PAREN]) || // TODO(amaanq): more cases for regular word
+                                  // chars but not variable names for function
+                                  // words, only handling : for now? #235
           lexer->lookahead == '%' ||
           (lexer->lookahead == '#' && !is_number) || lexer->lookahead == '@' ||
           (lexer->lookahead == '-' && valid_symbols[CLOSING_BRACE])) {
@@ -737,7 +737,7 @@ static bool scan(Scanner *scanner, TSLexer *lexer, const bool *valid_symbols) {
 
 regex:
   if ((valid_symbols[REGEX] || valid_symbols[REGEX_NO_SLASH] ||
-       valid_symbols[REGEX_NO_SPACE]) &&
+      valid_symbols[REGEX_NO_SPACE]) &&
       !in_error_recovery(valid_symbols)) {
     if (valid_symbols[REGEX] || valid_symbols[REGEX_NO_SPACE]) {
       while (iswspace(lexer->lookahead)) {
@@ -747,7 +747,7 @@ regex:
 
     if ((lexer->lookahead != '"' && lexer->lookahead != '\'') ||
         ((lexer->lookahead == '$' || lexer->lookahead == '\'') &&
-         valid_symbols[REGEX_NO_SLASH]) ||
+        valid_symbols[REGEX_NO_SLASH]) ||
         (lexer->lookahead == '\'' && valid_symbols[REGEX_NO_SPACE])) {
       typedef struct {
         bool done;
@@ -905,8 +905,8 @@ regex:
       }
 
       lexer->result_symbol = valid_symbols[REGEX_NO_SLASH]   ? REGEX_NO_SLASH
-                             : valid_symbols[REGEX_NO_SPACE] ? REGEX_NO_SPACE
-                                                             : REGEX;
+                            : valid_symbols[REGEX_NO_SPACE] ? REGEX_NO_SPACE
+                                                            : REGEX;
       if (valid_symbols[REGEX] && !state.advanced_once) {
         return false;
       }
@@ -1035,7 +1035,7 @@ extglob_pattern:
       } State;
 
       State state = {false, was_non_alpha, scanner->last_glob_paren_depth, 0,
-                     0};
+                    0};
       while (!state.done) {
         switch (lexer->lookahead) {
         case '\0':
@@ -1261,7 +1261,7 @@ void *tree_sitter_shellspec_external_scanner_create() {
 }
 
 bool tree_sitter_shellspec_external_scanner_scan(void *payload, TSLexer *lexer,
-                                                 const bool *valid_symbols) {
+                                                const bool *valid_symbols) {
   Scanner *scanner = (Scanner *)payload;
   return scan(scanner, lexer, valid_symbols);
 }

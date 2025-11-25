@@ -28,42 +28,42 @@ Thank you for your interest in contributing to tree-sitter-shellspec! This docum
 1. Fork the repository on GitHub
 2. Clone your fork locally:
 
-   ```bash
-   git clone https://github.com/YOUR_USERNAME/tree-sitter-shellspec.git
-   cd tree-sitter-shellspec
-   ```
+  ```bash
+  git clone https://github.com/YOUR_USERNAME/tree-sitter-shellspec.git
+  cd tree-sitter-shellspec
+  ```
 
 3. Add the upstream repository:
 
-   ```bash
-   git remote add upstream https://github.com/ivuorinen/tree-sitter-shellspec.git
-   ```
+  ```bash
+  git remote add upstream https://github.com/ivuorinen/tree-sitter-shellspec.git
+  ```
 
 ## Development Setup
 
 1. **Install dependencies:**
 
-   ```bash
-   npm install
-   ```
+  ```bash
+  npm install
+  ```
 
 2. **Generate the grammar:**
 
-   ```bash
-   npm run generate
-   ```
+  ```bash
+  npm run generate
+  ```
 
 3. **Run tests:**
 
-   ```bash
-   npm test
-   ```
+  ```bash
+  npm test
+  ```
 
 4. **Build the parser:**
 
-   ```bash
-   npm run build
-   ```
+  ```bash
+  npm run build
+  ```
 
 ### Development Workflow
 
@@ -209,33 +209,33 @@ tree-sitter test --debug
 
 1. **Create a feature branch:**
 
-   ```bash
-   git checkout -b feature/your-feature-name
-   ```
+  ```bash
+  git checkout -b feature/your-feature-name
+  ```
 
 2. **Make your changes** following the guidelines above
 
 3. **Commit with clear messages:**
 
-   ```bash
-   git commit -m "feat: add support for Data block modifiers
+  ```bash
+  git commit -m "feat: add support for Data block modifiers
 
-   - Add :raw and :expand modifier support
-   - Update test cases for new syntax
-   - Add documentation examples"
-   ```
+  - Add :raw and :expand modifier support
+  - Update test cases for new syntax
+  - Add documentation examples"
+  ```
 
 4. **Push to your fork:**
 
-   ```bash
-   git push origin feature/your-feature-name
-   ```
+  ```bash
+  git push origin feature/your-feature-name
+  ```
 
 5. **Create a Pull Request** with:
-   - Clear description of changes
-   - References to related issues
-   - Test results and coverage
-   - Breaking change notes (if any)
+  - Clear description of changes
+  - References to related issues
+  - Test results and coverage
+  - Breaking change notes (if any)
 
 ### Commit Message Guidelines
 
@@ -282,43 +282,43 @@ Use the [Grammar Issue template](.github/ISSUE_TEMPLATE/grammar_issue.md) for:
 ### High Priority
 
 1. **Enhanced Data block support**
-   - `:raw` and `:expand` modifiers
-   - Pipe filter syntax (`Data | command`)
-   - Multi-line `#|` syntax
+  - `:raw` and `:expand` modifiers
+  - Pipe filter syntax (`Data | command`)
+  - Multi-line `#|` syntax
 
 2. **Assertion parsing**
-   - When/The statement structures
-   - Matcher syntax parsing
-   - Subject/predicate analysis
+  - When/The statement structures
+  - Matcher syntax parsing
+  - Subject/predicate analysis
 
 3. **Performance optimization**
-   - Reduce parser conflicts
-   - Optimize grammar rules
-   - Improve parsing speed
+  - Reduce parser conflicts
+  - Optimize grammar rules
+  - Improve parsing speed
 
 ### Medium Priority
 
 1. **Editor integration**
-   - Neovim configuration examples
-   - VS Code extension support
-   - Emacs tree-sitter integration
+  - Neovim configuration examples
+  - VS Code extension support
+  - Emacs tree-sitter integration
 
 2. **Tooling improvements**
-   - Syntax highlighting themes
-   - Language server features
-   - Code formatting rules
+  - Syntax highlighting themes
+  - Language server features
+  - Code formatting rules
 
 3. **Documentation**
-   - Usage tutorials
-   - Grammar development guide
-   - Editor setup instructions
+  - Usage tutorials
+  - Grammar development guide
+  - Editor setup instructions
 
 ### Low Priority
 
 1. **Advanced features**
-   - ShellSpec custom matchers
-   - Configuration file parsing
-   - Metadata extraction
+  - ShellSpec custom matchers
+  - Configuration file parsing
+  - Metadata extraction
 
 ## Development Resources
 
