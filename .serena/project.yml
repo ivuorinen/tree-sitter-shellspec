@@ -1,6 +1,6 @@
 ignore_all_files_in_gitignore: true
 ignored_paths:
-- megalinter-reports
+  - megalinter-reports
 read_only: false
 
 # list of tool names to exclude. We recommend not excluding any tools, see the readme for more details.
@@ -46,8 +46,8 @@ excluded_tools: []
 initial_prompt: ""
 project_name: "tree-sitter-shellspec"
 languages:
-- cpp
-- typescript
-- bash
+  - cpp
+  - typescript
+  - bash
 included_optional_tools: []
 encoding: utf-8
