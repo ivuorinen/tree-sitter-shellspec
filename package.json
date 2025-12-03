@@ -6,7 +6,8 @@
   "author": "Ismo Vuorinen",
   "license": "MIT",
   "scripts": {
-    "generate": "tree-sitter generate",
+    "generate": "tree-sitter generate && ./scripts/post-generate.sh",
+    "generate:only": "tree-sitter generate",
     "test": "tree-sitter test",
     "parse": "tree-sitter parse",
     "web": "tree-sitter web-ui",

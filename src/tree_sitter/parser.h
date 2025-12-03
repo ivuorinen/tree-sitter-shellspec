@@ -152,6 +152,7 @@ struct TSLanguage {
 };
 
 static inline bool set_contains(const TSCharacterRange *ranges, uint32_t len, int32_t lookahead) {
+  if (len == 0) return false;
   uint32_t index = 0;
   uint32_t size = len - index;
   while (size > 1) {
