@@ -256,3 +256,44 @@ Data get_test_data
 (program
   (shellspec_data_block
     argument: (word)))
+
+================================================================================
+Data block with :raw modifier
+================================================================================
+
+Data :raw
+  'raw data here'
+End
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_data_block
+    statements: (command
+      name: (command_name
+        (word)))
+    statements: (command
+      name: (command_name
+        (raw_string)))))
+
+================================================================================
+Data block with :expand modifier
+================================================================================
+
+Data :expand
+  "expanded $variable"
+End
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_data_block
+    statements: (command
+      name: (command_name
+        (word)))
+    statements: (command
+      name: (command_name
+        (string
+          (string_content)
+          (simple_expansion
+            (variable_name)))))))

@@ -56,6 +56,18 @@
   "Todo"
 ] @keyword.function.pending
 
+; Block terminator
+[
+  "End"
+] @keyword.control
+
+; Data block modifiers
+[
+  ":raw"
+  ":expand"
+  "#|"
+] @keyword.modifier
+
 ; Directives
 [
   "Include"
