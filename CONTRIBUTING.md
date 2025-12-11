@@ -149,11 +149,11 @@ ShellSpec code here
 npm test
 
 # Test specific patterns
-tree-sitter test --filter "describe_blocks"
-tree-sitter test --filter "real_world_patterns"
+npx tree-sitter test --filter "describe_blocks"
+npx tree-sitter test --filter "real_world_patterns"
 
 # Test with debug output
-tree-sitter test --debug
+npx tree-sitter test --debug
 ```
 
 ### Test Coverage Requirements
@@ -200,7 +200,7 @@ tree-sitter test --debug
 ### Before Submitting
 
 1. **Ensure all tests pass:** `npm test`
-2. **Check code style:** `npm run lint && npm run format:check`
+2. **Check code style:** `npm run lint && npm run lint:editorconfig && npm run lint:markdown`
 3. **Update documentation** if needed
 4. **Test with real ShellSpec files** when possible
 5. **Run the full development cycle:** `npm run rebuild`
