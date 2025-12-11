@@ -1,8 +1,8 @@
 /**
-  * @file ShellSpec grammar for tree-sitter (extends bash)
-  * @author Ismo Vuorinen <ismo@ivuorinen.net>
-  * @license MIT
-  */
+ * @file ShellSpec grammar for tree-sitter (extends bash)
+ * @author Ismo Vuorinen <ismo@ivuorinen.net>
+ * @license MIT
+ */
 
 /// <reference types="tree-sitter-cli/dsl" />
 // @ts-check
