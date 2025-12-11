@@ -12,7 +12,33 @@ const bashGrammar = require("tree-sitter-bash/grammar");
 module.exports = grammar(bashGrammar, {
   name: "shellspec",
 
+  // Precedence Strategy:
+  // ShellSpec extends bash grammar by adding BDD test constructs. The key design
+  // principle is to make ShellSpec blocks take precedence over bash commands when
+  // followed by their specific syntax (descriptions, End keywords).
+  //
+  // Precedence levels:
+  // - Level 1: bash_statement (base level, all bash constructs)
+  // - Level 2: ShellSpec blocks (higher precedence than bash)
+  //
+  // This allows "Describe", "It", etc. to work as both:
+  // 1. ShellSpec block keywords (when followed by description + End)
+  // 2. Regular bash commands/functions (in any other context)
+
   // Optimize conflicts for performance while maintaining correctness
+  //
+  // Conflicts (5 total, all necessary and optimal):
+  // 1. [$._expression, $.command_name] - Bash: expression vs command ambiguity
+  // 2. [$.command, $.variable_assignments] - Bash: command vs variable assignment
+  // 3. [$.function_definition, $.command_name] - Bash: function vs command name
+  // 4. [$.command_name, $.shellspec_data_block] - ShellSpec: "Data" as command vs block
+  //    Resolution: ShellSpec blocks take precedence when followed by arguments/End
+  // 5. [$.shellspec_hook_block] - ShellSpec: Hook keywords vs bash commands
+  //    Resolution: ShellSpec hooks take precedence when followed by optional label/End
+  //
+  // Note: These conflicts are intentional and cannot be reduced without breaking
+  // either bash compatibility or ShellSpec functionality. Tree-sitter resolves them
+  // correctly using GLR parsing with precedence hints.
   conflicts: ($, previous) =>
     previous.concat([
       // Essential bash conflicts only
