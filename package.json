@@ -29,8 +29,8 @@
     "lint": "npx mega-linter-runner",
     "lint:markdown": "markdownlint . --config .markdownlint.json --ignore node_modules",
     "lint:markdown:fix": "markdownlint . --config .markdownlint.json --ignore node_modules --fix",
-    "lint:editorconfig": "eclint check .",
-    "lint:editorconfig:fix": "eclint fix .",
+    "lint:editorconfig": "editorconfig-checker",
+    "lint:editorconfig:fix": "editorconfig-checker -fix",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "precommit": "pre-commit run --all-files",
@@ -52,8 +52,8 @@
     "tree-sitter-bash": "^0.25.1"
   },
   "devDependencies": {
-    "eclint": "^2.8.1",
-    "markdownlint-cli": "^0.46.0",
+    "editorconfig-checker": "^6.1.1",
+    "markdownlint-cli": "^0.47.0",
     "nodemon": "^3.0.1",
     "prettier": "^3.6.2",
     "tree-sitter-cli": "^0.25.10"
