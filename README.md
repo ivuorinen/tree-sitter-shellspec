@@ -1,14 +1,16 @@
 # tree-sitter-shellspec
 
-[![Test Status](https://img.shields.io/badge/tests-59%2F59%20passing-brightgreen)](https://github.com/ivuorinen/tree-sitter-shellspec)
+[![Test Status](https://img.shields.io/badge/tests-61%2F61%20passing-brightgreen)](https://github.com/ivuorinen/tree-sitter-shellspec)
 [![Grammar Coverage](https://img.shields.io/badge/coverage-100%25-brightgreen)](https://github.com/ivuorinen/tree-sitter-shellspec)
 [![Tree-sitter](https://img.shields.io/badge/tree--sitter-grammar-blue)](https://tree-sitter.github.io/)
 
-A comprehensive [Tree-sitter](https://tree-sitter.github.io/) grammar for [ShellSpec](https://shellspec.info/) - a BDD (Behavior Driven Development) testing framework for POSIX shell scripts.
+A comprehensive [Tree-sitter](https://tree-sitter.github.io/) grammar for
+[ShellSpec](https://shellspec.info/) - a BDD (Behavior Driven Development) testing framework for POSIX shell scripts.
 
 ## Overview
 
-This grammar extends the [tree-sitter-bash](https://github.com/tree-sitter/tree-sitter-bash) grammar to provide complete parsing support for ShellSpec's BDD constructs.
+This grammar extends the [tree-sitter-bash](https://github.com/tree-sitter/tree-sitter-bash) grammar to provide complete parsing support
+for ShellSpec's BDD constructs.
 
 It enables syntax highlighting, code navigation, and tooling integration for ShellSpec test files.
 

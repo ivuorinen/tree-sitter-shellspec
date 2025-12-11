@@ -62,7 +62,7 @@ extern "C" {
 /// Push a new `element` onto the end of the array.
 #define array_push(self, element)                            \
   (_array__grow((Array *)(self), 1, array_elem_size(self)), \
-  (self)->contents[(self)->size++] = (element))
+   (self)->contents[(self)->size++] = (element))
 
 /// Increase the array's size by `count` elements.
 /// New elements are zero-initialized.
@@ -218,8 +218,8 @@ static inline void _array__grow(Array *self, uint32_t count, size_t element_size
 
 /// This is not what you're looking for, see `array_splice`.
 static inline void _array__splice(Array *self, size_t element_size,
-                                uint32_t index, uint32_t old_count,
-                                uint32_t new_count, const void *elements) {
+                                 uint32_t index, uint32_t old_count,
+                                 uint32_t new_count, const void *elements) {
   uint32_t new_size = self->size + new_count - old_count;
   uint32_t old_end = index + old_count;
   uint32_t new_end = index + new_count;
