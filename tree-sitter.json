@@ -5,9 +5,15 @@
       "camelcase": "Shellspec",
       "scope": "source.shellspec",
       "path": ".",
-      "file-types": ["shellspec"],
-      "highlights": ["queries/highlights.scm"],
-      "locals": ["queries/locals.scm"],
+      "file-types": [
+        "shellspec"
+      ],
+      "highlights": [
+        "queries/highlights.scm"
+      ],
+      "locals": [
+        "queries/locals.scm"
+      ],
       "injection-regex": "shellspec"
     }
   ],

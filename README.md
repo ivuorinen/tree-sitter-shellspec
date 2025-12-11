@@ -1,6 +1,6 @@
 # tree-sitter-shellspec
 
-[![Test Status](https://img.shields.io/badge/tests-61%2F61%20passing-brightgreen)](https://github.com/ivuorinen/tree-sitter-shellspec)
+[![Test Status](https://img.shields.io/badge/tests-63%2F63%20passing-brightgreen)](https://github.com/ivuorinen/tree-sitter-shellspec)
 [![Grammar Coverage](https://img.shields.io/badge/coverage-100%25-brightgreen)](https://github.com/ivuorinen/tree-sitter-shellspec)
 [![Tree-sitter](https://img.shields.io/badge/tree--sitter-grammar-blue)](https://tree-sitter.github.io/)
 
@@ -19,7 +19,7 @@ It enables syntax highlighting, code navigation, and tooling integration for She
 - **Complete ShellSpec syntax support** - All block types, hooks, and utility constructs
 - **Real-world compatibility** - Tested against official ShellSpec examples
 - **Bash integration** - Seamlessly handles mixed ShellSpec/bash code
-- **Production ready** - 100% test coverage with 59 comprehensive test cases
+- **Production ready** - 100% test coverage with 63 comprehensive test cases
 - **Editor support** - Works with any Tree-sitter compatible editor
 
 ## Installation
@@ -241,7 +241,7 @@ npm install
 # Generate parser from grammar
 npm run generate
 
-# Run test suite (59 comprehensive tests)
+# Run test suite (63 comprehensive tests)
 npm test
 
 # Build the parser
@@ -252,9 +252,10 @@ npm run dev          # Generate + test
 npm run dev:watch    # Watch mode for development
 
 # Linting and formatting
-npm run lint         # Check code style
-npm run lint:fix     # Auto-fix style issues
-npm run format       # Format code
+npm run lint                    # Check code style
+npm run lint:editorconfig:fix   # Auto-fix EditorConfig issues
+npm run lint:markdown           # Auto-fix markdown issues (includes --fix)
+npm run format                  # Format code with prettier
 
 # Utilities
 npm run clean        # Clean generated files

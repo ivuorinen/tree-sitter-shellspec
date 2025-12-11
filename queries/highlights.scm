@@ -15,6 +15,7 @@
 [
   "fDescribe"
   "fContext"
+  "fExampleGroup"
   "fIt"
   "fExample"
   "fSpecify"
@@ -24,6 +25,7 @@
 [
   "xDescribe"
   "xContext"
+  "xExampleGroup"
   "xIt"
   "xExample"
   "xSpecify"
@@ -60,13 +62,6 @@
 [
   "End"
 ] @keyword.control
-
-; Data block modifiers
-[
-  ":raw"
-  ":expand"
-  "#|"
-] @keyword.modifier
 
 ; Directives
 [
