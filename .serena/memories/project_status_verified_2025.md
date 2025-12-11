@@ -16,10 +16,15 @@ This memory contains only verified, accurate information about the current proje
 
 ### Dependencies (Verified)
 
+package.json excerpts:
+
 ```json
 "dependencies": {
   "tree-sitter-bash": "^0.25.0"
-},
+}
+```
+
+```json
 "devDependencies": {
   "markdownlint-cli": "^0.42.0",
   "nodemon": "^3.0.1",
@@ -28,6 +33,8 @@ This memory contains only verified, accurate information about the current proje
 ```
 
 ### NPM Scripts (Verified - 13 total)
+
+package.json excerpt:
 
 ```json
 "scripts": {
@@ -86,6 +93,17 @@ test/corpus/
 - Grammar generates cleanly with no warnings
 - All essential conflicts properly configured
 - Unnecessary conflicts eliminated through optimization
+
+**CI Enforcement Recommendation**: Add CI guard to fail on any conflicts/warnings
+
+```yaml
+# Add to CI workflow before tests
+- name: Generate grammar (fail on conflicts)
+  run: |
+    set -euo pipefail
+    npx tree-sitter generate 2>&1 | tee generate.log
+    ! rg -nP '(conflict|warn)' generate.log
+```
 
 ### Supported ShellSpec Constructs (Verified)
 
