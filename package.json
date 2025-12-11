@@ -5,6 +5,18 @@
   "main": "grammar.js",
   "author": "Ismo Vuorinen",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ivuorinen/tree-sitter-shellspec.git"
+  },
+  "files": [
+    "grammar.js",
+    "src",
+    "queries",
+    "binding.gyp",
+    "bindings",
+    "scripts"
+  ],
   "scripts": {
     "generate": "tree-sitter generate && ./scripts/post-generate.sh",
     "generate:only": "tree-sitter generate",
