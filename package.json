@@ -49,13 +49,13 @@
     }
   ],
   "dependencies": {
-    "tree-sitter-bash": "^0.25.0"
+    "tree-sitter-bash": "^0.25.1"
   },
   "devDependencies": {
     "eclint": "^2.8.1",
     "markdownlint-cli": "^0.46.0",
     "nodemon": "^3.0.1",
     "prettier": "^3.6.2",
-    "tree-sitter-cli": "^0.25.0"
+    "tree-sitter-cli": "^0.25.10"
   }
 }
