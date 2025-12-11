@@ -11,9 +11,6 @@
       "highlights": [
         "queries/highlights.scm"
       ],
-      "locals": [
-        "queries/locals.scm"
-      ],
       "injection-regex": "shellspec"
     }
   ],
