@@ -174,12 +174,12 @@ static void deserialize(Scanner *scanner, const char *buffer, unsigned length) {
 }
 
 /**
- * Consume a "word" in POSIX parlance, and returns it unquoted.
- *
- * This is an approximate implementation that doesn't deal with any
- * POSIX-mandated substitution, and assumes the default value for
- * IFS.
- */
+  * Consume a "word" in POSIX parlance, and returns it unquoted.
+  *
+  * This is an approximate implementation that doesn't deal with any
+  * POSIX-mandated substitution, and assumes the default value for
+  * IFS.
+  */
 static bool advance_word(TSLexer *lexer, String *unquoted_word) {
   bool empty = true;
 
