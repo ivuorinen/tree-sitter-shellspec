@@ -149,9 +149,8 @@ Total: 1,302 lines, 61 tests
 1. **test.yml** - Multi-node testing (Node 22, 24)
 2. **release.yml** - Automated releases
 3. **codeql.yml** - Security code scanning
-4. **pr-lint.yml** - Pull request validation
-5. **stale.yml** - Issue/PR management
-6. **sync-labels.yml** - Label synchronization
+4. **stale.yml** - Issue/PR management
+5. **sync-labels.yml** - Label synchronization
 
 ### Custom GitHub Actions
 
