@@ -33,7 +33,7 @@ git clone https://github.com/YOUR_USERNAME/tree-sitter-shellspec.git
 cd tree-sitter-shellspec
 ```
 
-3. Add the upstream repository:
+1. Add the upstream repository:
 
 ```bash
 git remote add upstream https://github.com/ivuorinen/tree-sitter-shellspec.git
@@ -47,19 +47,19 @@ git remote add upstream https://github.com/ivuorinen/tree-sitter-shellspec.git
 npm install
 ```
 
-2. **Generate the grammar:**
+1. **Generate the grammar:**
 
 ```bash
 npm run generate
 ```
 
-3. **Run tests:**
+1. **Run tests:**
 
 ```bash
 npm test
 ```
 
-4. **Build the parser:**
+1. **Build the parser:**
 
 ```bash
 npm run build
@@ -200,7 +200,7 @@ tree-sitter test --debug
 ### Before Submitting
 
 1. **Ensure all tests pass:** `npm test`
-2. **Check code style:** `npm run lint && npm run format -- --check`
+2. **Check code style:** `npm run lint && npm run format:check`
 3. **Update documentation** if needed
 4. **Test with real ShellSpec files** when possible
 5. **Run the full development cycle:** `npm run rebuild`
@@ -213,9 +213,9 @@ tree-sitter test --debug
 git checkout -b feature/your-feature-name
 ```
 
-2. **Make your changes** following the guidelines above
+1. **Make your changes** following the guidelines above
 
-3. **Commit with clear messages:**
+2. **Commit with clear messages:**
 
 ```bash
 git commit -m "feat: add support for Data block modifiers
@@ -225,13 +225,13 @@ git commit -m "feat: add support for Data block modifiers
 - Add documentation examples"
 ```
 
-4. **Push to your fork:**
+1. **Push to your fork:**
 
 ```bash
 git push origin feature/your-feature-name
 ```
 
-5. **Create a Pull Request** with:
+1. **Create a Pull Request** with:
 
 - Clear description of changes
 - References to related issues
@@ -288,13 +288,13 @@ Use the [Grammar Issue template](.github/ISSUE_TEMPLATE/grammar_issue.md) for:
 - Pipe filter syntax (`Data | command`)
 - Multi-line `#|` syntax
 
-2. **Assertion parsing**
+1. **Assertion parsing**
 
 - When/The statement structures
 - Matcher syntax parsing
 - Subject/predicate analysis
 
-3. **Performance optimization**
+1. **Performance optimization**
 
 - Reduce parser conflicts
 - Optimize grammar rules
@@ -308,13 +308,13 @@ Use the [Grammar Issue template](.github/ISSUE_TEMPLATE/grammar_issue.md) for:
 - VS Code extension support
 - Emacs tree-sitter integration
 
-2. **Tooling improvements**
+1. **Tooling improvements**
 
 - Syntax highlighting themes
 - Language server features
 - Code formatting rules
 
-3. **Documentation**
+1. **Documentation**
 
 - Usage tutorials
 - Grammar development guide

@@ -79,9 +79,10 @@ End
 
 ### Test Coverage Added
 
-- 59 total tests (up from 53)
+- 63 total tests (as of 2025-12-11; originally 59, up from 53)
 - New `real_world_patterns.txt` test file
 - 6 additional tests covering hook statements, directives, and complex patterns
+- 4 additional tests for Data block modifiers (added 2025-12-11)
 
 ## Integration Status
 
@@ -118,8 +119,8 @@ End
 - **Block types**: 5 (Describe, Context, It, Hook, Utility)
 - **Statement types**: 2 (Hook statements, Directives)
 - **Keywords supported**: 25+ ShellSpec keywords
-- **Test coverage**: 100% (59/59 tests passing)
-- **Conflict warnings**: 13 (mostly unnecessary, can be optimized)
+- **Test coverage**: 100% (63/63 tests passing as of 2025-12-11)
+- **Conflict warnings**: 5 (optimized from 13, all necessary)
 
 ## Recommendations for Future Development
 

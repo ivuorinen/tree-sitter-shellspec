@@ -83,7 +83,14 @@ module.exports = grammar(bashGrammar, {
       prec.right(
         1,
         seq(
-          choice("Context", "ExampleGroup", "fContext", "xContext"),
+          choice(
+            "Context",
+            "ExampleGroup",
+            "fContext",
+            "xContext",
+            "fExampleGroup",
+            "xExampleGroup",
+          ),
           field("description", choice($.string, $.raw_string, $.word)),
           repeat($._terminated_statement),
           "End",

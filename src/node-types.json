@@ -3144,6 +3144,10 @@
     "named": false
   },
   {
+    "type": "fExampleGroup",
+    "named": false
+  },
+  {
     "type": "fIt",
     "named": false
   },
@@ -3269,6 +3273,10 @@
   },
   {
     "type": "xExample",
+    "named": false
+  },
+  {
+    "type": "xExampleGroup",
     "named": false
   },
   {

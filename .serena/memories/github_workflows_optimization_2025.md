@@ -36,7 +36,7 @@ The project had significant duplication in GitHub Actions workflows, causing unn
 **File**: `.github/workflows/test.yml` → Renamed to "CI"
 
 - **Purpose**: Single source of truth for all continuous integration
-- **Triggers**: push, pull_request, merge_group to main/master
+- **Triggers**: push, pull_request to main/master
 - **Jobs**: test (matrix), lint, coverage
 - **Result**: Eliminated duplicate linting, maintained full functionality
 
