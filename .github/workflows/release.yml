@@ -1,0 +1,274 @@
+---
+# yaml-language-server: $schema=https://www.schemastore.org/github-workflow.json
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version to release (e.g., 1.0.0)"
+        required: true
+        type: string
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  actions: read
+  contents: read
+
+jobs:
+  validate:
+    name: 🔍 Validate Release
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+
+    steps:
+      - name: ⤵️ Checkout Repository
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+        with:
+          fetch-depth: 0
+
+      - name: 🔢 Extract Version
+        id: version
+        run: |
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            VERSION="${{ github.event.inputs.version }}"
+            echo "version=v${VERSION}" >> "$GITHUB_OUTPUT"
+          else
+            VERSION="${GITHUB_REF#refs/tags/}"
+            echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
+          fi
+          echo "Releasing version: ${VERSION}"
+
+      - name: ✅ Validate Version Format
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+          if [[ ! $VERSION =~ ^v[0-9]+\.[0-9]+\.[0-9]+(-[a-zA-Z0-9.-]+)?$ ]]; then
+            echo "❌ Invalid version format: $VERSION"
+            echo "Expected format: v1.0.0 or v1.0.0-beta.1"
+            exit 1
+          fi
+          echo "✅ Version format is valid: $VERSION"
+
+  # Tests and linting are handled by the CI workflow that runs on push
+  # This workflow only needs to run once CI passes on the tag
+  check-ci:
+    name: ✅ Verify CI Status
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    needs: validate
+
+    steps:
+      - name: 📋 Check CI Workflow Status
+        uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8
+        with:
+          script: |
+            const wfList = await github.rest.actions.listRepoWorkflows({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+            });
+            const wf =
+              wfList.data.workflows.find(w => w.path.endsWith('/test.yml')) ||
+              wfList.data.workflows.find(w => (w.name || '').toLowerCase() === 'ci');
+            if (!wf) core.setFailed('CI workflow not found (test.yml or CI).');
+            const { data } = await github.rest.actions.listWorkflowRuns({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              workflow_id: wf.id,
+              head_sha: context.sha,
+              status: 'completed',
+              per_page: 1
+            });
+            const latestRun = data.workflow_runs?.[0];
+            if (!latestRun) core.setFailed('No completed CI runs found for this commit.');
+            if (latestRun.conclusion !== 'success') {
+              core.setFailed(`CI workflow conclusion: ${latestRun.conclusion}`);
+            }
+            console.log(`CI status: ${latestRun.conclusion}`)
+
+  security:
+    name: 🔒 Security Scan
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    needs: validate
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+
+      - name: Setup Node.js 24
+        uses: actions/setup-node@395ad3262231945c25e8478fd5baf05154b1d79f # v6.1.0
+        with:
+          node-version: 24
+
+      - name: Cache Node.js dependencies
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
+        with:
+          path: |
+            ~/.npm
+            ~/.yarn
+            ~/.cache/yarn
+            ~/.pnpm-store
+            ~/.cache/pnpm
+            node_modules/.cache
+          key: ${{ runner.os }}-node-24-${{ hashFiles('**/package-lock.json', '**/yarn.lock', '**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-node-24-
+            ${{ runner.os }}-node-
+
+      - name: Install Dependencies
+        run: npm ci || { echo "❌ npm install failed"; npm install; }
+
+      - name: 🔍 Run Security Audit
+        run: npm audit --audit-level=high
+
+  release:
+    name: 🚀 Release
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    needs: [validate, check-ci, security]
+    if: always() && needs.validate.result == 'success' && needs.check-ci.result == 'success' && needs.security.result == 'success'
+    permissions:
+      contents: write
+      packages: write
+      issues: write
+      pull-requests: write
+
+    steps:
+      - name: ⤵️ Checkout Repository
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js 24
+        uses: actions/setup-node@395ad3262231945c25e8478fd5baf05154b1d79f # v6.1.0
+        with:
+          node-version: 24
+          registry-url: "https://registry.npmjs.org"
+
+      - name: Cache Node.js dependencies
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
+        with:
+          path: |
+            ~/.npm
+            ~/.yarn
+            ~/.cache/yarn
+            ~/.pnpm-store
+            ~/.cache/pnpm
+            node_modules/.cache
+          key: ${{ runner.os }}-node-24-${{ hashFiles('**/package-lock.json', '**/yarn.lock', '**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-node-24-
+            ${{ runner.os }}-node-
+
+      - name: Install Dependencies
+        run: npm ci || { echo "❌ npm install failed"; npm install; }
+
+      - name: Cache Generated Grammar
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
+        id: cache-grammar
+        with:
+          path: |
+            src/parser.c
+            src/tree_sitter/
+            binding.gyp
+          key: ${{ runner.os }}-grammar-${{ hashFiles('grammar.js', 'package.json') }}
+
+      - name: Generate Grammar
+        if: steps.cache-grammar.outputs.cache-hit != 'true'
+        run: npm run generate
+
+      - name: 🏗️ Build Parser
+        run: npm run build
+
+      - name: 🔎 Verify package.json version matches input
+        if: github.event_name == 'workflow_dispatch'
+        run: |
+          INPUT="${{ github.event.inputs.version }}"
+          EXPECTED="v${INPUT#v}"
+          PKG="v$(node -p "require('./package.json').version")"
+          if [ "$PKG" != "$EXPECTED" ]; then
+            echo "package.json version ($PKG) does not match requested release ($EXPECTED)."
+            echo "Bump package.json in a PR before running workflow_dispatch."
+            exit 1
+          fi
+
+      - name: 🏷️ Create Tag
+        if: github.event_name == 'workflow_dispatch'
+        run: |
+          VERSION="v${{ github.event.inputs.version }}"
+          git tag "${VERSION#v}"
+          git push origin "${VERSION#v}"
+
+      - name: 📝 Generate Release Notes
+        id: release_notes
+        run: |
+          VERSION="${{ needs.validate.outputs.version }}"
+          PREV_TAG=$(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || echo "")
+
+          {
+            echo "## Release ${VERSION}"
+            echo ""
+          } > release_notes.md
+
+          if [ -n "$PREV_TAG" ]; then
+            {
+              echo "### Changes since ${PREV_TAG}"
+              echo ""
+            } >> release_notes.md
+            git log --oneline --pretty=format:"- %s" "${PREV_TAG}..HEAD" >> release_notes.md
+          else
+            {
+              echo "### Initial Release"
+              echo ""
+              echo "- Initial release of tree-sitter-shellspec"
+              echo "- Complete ShellSpec grammar support"
+              echo "- Comprehensive test suite with broad coverage"
+              echo "- Real-world compatibility with official ShellSpec examples"
+            } >> release_notes.md
+          fi
+
+          {
+            echo ""
+            echo "### Installation"
+            echo ""
+            echo "\`\`\`bash"
+            echo "npm install @ivuorinen/tree-sitter-shellspec"
+            echo "\`\`\`"
+          } >> release_notes.md
+
+      - name: 🚀 Create GitHub Release
+        uses: softprops/action-gh-release@a06a81a03ee405af7f2048a818ed3f03bbf83c7b # v2.5.0
+        with:
+          tag_name: ${{ needs.validate.outputs.version }}
+          name: Release ${{ needs.validate.outputs.version }}
+          body_path: release_notes.md
+          draft: false
+          prerelease: ${{ contains(needs.validate.outputs.version, '-') }}
+          generate_release_notes: false
+
+      - name: 📦 Publish to npm
+        run: |
+          if [[ "${{ needs.validate.outputs.version }}" == *"-"* ]]; then
+            PUBLISH_TAG="next"
+          else
+            PUBLISH_TAG="latest"
+          fi
+          echo "Publishing with tag: $PUBLISH_TAG"
+          npm publish --access public --tag "$PUBLISH_TAG"
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: 📊 Release Summary
+        run: |
+          echo "🎉 Successfully released ${{ needs.validate.outputs.version }}"
+          echo "📦 Published to npm: https://www.npmjs.com/package/@ivuorinen/tree-sitter-shellspec"
+          echo "🏷️ GitHub Release: ${{ github.server_url }}/${{ github.repository }}/releases/tag/${{ needs.validate.outputs.version }}"

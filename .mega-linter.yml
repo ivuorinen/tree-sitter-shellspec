@@ -1,9 +1,12 @@
 ---
+# yaml-language-server:
+# $schema=https://raw.githubusercontent.com/megalinter/megalinter/main/megalinter/descriptors/schemas/megalinter-configuration.jsonschema.json
 # Configuration file for MegaLinter
 # See all available variables at
 # https://megalinter.io/configuration/ and in linters documentation
 
-APPLY_FIXES: all
+APPLY_FIXES: none
+FLAVOR_SUGGESTIONS: true
 SHOW_ELAPSED_TIME: false # Show elapsed time at the end of MegaLinter run
 PARALLEL: true
 VALIDATE_ALL_CODEBASE: true
@@ -17,19 +20,16 @@ SHOW_SKIPPED_LINTERS: false # Show skipped linters in MegaLinter log
 
 DISABLE_LINTERS:
   - REPOSITORY_DEVSKIM
-
-ENABLE_LINTERS:
-  - YAML_YAMLLINT
-  - MARKDOWN_MARKDOWNLINT
-  - YAML_PRETTIER
-  - JSON_PRETTIER
-  - JAVASCRIPT_ES
-  - TYPESCRIPT_ES
+  - C_CLANG_FORMAT # Generated code may not follow all style rules
+  - JSON_PRETTIER # Disabled for causing probelms
+  - SPELL_LYCHEE # Disabled due to too many false positives
+  - SPELL_CSPELL # Disabled due to too many false positives
+  - REPOSITORY_TRUFFLEHOG # Disabled due to being far too slow
+  - JAVASCRIPT_PRETTIER # We are not using Prettier for JS
 
 YAML_YAMLLINT_CONFIG_FILE: .yamllint.yml
 MARKDOWN_MARKDOWNLINT_CONFIG_FILE: .markdownlint.json
-JAVASCRIPT_ES_CONFIG_FILE: .eslintrc.json
-TYPESCRIPT_ES_CONFIG_FILE: .eslintrc.json
 
+# Exclude some paths from all linters as they are generated
 FILTER_REGEX_EXCLUDE: >
-  (node_modules|\.automation/test|docs/json-schemas|\.github/workflows)
+  (node_modules|test/spec|src|megalinter-reports)

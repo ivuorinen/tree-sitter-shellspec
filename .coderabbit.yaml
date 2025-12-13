@@ -1,0 +1,17 @@
+---
+# yaml-language-server: $schema=https://www.coderabbit.ai/integrations/schema.v2.json
+remote_config:
+  url: "https://raw.githubusercontent.com/ivuorinen/coderabbit/main/coderabbit.yaml"
+path_filters:
+  - "!src/**"
+  - "!test/spec/**"
+  - "!test/corpus/**"
+path_instructions:
+  - path: ".serena/**/*"
+    instructions: "These are files for Serena LLM. Do not review them."
+  - path: "src/**/*"
+    instructions: "These are automatically generated files. Do not review them."
+  - path: "test/spec/**/*"
+    instructions: "These are test files for the grammar. Do not review them."
+  - path: "test/corpus/**/*"
+    instructions: "Grammar corpora. Do not review them."
