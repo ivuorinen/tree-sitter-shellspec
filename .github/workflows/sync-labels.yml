@@ -1,5 +1,5 @@
 ---
-# yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
+# yaml-language-server: $schema=https://www.schemastore.org/github-workflow.json
 name: Sync Labels
 
 on:
@@ -8,13 +8,12 @@ on:
       - main
       - master
     paths:
-      - '.github/labels.yml'
-      - '.github/workflows/sync-labels.yml'
+      - ".github/labels.yml"
+      - ".github/workflows/sync-labels.yml"
   schedule:
-    - cron: '34 5 * * *' # Run every day at 05:34 AM UTC
+    - cron: "34 5 * * *" # Run every day at 05:34 AM UTC
   workflow_call:
   workflow_dispatch:
-  merge_group:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}

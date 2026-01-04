@@ -1,0 +1,285 @@
+---
+# yaml-language-server: $schema=https://www.schemastore.org/github-workflow.json
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  actions: write
+
+jobs:
+  test:
+    name: 🧪 Test Suite
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      actions: read
+      contents: read
+      issues: write
+      pull-requests: write
+
+    strategy:
+      matrix:
+        node-version: [22, 24]
+      fail-fast: false
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@395ad3262231945c25e8478fd5baf05154b1d79f # v6.1.0
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Cache Node.js dependencies
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
+        id: cache-npm
+        with:
+          path: |
+            ~/.npm
+            ~/.yarn
+            ~/.cache/yarn
+            ~/.pnpm-store
+            ~/.cache/pnpm
+            node_modules/.cache
+          key: ${{ runner.os }}-node-${{ matrix.node-version }}-${{ hashFiles('**/package-lock.json', '**/yarn.lock', '**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-node-${{ matrix.node-version }}-
+            ${{ runner.os }}-node-
+
+      - name: Install Dependencies
+        run: npm ci || { echo "❌ npm install failed"; npm install; }
+        shell: bash
+
+      - name: Cache npx store
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
+        id: cache-npx
+        with:
+          path: |
+            ~/.npm/_npx
+            ~/.cache/yarn/global
+            ~/.local/share/pnpm/global
+          key: ${{ runner.os }}-npx-${{ hashFiles('package.json') }}
+
+      - name: Cache Generated Grammar
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
+        id: cache-grammar
+        with:
+          path: |
+            src/parser.c
+            src/tree_sitter/
+            binding.gyp
+          key: ${{ runner.os }}-grammar-${{ hashFiles('grammar.js', 'package.json') }}
+
+      - name: Generate Grammar
+        if: steps.cache-grammar.outputs.cache-hit != 'true'
+        run: npm run generate
+        shell: bash
+
+      - name: Cache Built Parser
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
+        id: cache-parser
+        with:
+          path: |
+            build/
+          key: ${{ runner.os }}-parser-${{ matrix.node-version }}-${{ hashFiles('package-lock.json', 'src/parser.c', 'binding.gyp', 'src/**/*.cc', 'src/**/*.h') }}
+
+      - name: Build Parser
+        if: steps.cache-parser.outputs.cache-hit != 'true'
+        run: npm run build
+        shell: bash
+
+      - name: Test Parser with Sample Code
+        run: |
+          # Ensure parser is built
+          npm run build
+
+          cat << 'EOF' > test_sample.shellspec
+          #!/usr/bin/env shellspec
+
+          Describe 'Calculator'
+            Include ./lib/calculator.sh
+
+            Before 'setup_calculator'
+            After 'cleanup_calculator'
+
+            Context 'when adding numbers'
+              It 'adds two positive numbers'
+                When call add 2 3
+                The output should eq 5
+              End
+
+              It 'handles zero'
+                When call add 0 5
+                The output should eq 5
+              End
+            End
+
+            Context 'when input is invalid'
+              Skip if "validation not implemented" ! command -v validate
+
+              It 'handles empty input'
+                When call add "" ""
+                The status should be failure
+              End
+            End
+          End
+
+          It 'works without describe block'
+            When call echo "test"
+            The output should eq "test"
+          End
+          EOF
+
+          npx tree-sitter parse test_sample.shellspec --quiet || {
+            echo "❌ Parser failed on sample ShellSpec code"
+            exit 1
+          }
+          echo "✅ Parser successfully handled sample code"
+        shell: bash
+
+  lint:
+    name: 🧹 Code Quality
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      issues: write
+      pull-requests: write
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+
+      - name: Setup Node.js
+        uses: actions/setup-node@395ad3262231945c25e8478fd5baf05154b1d79f # v6.1.0
+        with:
+          node-version: 24
+
+      - name: Cache Node.js dependencies
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
+        with:
+          path: |
+            ~/.npm
+            ~/.yarn
+            ~/.cache/yarn
+            ~/.pnpm-store
+            ~/.cache/pnpm
+            node_modules/.cache
+          key: ${{ runner.os }}-node-24-${{ hashFiles('**/package-lock.json', '**/yarn.lock', '**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-node-24-
+            ${{ runner.os }}-node-
+
+      - name: Install Dependencies
+        run: npm ci || { echo "❌ npm install failed"; npm install; }
+        shell: bash
+
+      - name: 🧹 Run Linter
+        uses: ivuorinen/actions/pr-lint@7aa206a02a0f9bef6f173a881bcc3ac2aa802917 # v2025.12.10
+
+  coverage:
+    name: 📊 Test Coverage
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    needs: test
+    permissions:
+      actions: read
+      contents: read
+      issues: write
+      pull-requests: write
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+
+      - name: Setup Node.js
+        uses: actions/setup-node@395ad3262231945c25e8478fd5baf05154b1d79f # v6.1.0
+        with:
+          node-version: 24
+
+      - name: Cache Node.js dependencies
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
+        with:
+          path: |
+            ~/.npm
+            ~/.yarn
+            ~/.cache/yarn
+            ~/.pnpm-store
+            ~/.cache/pnpm
+            node_modules/.cache
+          key: ${{ runner.os }}-node-24-${{ hashFiles('**/package-lock.json', '**/yarn.lock', '**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-node-24-
+            ${{ runner.os }}-node-
+
+      - name: Install Dependencies
+        run: npm ci || { echo "❌ npm install failed"; npm install; }
+
+      - name: Test Coverage Analysis
+        id: coverage
+        run: |
+          echo "## Test Coverage Report" > coverage_report.md
+          echo "" >> coverage_report.md
+
+          # Run tests and capture output with exit code
+          set +e  # Don't exit on test failure
+          TEST_OUTPUT=$(npm test 2>&1)
+          TEST_EXIT=$?
+          set -e  # Re-enable exit on error
+
+          TOTAL_TESTS=$(echo "$TEST_OUTPUT" | grep -cE "^\s+[0-9]+\." || echo "0")
+          PASSING_TESTS=$(echo "$TEST_OUTPUT" | grep -cE "^\s+[0-9]+\. ✓" || echo "0")
+          FAILING_TESTS=$(echo "$TEST_OUTPUT" | grep -cE "^\s+[0-9]+\. ✗" || echo "0")
+
+          {
+            echo "- **Total Tests:** $TOTAL_TESTS"
+            echo "- **Passing:** $PASSING_TESTS ✅"
+            echo "- **Failing:** $FAILING_TESTS ❌"
+          } >> coverage_report.md
+
+          if [ "$TOTAL_TESTS" -gt 0 ]; then
+            COVERAGE_PERCENT=$(( (PASSING_TESTS * 100) / TOTAL_TESTS ))
+            echo "- **Coverage:** $COVERAGE_PERCENT%" >> coverage_report.md
+          else
+            COVERAGE_PERCENT=0
+          fi
+
+          {
+            echo ""
+            echo "### Test Files"
+          } >> coverage_report.md
+          echo "$TEST_OUTPUT" | grep -E "^[[:space:]]+[A-Za-z0-9._/\\-]+:" | sed 's/^/- /' >> coverage_report.md
+
+          cat coverage_report.md
+
+          # Set outputs
+          {
+            echo "total-tests=$TOTAL_TESTS"
+            echo "passing-tests=$PASSING_TESTS"
+            echo "coverage-percent=$COVERAGE_PERCENT"
+          } >> "$GITHUB_OUTPUT"
+
+          # Validate test coverage requirements
+          if [ "${TOTAL_TESTS:-0}" -lt 55 ]; then
+            echo "❌ Expected at least 55 tests, found ${TOTAL_TESTS:-0}"
+            exit 1
+          fi
+
+          if [ "${FAILING_TESTS:-0}" -gt 0 ] || [ "$TEST_EXIT" -ne 0 ]; then
+            echo "❌ Found ${FAILING_TESTS:-0} failing tests or test runner failed (exit code: $TEST_EXIT)"
+            exit 1
+          fi
+
+          echo "✅ Test coverage is acceptable: $PASSING_TESTS/$TOTAL_TESTS tests passing ($COVERAGE_PERCENT%)"
+        shell: bash

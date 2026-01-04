@@ -1,15 +1,14 @@
 ---
-# yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
-name: 'CodeQL'
+# yaml-language-server: $schema=https://www.schemastore.org/github-workflow.json
+name: "CodeQL"
 
 on:
   push:
-    branches: ['main']
+    branches: ["main"]
   pull_request:
-    branches: ['main']
+    branches: ["main"]
   schedule:
-    - cron: '30 1 * * 0' # Run at 1:30 AM UTC every Sunday
-  merge_group:
+    - cron: "30 1 * * 0" # Run at 1:30 AM UTC every Sunday
 
 permissions:
   actions: read
@@ -25,7 +24,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        language: ['actions'] # Add languages used in your actions
+        language: ["actions", "javascript"] # Add languages used in your actions
 
     steps:
       - name: Checkout repository
@@ -43,4 +42,4 @@ jobs:
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@5d4e8d1aca955e8d8589aabd499c5cae939e33c7 # v4.31.9
         with:
-          category: '/language:${{matrix.language}}'
+          category: "/language:${{matrix.language}}"

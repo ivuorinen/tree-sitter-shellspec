@@ -1,0 +1,236 @@
+================================================================================
+Describe with Context
+================================================================================
+
+Describe "main feature"
+  Context "when condition A"
+    echo "setup A"
+  End
+End
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_describe_block
+    description: (string
+      (string_content))
+    (shellspec_context_block
+      description: (string
+        (string_content))
+      (command
+        name: (command_name
+          (word))
+        argument: (string
+          (string_content))))))
+
+================================================================================
+Describe with It
+================================================================================
+
+Describe "main feature"
+  It "should work"
+    echo "test"
+  End
+End
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_describe_block
+    description: (string
+      (string_content))
+    (shellspec_it_block
+      description: (string
+        (string_content))
+      (command
+        name: (command_name
+          (word))
+        argument: (string
+          (string_content))))))
+
+================================================================================
+Context with It
+================================================================================
+
+Context "when ready"
+  It "should execute"
+    echo "executing"
+  End
+End
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_context_block
+    description: (string
+      (string_content))
+    (shellspec_it_block
+      description: (string
+        (string_content))
+      (command
+        name: (command_name
+          (word))
+        argument: (string
+          (string_content))))))
+
+================================================================================
+Describe with hooks and tests
+================================================================================
+
+Describe "complete feature"
+  BeforeEach
+    setup_test
+  End
+
+  It "should work correctly"
+    run_test
+  End
+
+  AfterEach
+    cleanup_test
+  End
+End
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_describe_block
+    description: (string
+      (string_content))
+    (shellspec_hook_block
+      (command
+        name: (command_name
+          (word))))
+    (shellspec_it_block
+      description: (string
+        (string_content))
+      (command
+        name: (command_name
+          (word))))
+    (shellspec_hook_block
+      (command
+        name: (command_name
+          (word))))))
+
+================================================================================
+Complex nested structure
+================================================================================
+
+Describe "main functionality"
+  BeforeAll
+    global_setup
+  End
+
+  Context "when user is authenticated"
+    BeforeEach
+      login_user
+    End
+
+    It "should access protected resource"
+      access_resource
+    End
+
+    Context "and has admin privileges"
+      It "should access admin panel"
+        access_admin
+      End
+    End
+
+    AfterEach
+      logout_user
+    End
+  End
+
+  AfterAll
+    global_cleanup
+  End
+End
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_describe_block
+    description: (string
+      (string_content))
+    (shellspec_hook_block
+      (command
+        name: (command_name
+          (word))))
+    (shellspec_context_block
+      description: (string
+        (string_content))
+      (shellspec_hook_block
+        (command
+          name: (command_name
+            (word))))
+      (shellspec_it_block
+        description: (string
+          (string_content))
+        (command
+          name: (command_name
+            (word))))
+      (shellspec_context_block
+        description: (string
+          (string_content))
+        (shellspec_it_block
+          description: (string
+            (string_content))
+          (command
+            name: (command_name
+              (word)))))
+      (shellspec_hook_block
+        (command
+          name: (command_name
+            (word)))))
+    (shellspec_hook_block
+      (command
+        name: (command_name
+          (word))))))
+
+================================================================================
+Mixed with regular bash
+================================================================================
+
+#!/bin/bash
+
+function helper() {
+  echo "helper function"
+}
+
+Describe "using bash functions"
+  It "should call helper"
+    result=$(helper)
+    echo "$result"
+  End
+End
+
+--------------------------------------------------------------------------------
+
+(program
+  (comment)
+  (function_definition
+    name: (word)
+    body: (compound_statement
+      (command
+        name: (command_name
+          (word))
+        argument: (string
+          (string_content)))))
+  (shellspec_describe_block
+    description: (string
+      (string_content))
+    (shellspec_it_block
+      description: (string
+        (string_content))
+      (variable_assignment
+        name: (variable_name)
+        value: (command_substitution
+          (command
+            name: (command_name
+              (word)))))
+      (command
+        name: (command_name
+          (word))
+        argument: (string
+          (simple_expansion
+            (variable_name)))))))
