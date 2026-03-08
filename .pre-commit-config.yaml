@@ -45,12 +45,12 @@ repos:
         args: ["-shellcheck="]
 
   - repo: https://github.com/renovatebot/pre-commit-hooks
-    rev: 43.31.6
+    rev: 43.59.3
     hooks:
       - id: renovate-config-validator
 
   - repo: https://github.com/bridgecrewio/checkov.git
-    rev: '3.2.507'
+    rev: "3.2.508"
     hooks:
       - id: checkov
         args:

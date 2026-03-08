@@ -34,15 +34,15 @@ jobs:
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
       - name: Setup Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@395ad3262231945c25e8478fd5baf05154b1d79f # v6.1.0
+        uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6.3.0
         with:
           node-version: ${{ matrix.node-version }}
 
       - name: Cache Node.js dependencies
-        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
+        uses: actions/cache@cdf6c1fa76f9f475f3d7449005a359c84ca0f306 # v5.0.3
         id: cache-npm
         with:
           path: |
@@ -62,7 +62,7 @@ jobs:
         shell: bash
 
       - name: Cache npx store
-        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
+        uses: actions/cache@cdf6c1fa76f9f475f3d7449005a359c84ca0f306 # v5.0.3
         id: cache-npx
         with:
           path: |
@@ -72,14 +72,14 @@ jobs:
           key: ${{ runner.os }}-npx-${{ hashFiles('package.json') }}
 
       - name: Cache Generated Grammar
-        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
+        uses: actions/cache@cdf6c1fa76f9f475f3d7449005a359c84ca0f306 # v5.0.3
         id: cache-grammar
         with:
           path: |
             src/parser.c
             src/tree_sitter/
             binding.gyp
-          key: ${{ runner.os }}-grammar-${{ hashFiles('grammar.js', 'package.json') }}
+          key: ${{ runner.os }}-grammar-${{ hashFiles('grammar.js', 'package.json', 'src/scanner.c') }}
 
       - name: Generate Grammar
         if: steps.cache-grammar.outputs.cache-hit != 'true'
@@ -87,7 +87,7 @@ jobs:
         shell: bash
 
       - name: Cache Built Parser
-        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
+        uses: actions/cache@cdf6c1fa76f9f475f3d7449005a359c84ca0f306 # v5.0.3
         id: cache-parser
         with:
           path: |
@@ -159,15 +159,15 @@ jobs:
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
       - name: Setup Node.js
-        uses: actions/setup-node@395ad3262231945c25e8478fd5baf05154b1d79f # v6.1.0
+        uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6.3.0
         with:
           node-version: 24
 
       - name: Cache Node.js dependencies
-        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
+        uses: actions/cache@cdf6c1fa76f9f475f3d7449005a359c84ca0f306 # v5.0.3
         with:
           path: |
             ~/.npm
@@ -186,7 +186,7 @@ jobs:
         shell: bash
 
       - name: 🧹 Run Linter
-        uses: ivuorinen/actions/pr-lint@7aa206a02a0f9bef6f173a881bcc3ac2aa802917 # v2025.12.10
+        uses: ivuorinen/actions/pr-lint@242ecca8f01357727f5b2b040154ccdece61720b # v2026.03.07
 
   coverage:
     name: 📊 Test Coverage
@@ -201,15 +201,15 @@ jobs:
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
       - name: Setup Node.js
-        uses: actions/setup-node@395ad3262231945c25e8478fd5baf05154b1d79f # v6.1.0
+        uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6.3.0
         with:
           node-version: 24
 
       - name: Cache Node.js dependencies
-        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
+        uses: actions/cache@cdf6c1fa76f9f475f3d7449005a359c84ca0f306 # v5.0.3
         with:
           path: |
             ~/.npm
