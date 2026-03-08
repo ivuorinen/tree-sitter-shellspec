@@ -2,8 +2,8 @@
 
 # ShellSpec has Before and After hooks.
 # Those hooks are executed for each example (It/Example/Specify).
-# There are no hooks executed for each example group (Describe/Context).
-# In other words, there are no BeforeAll / AfterAll hooks by design.
+# Note: ShellSpec also supports BeforeAll/AfterAll, BeforeCall/AfterCall,
+# and BeforeRun/AfterRun hooks (see the grammar for the full list).
 
 Describe 'before / after hook example'
   Describe '1: before hook'

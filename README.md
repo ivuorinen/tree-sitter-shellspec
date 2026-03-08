@@ -1,6 +1,6 @@
 # tree-sitter-shellspec
 
-[![Test Status](https://img.shields.io/badge/tests-63%2F63%20passing-brightgreen)](https://github.com/ivuorinen/tree-sitter-shellspec)
+[![Test Status](https://img.shields.io/badge/tests-120%2F120%20passing-brightgreen)](https://github.com/ivuorinen/tree-sitter-shellspec)
 [![Grammar Coverage](https://img.shields.io/badge/coverage-100%25-brightgreen)](https://github.com/ivuorinen/tree-sitter-shellspec)
 [![Tree-sitter](https://img.shields.io/badge/tree--sitter-grammar-blue)](https://tree-sitter.github.io/)
 
@@ -16,10 +16,10 @@ It enables syntax highlighting, code navigation, and tooling integration for She
 
 ### Features
 
-- **Complete ShellSpec syntax support** - All block types, hooks, and utility constructs
+- **Complete ShellSpec syntax support** - All block types, hooks, When/The/Assert DSL, Mock blocks, and % directives
 - **Real-world compatibility** - Tested against official ShellSpec examples
 - **Bash integration** - Seamlessly handles mixed ShellSpec/bash code
-- **Production ready** - 100% test coverage with 63 comprehensive test cases
+- **Production ready** - 100% test coverage with 120 comprehensive test cases
 - **Editor support** - Works with any Tree-sitter compatible editor
 
 ## Installation
@@ -149,6 +149,58 @@ Skip if "platform not supported" [ "$PLATFORM" != "linux" ]
 Skip if "command not available" ! command -v docker
 ```
 
+### When/The/Assert (Core Assertion DSL)
+
+```shellspec
+It 'should calculate correctly'
+  When call add 2 3
+  The output should eq 5
+End
+
+It 'should handle errors'
+  When run command invalid_cmd
+  The status should be failure
+  The stderr should not eq ""
+End
+
+Assert check_result
+```
+
+### Mock Blocks
+
+```shellspec
+Mock curl
+  echo '{"status": "ok"}'
+End
+```
+
+### % Directives
+
+```shellspec
+%const API_URL: "https://api.example.com"
+
+%text
+#|line one
+#|line two
+
+%text | tr 'a-z' 'A-Z'
+#|hello world
+
+%puts "output without newline"
+%putsn "output with newline"
+%preserve RESULT
+%logger "debug info"
+```
+
+### Additional Statements
+
+```shellspec
+Path helper=./lib/helper.sh
+Set 'errexit:on'
+Dump
+Intercept my_func
+```
+
 ## Usage Examples
 
 ### Basic Test Structure
@@ -241,7 +293,7 @@ npm install
 # Generate parser from grammar
 npm run generate
 
-# Run test suite (63 comprehensive tests)
+# Run test suite
 npm test
 
 # Build the parser
@@ -276,21 +328,52 @@ The grammar includes comprehensive test coverage:
 npm test
 
 # Test specific patterns
-tree-sitter test --filter "describe_blocks"
-tree-sitter test --filter "real_world_patterns"
+tree-sitter test -i "describe_blocks"
+tree-sitter test -i "real_world_patterns"
 ```
 
 ### Grammar Structure
 
-The grammar extends tree-sitter-bash with these main rules:
+The grammar extends tree-sitter-bash with 27 rules organized as follows:
+
+**Block rules:**
 
 - `shellspec_describe_block` - Describe/fDescribe/xDescribe blocks
 - `shellspec_context_block` - Context/ExampleGroup blocks
 - `shellspec_it_block` - It/Example/Specify blocks
 - `shellspec_hook_block` - BeforeEach/AfterEach/etc. blocks
-- `shellspec_utility_block` - Data/Parameters/Skip/Pending/Todo blocks
+- `shellspec_utility_block` - Parameters blocks
+- `shellspec_data_block` - Data blocks with content types
+- `shellspec_mock_block` - Mock command blocks
+
+**Statement rules:**
+
+- `shellspec_when_statement` - When call/run statements
+- `shellspec_the_statement` - The subject should matcher assertions
+- `shellspec_assert_statement` - Assert function assertions
 - `shellspec_hook_statement` - Before/After statements
 - `shellspec_directive_statement` - Include and conditional Skip
+- `shellspec_path_statement` - Path alias declarations
+- `shellspec_set_statement` - Set option directives
+- `shellspec_dump_statement` - Dump debugging output
+- `shellspec_intercept_statement` - Intercept function calls
+- `shellspec_todo_statement` - Todo markers
+- `shellspec_pending_statement` - Pending markers
+- `shellspec_skip_statement` - Skip markers
+
+**Directive rules:**
+
+- `shellspec_text_directive` - %text heredoc-style blocks
+- `shellspec_const_directive` - %const variable declarations
+- `shellspec_output_directive` - %puts/%putsn/%-/%= output directives
+- `shellspec_preserve_directive` - %preserve variable preservation
+- `shellspec_logger_directive` - %logger debug output
+
+**Helper rules:**
+
+- `shellspec_subject` - Subject expressions in The statements
+- `shellspec_matcher` - Matcher expressions in The statements
+- `shellspec_data_line_content` - Content lines in Data blocks
 
 ## Editor Integration
 
@@ -325,11 +408,11 @@ Contributions are welcome! Please see our [contributing guidelines](CONTRIBUTING
 
 ### Areas for Contribution
 
-- **Enhanced Data block support** - Advanced syntax (`:raw`, `:expand`, `|` filters)
-- **Assertion parsing** - When/The statement structures
-- **Performance optimization** - Reduce parser conflicts
-- **Editor plugins** - Syntax highlighting themes
-- **Documentation** - Usage examples and tutorials
+- **Tagging support** - `Describe "name" tag:value` syntax
+- **Additional % directives** - `%data`, `%printf`, `%sleep` and other utility directives
+- **Advanced subject/matcher semantics** - Ordinal references, compound modifiers in The statements
+- **Editor plugins** - Syntax highlighting themes for various editors
+- **Performance optimization** - Reduce parse time for large spec files
 
 ### Reporting Issues
 

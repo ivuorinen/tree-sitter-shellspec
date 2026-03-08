@@ -1,4 +1,6 @@
 # shellcheck shell=sh
+# Sample ShellSpec file for manual parser testing (not executed by `npm test`).
+# Some examples intentionally demonstrate failing assertions.
 
 Describe 'expectation example'
   It 'is succeeds because expectation is successful'
