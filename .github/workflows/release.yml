@@ -259,7 +259,7 @@ jobs:
 
       - name: 📦 Publish to npm
         run: |
-          if [[ "${{ needs.validate.outputs.version }}" == *"-"* ]]; then
+          if [[ "$VERSION" == *"-"* ]]; then
             PUBLISH_TAG="next"
           else
             PUBLISH_TAG="latest"
@@ -268,6 +268,7 @@ jobs:
           npm publish --access public --tag "$PUBLISH_TAG"
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          VERSION: ${{ needs.validate.outputs.version }}
 
       - name: 📊 Release Summary
         run: |
