@@ -92,7 +92,10 @@ jobs:
         with:
           path: |
             build/
-          key: ${{ runner.os }}-parser-${{ matrix.node-version }}-${{ hashFiles('package-lock.json', 'src/parser.c', 'binding.gyp', 'src/**/*.cc', 'src/**/*.h') }}
+          key: >-
+            ${{ runner.os }}-parser-${{ matrix.node-version }}-${{
+            hashFiles('package-lock.json', 'src/parser.c', 'binding.gyp',
+            'src/**/*.cc', 'src/**/*.h') }}
 
       - name: Build Parser
         if: steps.cache-parser.outputs.cache-hit != 'true'
