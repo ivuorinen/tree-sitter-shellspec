@@ -64,21 +64,25 @@ check-ci:
   name: ✅ Verify CI Status
   steps:
     - name: 📋 Check CI Workflow Status
-      uses: actions/github-script@e1ec48de9e3eaf9b93b1c5f88eaf97ae19d7b7bb
+      uses: actions/github-script@v8
       with:
         script: |
-          const { data: workflows } = await github.rest.actions.listWorkflowRuns({
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            workflow_id: 'test.yml',
-            head_sha: context.sha,
-            status: 'completed'
+          const wfList = await github.rest.actions.listRepoWorkflows({
+            owner: context.repo.owner, repo: context.repo.repo,
           });
-
-          const latestRun = workflows.workflow_runs[0];
-          if (!latestRun || latestRun.conclusion !== 'success') {
-            core.setFailed('CI workflow has not passed for this commit');
-          }
+          const wf =
+            wfList.data.workflows.find(w => w.path.endsWith('/test.yml')) ||
+            wfList.data.workflows.find(w => (w.name || '').toLowerCase() === 'ci');
+          if (!wf) core.setFailed('CI workflow not found');
+          const { data } = await github.rest.actions.listWorkflowRuns({
+            owner: context.repo.owner, repo: context.repo.repo,
+            workflow_id: wf.id, head_sha: context.sha,
+            status: 'completed', per_page: 1,
+          });
+          const latestRun = data.workflow_runs?.[0];
+          if (!latestRun) core.setFailed('No completed CI runs found');
+          if (latestRun.conclusion !== 'success')
+            core.setFailed(`CI conclusion: ${latestRun.conclusion}`);
 ```
 
 ### 4. Reduced Trigger Scope
@@ -133,7 +137,7 @@ check-ci:
 
 ### 1. CI Workflow (`test.yml`)
 
-- **Triggers**: push, pull_request, merge_group
+- **Triggers**: push, pull_request (to main/master)
 - **Jobs**: test (Node 22,24), lint, coverage
 - **Purpose**: Primary quality gate for all code changes
 

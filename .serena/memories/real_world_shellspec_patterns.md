@@ -100,10 +100,10 @@ End
 
 🔄 **Future Enhancements Needed**:
 
-- Data block modifiers (:raw, :expand)
-- Data block filters (| syntax)
-- Data block #| line syntax
+- Data block pipe filters (`Data | filter` syntax)
 - More sophisticated conditional parsing for Skip
+
+Note: Data block modifiers (`:raw`, `:expand`) and `#|` line syntax ARE implemented in grammar.js (lines 162-164, 173).
 
 ## Real-World Usage Patterns Observed
 

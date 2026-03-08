@@ -20,34 +20,41 @@ package.json excerpts:
 
 ```json
 "dependencies": {
-  "tree-sitter-bash": "^0.25.0"
+  "tree-sitter-bash": "^0.25.1"
 }
 ```
 
 ```json
 "devDependencies": {
-  "markdownlint-cli": "^0.42.0",
+  "editorconfig-checker": "^6.1.1",
+  "markdownlint-cli": "^0.47.0",
   "nodemon": "^3.0.1",
-  "tree-sitter-cli": "^0.24.2"
+  "prettier": "^3.6.2",
+  "tree-sitter-cli": "^0.25.10"
 }
 ```
 
-### NPM Scripts (Verified - 13 total)
+### NPM Scripts (Verified - 17 total)
 
 package.json excerpt:
 
 ```json
 "scripts": {
-  "generate": "tree-sitter generate",
+  "generate": "tree-sitter generate && ./scripts/post-generate.sh",
+  "generate:only": "tree-sitter generate",
   "test": "tree-sitter test",
   "parse": "tree-sitter parse",
   "web": "tree-sitter web-ui",
-  "build": "npm run generate",
+  "build": "tree-sitter build",
   "dev": "npm run generate && npm run test",
   "dev:watch": "nodemon --watch grammar.js --watch test/ --ext js,txt --exec 'npm run dev'",
   "lint": "npx mega-linter-runner",
-  "lint:yaml": "yamllint .",
-  "lint:markdown": "markdownlint . --config .markdownlint.json --ignore node_modules --fix",
+  "lint:markdown": "markdownlint . --config .markdownlint.json --ignore node_modules",
+  "lint:markdown:fix": "markdownlint . --config .markdownlint.json --ignore node_modules --fix",
+  "lint:editorconfig": "editorconfig-checker",
+  "lint:editorconfig:fix": "editorconfig-checker -fix",
+  "format": "prettier --write .",
+  "format:check": "prettier --check .",
   "precommit": "pre-commit run --all-files",
   "clean": "rm -rf src/parser.c src/grammar.json src/node-types.json",
   "rebuild": "npm run clean && npm run generate"
@@ -56,7 +63,7 @@ package.json excerpt:
 
 ## Test Suite Status (VERIFIED)
 
-### Current Test Count: 61/61 PASSING ✅
+### Current Test Count: 63/63 PASSING ✅
 
 Verified by actual test execution - all tests pass successfully.
 
@@ -81,8 +88,8 @@ test/corpus/
 - **it_blocks**: 10 tests
 - **nested_structures**: 6 tests
 - **real_world_patterns**: 6 tests
-- **utility_blocks**: 13 tests
-- **Total**: 61 tests (100% pass rate)
+- **utility_blocks**: 15 tests
+- **Total**: 63 tests (100% pass rate)
 
 ## Grammar Implementation Status
 
@@ -213,7 +220,7 @@ src/
 
 ### ✅ Quality Metrics
 
-- **Test Coverage**: 61/61 tests passing (100%)
+- **Test Coverage**: 63/63 tests passing (100%)
 - **Grammar Generation**: Clean (zero warnings)
 - **Code Quality**: All linters passing
 - **CI/CD**: Fully automated and optimized
@@ -248,7 +255,7 @@ src/
 
 ### Future Enhancement Opportunities (Optional)
 
-- Advanced Data block syntax (`:raw`, `:expand` modifiers, `|` filters)
+- Data block pipe filters (`Data | filter` syntax)
 - ShellSpec assertion parsing (When/The statements)
 - Additional editor-specific plugins
 
@@ -256,8 +263,8 @@ src/
 
 The tree-sitter-shellspec project is a **professionally developed, production-ready**
 grammar that successfully parses all documented ShellSpec constructs.
-With 61/61 tests passing, zero grammar warnings, optimized CI/CD workflows,
-and comprehensive tooling, it represents a high-quality open source project
+With 63/63 tests passing, zero grammar warnings, optimized CI/CD workflows,
+and comprehensive tooling, it represents a high-quality open-source project
 ready for immediate use in development workflows and editor integrations.
 
 **Last Verified**: September 12, 2025
