@@ -21,7 +21,13 @@ SHOW_SKIPPED_LINTERS: false # Show skipped linters in MegaLinter log
 DISABLE_LINTERS:
   - REPOSITORY_DEVSKIM
   - C_CLANG_FORMAT # Generated code may not follow all style rules
-  - JSON_PRETTIER # Disabled for causing probelms
+  - C_CPPCHECK # Generated src/ files (false positives)
+  - C_CPPLINT # Generated src/ files (false positives)
+  - CPP_CPPCHECK # Generated src/ files (false positives)
+  - CPP_CPPLINT # Generated src/ files (false positives)
+  - BASH_SHFMT # Doesn't understand ShellSpec DSL syntax
+  - BASH_BASH_EXEC # Test spec files are sourced by ShellSpec, not executed directly
+  - JSON_PRETTIER # Disabled for causing problems
   - SPELL_LYCHEE # Disabled due to too many false positives
   - SPELL_CSPELL # Disabled due to too many false positives
   - REPOSITORY_TRUFFLEHOG # Disabled due to being far too slow
@@ -30,6 +36,9 @@ DISABLE_LINTERS:
 YAML_YAMLLINT_CONFIG_FILE: .yamllint.yml
 MARKDOWN_MARKDOWNLINT_CONFIG_FILE: .markdownlint.json
 
-# Exclude some paths from all linters as they are generated
+# v8r workaround: tree-sitter.json schema returns 404
+JSON_V8R_FILTER_REGEX_EXCLUDE: "tree-sitter\\.json"
+
+# Exclude some paths from all linters as they are generated or LLM-managed
 FILTER_REGEX_EXCLUDE: >
-  (node_modules|test/spec|src|megalinter-reports)
+  (node_modules|test/spec|src/|megalinter-reports|\.serena|\.claude)
