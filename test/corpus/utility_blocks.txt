@@ -95,124 +95,79 @@ End
           (string_content))))))
 
 ================================================================================
-Skip block
-================================================================================
-
-Skip
-  echo "this is skipped"
-End
-
---------------------------------------------------------------------------------
-
-(program
-  (shellspec_utility_block
-    label: (word)
-    (command
-      name: (command_name
-        (string
-          (string_content))))))
-
-================================================================================
 Skip with reason
 ================================================================================
 
+Skip 'skipped for now'
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_skip_statement
+    reason: (raw_string)))
+
+================================================================================
+Skip with double-quoted reason
+================================================================================
+
 Skip "not implemented yet"
-  echo "this test"
-End
 
 --------------------------------------------------------------------------------
 
 (program
-  (shellspec_utility_block
-    (command
-      name: (command_name
-        (string
-          (string_content))))
-    (command
-      name: (command_name
-        (word))
-      argument: (string
-        (string_content)))))
-
-================================================================================
-Pending block
-================================================================================
-
-Pending
-  echo "pending implementation"
-End
-
---------------------------------------------------------------------------------
-
-(program
-  (shellspec_utility_block
-    label: (word)
-    (command
-      name: (command_name
-        (string
-          (string_content))))))
+  (shellspec_skip_statement
+    reason: (string
+      (string_content))))
 
 ================================================================================
 Pending with reason
 ================================================================================
 
+Pending 'work in progress'
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_pending_statement
+    reason: (raw_string)))
+
+================================================================================
+Pending with double-quoted reason
+================================================================================
+
 Pending "waiting for fix"
-  echo "test"
-End
 
 --------------------------------------------------------------------------------
 
 (program
-  (shellspec_utility_block
-    (command
-      name: (command_name
-        (string
-          (string_content))))
-    (command
-      name: (command_name
-        (word))
-      argument: (string
-        (string_content)))))
+  (shellspec_pending_statement
+    reason: (string
+      (string_content))))
 
 ================================================================================
-Todo block
-================================================================================
-
-Todo
-  echo "todo item"
-End
-
---------------------------------------------------------------------------------
-
-(program
-  (shellspec_utility_block
-    label: (word)
-    (command
-      name: (command_name
-        (string
-          (string_content))))))
-
-================================================================================
-Todo with description
+Todo standalone
 ================================================================================
 
 Todo "implement feature X"
-  echo "feature X"
-End
 
 --------------------------------------------------------------------------------
 
 (program
-  (shellspec_utility_block
-    (command
-      name: (command_name
-        (string
-          (string_content))))
-    (command
-      name: (command_name
-        (word))
-      argument: (string
-        (string_content)))))
+  (shellspec_todo_statement
+    description: (string
+      (string_content))))
+
+================================================================================
+Todo with raw string
+================================================================================
+
+Todo 'implement feature X'
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_todo_statement
+    description: (raw_string)))
 
 ================================================================================
 Empty utility block
@@ -297,3 +252,72 @@ End
           (string_content)
           (simple_expansion
             (variable_name)))))))
+
+================================================================================
+Data block with pipe filter
+================================================================================
+
+Data | tr 'abc' 'ABC'
+#|aaa
+#|bbb
+End
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_data_block
+    filter: (word)
+    filter: (raw_string)
+    filter: (raw_string)
+    data_line: (shellspec_data_line_content)
+    data_line: (shellspec_data_line_content)))
+
+================================================================================
+Data block with pipe filter and modifier
+================================================================================
+
+Data:expand | tr 'a' 'A'
+#|hello
+End
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_data_block
+    filter: (word)
+    filter: (raw_string)
+    filter: (raw_string)
+    data_line: (shellspec_data_line_content)))
+
+================================================================================
+Data function argument with pipe filter
+================================================================================
+
+Data foo a b c | tr 'abc' 'ABC'
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_data_block
+    argument: (word)
+    extra_argument: (word)
+    extra_argument: (word)
+    extra_argument: (word)
+    filter: (word)
+    filter: (raw_string)
+    filter: (raw_string)))
+
+================================================================================
+Data string argument with pipe filter
+================================================================================
+
+Data 'abc' | tr 'abc' 'ABC'
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_data_block
+    argument: (raw_string)
+    filter: (word)
+    filter: (raw_string)
+    filter: (raw_string)))

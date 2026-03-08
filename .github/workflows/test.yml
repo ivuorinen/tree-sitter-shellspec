@@ -271,8 +271,8 @@ jobs:
           } >> "$GITHUB_OUTPUT"
 
           # Validate test coverage requirements
-          if [ "${TOTAL_TESTS:-0}" -lt 55 ]; then
-            echo "❌ Expected at least 55 tests, found ${TOTAL_TESTS:-0}"
+          if [ "${TOTAL_TESTS:-0}" -lt 115 ]; then
+            echo "❌ Expected at least 115 tests, found ${TOTAL_TESTS:-0}"
             exit 1
           fi
 

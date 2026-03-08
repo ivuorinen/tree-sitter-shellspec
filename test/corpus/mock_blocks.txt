@@ -1,0 +1,76 @@
+================================================================================
+Mock simple command
+================================================================================
+
+Mock curl
+  echo "mocked response"
+End
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_mock_block
+    name: (word)
+    (command
+      name: (command_name
+        (word))
+      argument: (string
+        (string_content)))))
+
+================================================================================
+Mock command with string name
+================================================================================
+
+Mock "git"
+  echo "mock git"
+End
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_mock_block
+    name: (string
+      (string_content))
+    (command
+      name: (command_name
+        (word))
+      argument: (string
+        (string_content)))))
+
+================================================================================
+Mock empty command
+================================================================================
+
+Mock curl
+End
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_mock_block
+    name: (word)))
+
+================================================================================
+Mock with multiple statements
+================================================================================
+
+Mock curl
+  echo "status: 200"
+  echo "body: ok"
+End
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_mock_block
+    name: (word)
+    (command
+      name: (command_name
+        (word))
+      argument: (string
+        (string_content)))
+    (command
+      name: (command_name
+        (word))
+      argument: (string
+        (string_content)))))

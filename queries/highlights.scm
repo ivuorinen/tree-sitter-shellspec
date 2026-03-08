@@ -45,18 +45,61 @@
   "AfterCall"
 ] @keyword.control.hook
 
+; When/The/Assert keywords (core assertion DSL)
+[
+  "When"
+  "The"
+  "Assert"
+] @keyword
+
+; When evaluation type keywords
+[
+  "call"
+  "run"
+  "command"
+  "script"
+  "source"
+] @keyword.operator
+
+; The statement keywords
+[
+  "should"
+  "not"
+] @keyword.control
+
+; Mock block keyword
+[
+  "Mock"
+] @keyword.function
+
 ; Utility blocks
 [
   "Data"
+  "Data:raw"
+  "Data:expand"
   "Parameters"
+  "Parameters:block"
+  "Parameters:value"
+  "Parameters:matrix"
+  "Parameters:dynamic"
 ] @keyword.function.data
 
-; Skip/Pending/Todo blocks
+; Skip/Pending/Todo keywords
 [
   "Skip"
   "Pending"
   "Todo"
 ] @keyword.function.pending
+
+; Statement keywords (Path/File/Dir, Set, Dump, Intercept)
+[
+  "Path"
+  "File"
+  "Dir"
+  "Set"
+  "Dump"
+  "Intercept"
+] @keyword
 
 ; Block terminator
 [
@@ -66,6 +109,21 @@
 ; Directives
 [
   "Include"
+] @keyword.directive
+
+; % directives (text, const, output, preserve, logger)
+[
+  "%text"
+  "%text:raw"
+  "%text:expand"
+  "%const"
+  "%"
+  "%puts"
+  "%putsn"
+  "%-"
+  "%="
+  "%preserve"
+  "%logger"
 ] @keyword.directive
 
 ; Comments (inherit from bash)

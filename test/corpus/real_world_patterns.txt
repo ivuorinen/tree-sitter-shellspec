@@ -58,20 +58,17 @@ Skip if 'function returns "skip"' [ "$(conditions)" = "skip" ]
 --------------------------------------------------------------------------------
 
 (program
-  (ERROR
-    (command
-      name: (command_name
-        (raw_string))
-      argument: (word)
-      argument: (string
-        (command_substitution
-          (command
-            name: (command_name
-              (word)))))
-      argument: (word)
-      argument: (string
-        (string_content))
-      argument: (word))))
+  (shellspec_directive_statement
+    reason: (raw_string)
+    condition: (test_command
+      (binary_expression
+        left: (string
+          (command_substitution
+            (command
+              name: (command_name
+                (word)))))
+        right: (string
+          (string_content))))))
 
 ================================================================================
 Top-level It without Describe
@@ -87,16 +84,12 @@ End
 (program
   (shellspec_it_block
     description: (raw_string)
-    (command
-      name: (command_name
-        (word))
-      argument: (word)
-      argument: (word)
+    (shellspec_when_statement
+      function: (word)
       argument: (raw_string))
-    (command
-      name: (command_name
+    (shellspec_the_statement
+      subject: (shellspec_subject
         (word))
-      argument: (word)
-      argument: (word)
-      argument: (word)
-      argument: (raw_string))))
+      matcher: (shellspec_matcher
+        (word)
+        (raw_string)))))
