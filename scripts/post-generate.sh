@@ -1,4 +1,10 @@
 #!/usr/bin/env bash
+# post-generate.sh — Patches generated tree-sitter files after `tree-sitter generate`.
+#
+# The tree-sitter CLI generates src/tree_sitter/parser.h without a bounds check
+# in the `set_contains` function, which can read past an empty array. Until this
+# is fixed upstream, this script injects an early `len == 0` guard after every
+# generation pass. The "generate" npm script calls this automatically.
 set -e
 
 echo "Running post-generation fixes..."

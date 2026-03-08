@@ -44,4 +44,5 @@ yarn-error.log*
 .idea/
 .vscode/
 .fleet/
-CLAUDE.md
+shellspec.so
+.claude/settings.local.json

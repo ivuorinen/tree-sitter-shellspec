@@ -18,19 +18,18 @@
     "scripts"
   ],
   "scripts": {
-    "generate": "tree-sitter generate && ./scripts/post-generate.sh",
-    "generate:only": "tree-sitter generate",
-    "test": "tree-sitter test",
-    "parse": "tree-sitter parse",
-    "web": "tree-sitter web-ui",
-    "build": "npm run generate",
+    "generate": "npx tree-sitter generate && ./scripts/post-generate.sh",
+    "generate:only": "npx tree-sitter generate",
+    "test": "npx tree-sitter test",
+    "parse": "npx tree-sitter parse",
+    "web": "npx tree-sitter web-ui",
+    "build": "npx tree-sitter build .",
     "dev": "npm run generate && npm run test",
     "dev:watch": "nodemon --watch grammar.js --watch test/ --ext js,txt --exec 'npm run dev'",
     "lint": "npx mega-linter-runner",
     "lint:markdown": "markdownlint . --config .markdownlint.json --ignore node_modules",
     "lint:markdown:fix": "markdownlint . --config .markdownlint.json --ignore node_modules --fix",
     "lint:editorconfig": "editorconfig-checker",
-    "lint:editorconfig:fix": "editorconfig-checker -fix",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "precommit": "pre-commit run --all-files",
@@ -53,9 +52,9 @@
   },
   "devDependencies": {
     "editorconfig-checker": "^6.1.1",
-    "markdownlint-cli": "^0.47.0",
+    "markdownlint-cli": "^0.48.0",
     "nodemon": "^3.0.1",
     "prettier": "^3.6.2",
-    "tree-sitter-cli": "^0.25.10"
+    "tree-sitter-cli": "^0.26.6"
   }
 }
