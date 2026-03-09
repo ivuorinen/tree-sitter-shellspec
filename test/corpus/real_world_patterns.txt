@@ -1,0 +1,95 @@
+================================================================================
+Before hook statements
+================================================================================
+
+Before 'setup'
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_hook_statement
+    argument: (raw_string)))
+
+================================================================================
+After hook with multiple arguments
+================================================================================
+
+Before 'setup1' 'setup2'
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_hook_statement
+    argument: (raw_string)
+    argument: (raw_string)))
+
+================================================================================
+Include directive
+================================================================================
+
+Include ./lib.sh
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_directive_statement
+    path: (word)))
+
+================================================================================
+Skip with conditional
+================================================================================
+
+Skip if "function returns success" conditions
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_directive_statement
+    reason: (string
+      (string_content))
+    condition: (word)))
+
+================================================================================
+Skip with complex conditional
+================================================================================
+
+Skip if 'function returns "skip"' [ "$(conditions)" = "skip" ]
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_directive_statement
+    reason: (raw_string)
+    condition: (test_command
+      (binary_expression
+        left: (string
+          (command_substitution
+            (command
+              name: (command_name
+                (word)))))
+        right: (string
+          (string_content))))))
+
+================================================================================
+Top-level It without Describe
+================================================================================
+
+It 'is simple'
+  When call echo 'ok'
+  The output should eq 'ok'
+End
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_it_block
+    description: (raw_string)
+    (shellspec_when_statement
+      function: (word)
+      argument: (raw_string))
+    (shellspec_the_statement
+      subject: (shellspec_subject
+        (word))
+      matcher: (shellspec_matcher
+        (word)
+        (raw_string)))))

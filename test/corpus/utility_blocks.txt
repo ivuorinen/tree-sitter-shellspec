@@ -1,0 +1,323 @@
+================================================================================
+Data block
+================================================================================
+
+Data
+  item1
+  item2
+  item3
+End
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_data_block
+    statements: (command
+      name: (command_name
+        (word)))
+    statements: (command
+      name: (command_name
+        (word)))
+    statements: (command
+      name: (command_name
+        (word)))))
+
+================================================================================
+Data block with label
+================================================================================
+
+Data "test data"
+  "value 1"
+  "value 2"
+End
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_data_block
+    statements: (command
+      name: (command_name
+        (string
+          (string_content))))
+    statements: (command
+      name: (command_name
+        (string
+          (string_content))))
+    statements: (command
+      name: (command_name
+        (string
+          (string_content))))))
+
+================================================================================
+Parameters block
+================================================================================
+
+Parameters
+  param1
+  param2
+End
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_utility_block
+    (command
+      name: (command_name
+        (word)))
+    (command
+      name: (command_name
+        (word)))))
+
+================================================================================
+Parameters with label
+================================================================================
+
+Parameters "test parameters"
+  "first param"
+  "second param"
+End
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_utility_block
+    (command
+      name: (command_name
+        (string
+          (string_content))))
+    (command
+      name: (command_name
+        (string
+          (string_content))))
+    (command
+      name: (command_name
+        (string
+          (string_content))))))
+
+================================================================================
+Skip with reason
+================================================================================
+
+Skip 'skipped for now'
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_skip_statement
+    reason: (raw_string)))
+
+================================================================================
+Skip with double-quoted reason
+================================================================================
+
+Skip "not implemented yet"
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_skip_statement
+    reason: (string
+      (string_content))))
+
+================================================================================
+Pending with reason
+================================================================================
+
+Pending 'work in progress'
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_pending_statement
+    reason: (raw_string)))
+
+================================================================================
+Pending with double-quoted reason
+================================================================================
+
+Pending "waiting for fix"
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_pending_statement
+    reason: (string
+      (string_content))))
+
+================================================================================
+Todo standalone
+================================================================================
+
+Todo "implement feature X"
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_todo_statement
+    description: (string
+      (string_content))))
+
+================================================================================
+Todo with raw string
+================================================================================
+
+Todo 'implement feature X'
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_todo_statement
+    description: (raw_string)))
+
+================================================================================
+Empty utility block
+================================================================================
+
+Data "empty data"
+End
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_data_block
+    statements: (command
+      name: (command_name
+        (string
+          (string_content))))))
+
+
+
+================================================================================
+Data string argument style
+================================================================================
+
+Data "inline data"
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_data_block
+    argument: (string
+      (string_content))))
+
+================================================================================
+Data function argument style
+================================================================================
+
+Data get_test_data
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_data_block
+    argument: (word)))
+
+================================================================================
+Data block with :raw modifier
+================================================================================
+
+Data :raw
+  'raw data here'
+End
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_data_block
+    statements: (command
+      name: (command_name
+        (word)))
+    statements: (command
+      name: (command_name
+        (raw_string)))))
+
+================================================================================
+Data block with :expand modifier
+================================================================================
+
+Data :expand
+  "expanded $variable"
+End
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_data_block
+    statements: (command
+      name: (command_name
+        (word)))
+    statements: (command
+      name: (command_name
+        (string
+          (string_content)
+          (simple_expansion
+            (variable_name)))))))
+
+================================================================================
+Data block with pipe filter
+================================================================================
+
+Data | tr 'abc' 'ABC'
+#|aaa
+#|bbb
+End
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_data_block
+    filter: (word)
+    filter: (raw_string)
+    filter: (raw_string)
+    data_line: (shellspec_data_line_content)
+    data_line: (shellspec_data_line_content)))
+
+================================================================================
+Data block with pipe filter and modifier
+================================================================================
+
+Data:expand | tr 'a' 'A'
+#|hello
+End
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_data_block
+    filter: (word)
+    filter: (raw_string)
+    filter: (raw_string)
+    data_line: (shellspec_data_line_content)))
+
+================================================================================
+Data function argument with pipe filter
+================================================================================
+
+Data foo a b c | tr 'abc' 'ABC'
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_data_block
+    argument: (word)
+    extra_argument: (word)
+    extra_argument: (word)
+    extra_argument: (word)
+    filter: (word)
+    filter: (raw_string)
+    filter: (raw_string)))
+
+================================================================================
+Data string argument with pipe filter
+================================================================================
+
+Data 'abc' | tr 'abc' 'ABC'
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_data_block
+    argument: (raw_string)
+    filter: (word)
+    filter: (raw_string)
+    filter: (raw_string)))

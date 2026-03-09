@@ -1,0 +1,95 @@
+================================================================================
+Inline Pending with reason
+================================================================================
+
+Pending 'not yet implemented'
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_pending_statement
+    reason: (raw_string)))
+
+================================================================================
+Inline Pending with double-quoted reason
+================================================================================
+
+Pending "not yet implemented"
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_pending_statement
+    reason: (string
+      (string_content))))
+
+================================================================================
+Inline Pending inside It block
+================================================================================
+
+It 'should do something'
+  Pending 'not yet implemented'
+  When call my_func
+  The output should equal "hello"
+End
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_it_block
+    description: (raw_string)
+    (shellspec_pending_statement
+      reason: (raw_string))
+    (shellspec_when_statement
+      function: (word))
+    (shellspec_the_statement
+      subject: (shellspec_subject
+        (word))
+      matcher: (shellspec_matcher
+        (word)
+        (string
+          (string_content))))))
+
+================================================================================
+Inline Skip with reason
+================================================================================
+
+Skip 'not supported on this platform'
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_skip_statement
+    reason: (raw_string)))
+
+================================================================================
+Inline Skip with double-quoted reason
+================================================================================
+
+Skip "not supported"
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_skip_statement
+    reason: (string
+      (string_content))))
+
+================================================================================
+Inline Skip inside It block
+================================================================================
+
+It 'should do something'
+  Skip 'not supported'
+  When call my_func
+End
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_it_block
+    description: (raw_string)
+    (shellspec_skip_statement
+      reason: (raw_string))
+    (shellspec_when_statement
+      function: (word))))

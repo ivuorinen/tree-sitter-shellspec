@@ -1,0 +1,110 @@
+================================================================================
+Parameters:block variant
+================================================================================
+
+Parameters:block
+  "arg1" "arg2"
+  "arg3" "arg4"
+End
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_utility_block
+    label: (string
+      (string_content))
+    (command
+      name: (command_name
+        (string
+          (string_content))))
+    (command
+      name: (command_name
+        (string
+          (string_content)))
+      argument: (string
+        (string_content)))))
+
+================================================================================
+Parameters:value variant
+================================================================================
+
+Parameters:value
+  val1
+  val2
+End
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_utility_block
+    (command
+      name: (command_name
+        (word)))
+    (command
+      name: (command_name
+        (word)))))
+
+================================================================================
+Parameters:matrix variant
+================================================================================
+
+Parameters:matrix
+  "a" "b"
+  "c" "d"
+End
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_utility_block
+    label: (string
+      (string_content))
+    (command
+      name: (command_name
+        (string
+          (string_content))))
+    (command
+      name: (command_name
+        (string
+          (string_content)))
+      argument: (string
+        (string_content)))))
+
+================================================================================
+Parameters:dynamic variant
+================================================================================
+
+Parameters:dynamic
+  generate_params
+End
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_utility_block
+    (command
+      name: (command_name
+        (word)))))
+
+================================================================================
+Parameters:block with label
+================================================================================
+
+Parameters:block "test cases"
+  "case1" "expected1"
+End
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_utility_block
+    (command
+      name: (command_name
+        (string
+          (string_content))))
+    (command
+      name: (command_name
+        (string
+          (string_content)))
+      argument: (string
+        (string_content)))))

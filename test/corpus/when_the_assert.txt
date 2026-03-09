@@ -1,0 +1,250 @@
+================================================================================
+When call simple function
+================================================================================
+
+When call my_func
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_when_statement
+    function: (word)))
+
+================================================================================
+When call function with arguments
+================================================================================
+
+When call add 2 3
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_when_statement
+    function: (word)
+    argument: (word)
+    argument: (word)))
+
+================================================================================
+When call function with string argument
+================================================================================
+
+When call my_func "hello world"
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_when_statement
+    function: (word)
+    argument: (string
+      (string_content))))
+
+================================================================================
+When run simple
+================================================================================
+
+When run my_func
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_when_statement
+    function: (word)))
+
+================================================================================
+When run command
+================================================================================
+
+When run command expr 1 + 2
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_when_statement
+    function: (word)
+    argument: (word)
+    argument: (word)
+    argument: (word)))
+
+================================================================================
+When run script
+================================================================================
+
+When run script ./test.sh
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_when_statement
+    function: (word)))
+
+================================================================================
+When run source
+================================================================================
+
+When run source ./lib.sh arg1
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_when_statement
+    function: (word)
+    argument: (word)))
+
+================================================================================
+The output should eq string
+================================================================================
+
+The output should eq 'ok'
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_the_statement
+    subject: (shellspec_subject
+      (word))
+    matcher: (shellspec_matcher
+      (word)
+      (raw_string))))
+
+================================================================================
+The status should be success
+================================================================================
+
+The status should be success
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_the_statement
+    subject: (shellspec_subject
+      (word))
+    matcher: (shellspec_matcher
+      (word)
+      (word))))
+
+================================================================================
+The output should not eq bad
+================================================================================
+
+The output should not eq "bad"
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_the_statement
+    subject: (shellspec_subject
+      (word))
+    matcher: (shellspec_matcher
+      (word)
+      (string
+        (string_content)))))
+
+================================================================================
+The status should be failure
+================================================================================
+
+The status should be failure
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_the_statement
+    subject: (shellspec_subject
+      (word))
+    matcher: (shellspec_matcher
+      (word)
+      (word))))
+
+================================================================================
+The with multi-word subject
+================================================================================
+
+The line 1 of output should eq "first"
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_the_statement
+    subject: (shellspec_subject
+      (word)
+      (word)
+      (word)
+      (word))
+    matcher: (shellspec_matcher
+      (word)
+      (string
+        (string_content)))))
+
+================================================================================
+Assert simple function
+================================================================================
+
+Assert my_function
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_assert_statement
+    argument: (word)))
+
+================================================================================
+Assert with multiple arguments
+================================================================================
+
+Assert check_result "expected value"
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_assert_statement
+    argument: (word)
+    argument: (string
+      (string_content))))
+
+================================================================================
+When and The inside It block
+================================================================================
+
+It "should add numbers"
+  When call add 2 3
+  The output should eq 5
+End
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_it_block
+    description: (string
+      (string_content))
+    (shellspec_when_statement
+      function: (word)
+      argument: (word)
+      argument: (word))
+    (shellspec_the_statement
+      subject: (shellspec_subject
+        (word))
+      matcher: (shellspec_matcher
+        (word)
+        (word)))))
+
+================================================================================
+Assert inside It block
+================================================================================
+
+It "should validate"
+  When call validate "input"
+  Assert check_valid
+End
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_it_block
+    description: (string
+      (string_content))
+    (shellspec_when_statement
+      function: (word)
+      argument: (string
+        (string_content)))
+    (shellspec_assert_statement
+      argument: (word))))
