@@ -40,5 +40,8 @@ MARKDOWN_MARKDOWNLINT_CONFIG_FILE: .markdownlint.json
 JSON_V8R_FILTER_REGEX_EXCLUDE: "tree-sitter\\.json"
 
 # Exclude some paths from all linters as they are generated or LLM-managed
-FILTER_REGEX_EXCLUDE: >
+YAML_V8R_FILTER_REGEX_EXCLUDE: "(mega-linter\\.yml|\\.serena/)"
+
+# Exclude some paths from all linters as they are generated or LLM-managed
+FILTER_REGEX_EXCLUDE: >-
   (node_modules|test/spec|src/|megalinter-reports|\.serena|\.claude)

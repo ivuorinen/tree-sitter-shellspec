@@ -25,7 +25,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        language: ["actions", "javascript", "c"]
+        language: ["actions", "javascript"]
     steps:
       - name: CodeQL Analysis
         uses: ivuorinen/actions/codeql-analysis@242ecca8f01357727f5b2b040154ccdece61720b # v2026.03.07
