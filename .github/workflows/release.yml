@@ -19,8 +19,8 @@ concurrency:
   cancel-in-progress: false
 
 permissions:
-  actions: read
-  contents: read
+  actions: read # required to query CI workflow run status
+  contents: read # required to check out the repository
 
 jobs:
   validate:
@@ -36,12 +36,16 @@ jobs:
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
           fetch-depth: 0
+          persist-credentials: false
 
       - name: 🔢 Extract Version
         id: version
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          INPUT_VERSION: ${{ github.event.inputs.version }}
         run: |
-          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
-            VERSION="${{ github.event.inputs.version }}"
+          if [[ "$EVENT_NAME" == "workflow_dispatch" ]]; then
+            VERSION="$INPUT_VERSION"
             VERSION="${VERSION#v}"
             echo "version=v${VERSION}" >> "$GITHUB_OUTPUT"
           else
@@ -51,8 +55,9 @@ jobs:
           echo "Releasing version: ${VERSION}"
 
       - name: ✅ Validate Version Format
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
         run: |
-          VERSION="${{ steps.version.outputs.version }}"
           if [[ ! $VERSION =~ ^v[0-9]+\.[0-9]+\.[0-9]+(-[a-zA-Z0-9.-]+)?$ ]]; then
             echo "❌ Invalid version format: $VERSION"
             echo "Expected format: v1.0.0 or v1.0.0-beta.1"
@@ -105,27 +110,17 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          persist-credentials: false
 
       - name: Setup Node.js 24
+        # zizmor: ignore[cache-poisoning] no cache input is set, so nothing is restored
         uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
         with:
           node-version: 24
 
-      - name: Cache Node.js dependencies
-        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
-        with:
-          path: |
-            ~/.npm
-            ~/.yarn
-            ~/.cache/yarn
-            ~/.pnpm-store
-            ~/.cache/pnpm
-            node_modules/.cache
-          key: ${{ runner.os }}-node-24-${{ hashFiles('**/package-lock.json', '**/yarn.lock', '**/pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-node-24-
-            ${{ runner.os }}-node-
-
+      # No dependency cache in the publish path: a cache poisoned from a PR-triggered
+      # run must never reach the release/publish jobs.
       - name: Install Dependencies
         run: npm ci || { echo "❌ npm install failed"; npm install; }
 
@@ -138,54 +133,36 @@ jobs:
     timeout-minutes: 15
     needs: [validate, check-ci, security]
     if: always() && needs.validate.result == 'success' && needs.check-ci.result == 'success' && needs.security.result == 'success'
+    # Scope the npm publish secret to a protected deployment environment.
+    environment: release
     permissions:
-      contents: write
-      packages: write
-      issues: write
-      pull-requests: write
+      contents: write # required to push the release tag and create the GitHub release
+      packages: write # required to publish the package
+      issues: write # required by release tooling to comment on issues
+      pull-requests: write # required by release tooling to comment on PRs
 
     steps:
       - name: ⤵️ Checkout Repository
+        # persist-credentials is intentionally left enabled: the "Create Tag" step
+        # below pushes a tag with the checkout-provided GITHUB_TOKEN.
+        # zizmor: ignore[artipacked]
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
           fetch-depth: 0
 
       - name: Setup Node.js 24
+        # zizmor: ignore[cache-poisoning] no cache input is set, so nothing is restored
         uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
         with:
           node-version: 24
           registry-url: "https://registry.npmjs.org"
 
-      - name: Cache Node.js dependencies
-        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
-        with:
-          path: |
-            ~/.npm
-            ~/.yarn
-            ~/.cache/yarn
-            ~/.pnpm-store
-            ~/.cache/pnpm
-            node_modules/.cache
-          key: ${{ runner.os }}-node-24-${{ hashFiles('**/package-lock.json', '**/yarn.lock', '**/pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-node-24-
-            ${{ runner.os }}-node-
-
+      # No dependency or grammar cache in the publish path: a cache poisoned from a
+      # PR-triggered run must never reach the published artifact.
       - name: Install Dependencies
         run: npm ci || { echo "❌ npm install failed"; npm install; }
 
-      - name: Cache Generated Grammar
-        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
-        id: cache-grammar
-        with:
-          path: |
-            src/parser.c
-            src/tree_sitter/
-            binding.gyp
-          key: ${{ runner.os }}-grammar-${{ hashFiles('grammar.js', 'package.json', 'src/scanner.c') }}
-
       - name: Generate Grammar
-        if: steps.cache-grammar.outputs.cache-hit != 'true'
         run: npm run generate
 
       - name: 🏗️ Build Parser
@@ -193,8 +170,10 @@ jobs:
 
       - name: 🔎 Verify package.json version matches input
         if: github.event_name == 'workflow_dispatch'
+        env:
+          INPUT_VERSION: ${{ github.event.inputs.version }}
         run: |
-          INPUT="${{ github.event.inputs.version }}"
+          INPUT="$INPUT_VERSION"
           EXPECTED="v${INPUT#v}"
           PKG="v$(node -p "require('./package.json').version")"
           if [ "$PKG" != "$EXPECTED" ]; then
@@ -205,15 +184,18 @@ jobs:
 
       - name: 🏷️ Create Tag
         if: github.event_name == 'workflow_dispatch'
+        env:
+          INPUT_VERSION: ${{ github.event.inputs.version }}
         run: |
-          VERSION="v${{ github.event.inputs.version }}"
+          VERSION="v$INPUT_VERSION"
           git tag "${VERSION#v}"
           git push origin "${VERSION#v}"
 
       - name: 📝 Generate Release Notes
         id: release_notes
+        env:
+          VERSION: ${{ needs.validate.outputs.version }}
         run: |
-          VERSION="${{ needs.validate.outputs.version }}"
           PREV_TAG=$(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || echo "")
 
           {
@@ -248,17 +230,20 @@ jobs:
           } >> release_notes.md
 
       - name: 🚀 Create GitHub Release
-        uses: softprops/action-gh-release@718ea10b132b3b2eba29c1007bb80653f286566b # v3.0.1
-        with:
-          tag_name: ${{ needs.validate.outputs.version }}
-          name: Release ${{ needs.validate.outputs.version }}
-          body_path: release_notes.md
-          draft: false
-          prerelease: ${{ contains(needs.validate.outputs.version, '-') }}
-          generate_release_notes: false
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ needs.validate.outputs.version }}
+        run: |
+          args=(--title "Release ${VERSION}" --notes-file release_notes.md)
+          if [[ "$VERSION" == *"-"* ]]; then
+            args+=(--prerelease)
+          fi
+          gh release create "$VERSION" "${args[@]}"
 
       - name: 📦 Publish to npm
-        run: |
+        # Token-based publish: trusted publishing requires the package to be
+        # configured for an OIDC trusted publisher on npmjs.com (external setup).
+        run: | # zizmor: ignore[use-trusted-publishing]
           if [[ "$VERSION" == *"-"* ]]; then
             PUBLISH_TAG="next"
           else
@@ -271,7 +256,11 @@ jobs:
           VERSION: ${{ needs.validate.outputs.version }}
 
       - name: 📊 Release Summary
+        env:
+          VERSION: ${{ needs.validate.outputs.version }}
+          SERVER_URL: ${{ github.server_url }}
+          REPOSITORY: ${{ github.repository }}
         run: |
-          echo "🎉 Successfully released ${{ needs.validate.outputs.version }}"
+          echo "🎉 Successfully released ${VERSION}"
           echo "📦 Published to npm: https://www.npmjs.com/package/@ivuorinen/tree-sitter-shellspec"
-          echo "🏷️ GitHub Release: ${{ github.server_url }}/${{ github.repository }}/releases/tag/${{ needs.validate.outputs.version }}"
+          echo "🏷️ GitHub Release: ${SERVER_URL}/${REPOSITORY}/releases/tag/${VERSION}"
