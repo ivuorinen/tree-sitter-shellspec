@@ -185,11 +185,12 @@ jobs:
       - name: 🏷️ Create Tag
         if: github.event_name == 'workflow_dispatch'
         env:
-          INPUT_VERSION: ${{ github.event.inputs.version }}
+          VERSION: ${{ needs.validate.outputs.version }}
         run: |
-          VERSION="v$INPUT_VERSION"
-          git tag "${VERSION#v}"
-          git push origin "${VERSION#v}"
+          # Use the validated, v-prefixed version so the pushed tag matches the
+          # tag the GitHub release is created for (gh release create "$VERSION").
+          git tag "$VERSION"
+          git push origin "$VERSION"
 
       - name: 📝 Generate Release Notes
         id: release_notes
