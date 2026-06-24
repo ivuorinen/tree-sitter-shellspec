@@ -13,22 +13,26 @@ on:
 
 permissions: {}
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   analyze:
     name: Analyze
     runs-on: ubuntu-latest
     permissions:
-      actions: read
-      contents: read
-      packages: read
-      security-events: write
+      actions: read # required by CodeQL to read workflow run metadata
+      contents: read # required to check out the repository
+      packages: read # required to read packages during analysis
+      security-events: write # required to upload CodeQL results to the Security tab
     strategy:
       fail-fast: false
       matrix:
         language: ["actions", "javascript"]
     steps:
       - name: CodeQL Analysis
-        uses: ivuorinen/actions/codeql-analysis@f2d15a840e8888ba4f0c348ea70b6522cf2dc541 # v2026.04.15
+        uses: ivuorinen/actions/codeql-analysis@8395dad6b7d5d7d2e1d016cac1eede33ab404a3c # v2026.06.18
         with:
           language: ${{ matrix.language }}
           queries: security-and-quality

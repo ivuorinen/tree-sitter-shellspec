@@ -12,7 +12,7 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
-permissions: read-all
+permissions: {}
 
 jobs:
   Linter:
@@ -20,11 +20,11 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     permissions:
-      statuses: write
-      contents: read
-      packages: read
+      statuses: write # required to publish lint status checks on commits
+      contents: read # required to check out the repository
+      packages: read # required to read packages during linting
 
     steps:
       - name: Run PR Lint
         # https://github.com/ivuorinen/actions
-        uses: ivuorinen/actions/pr-lint@f2d15a840e8888ba4f0c348ea70b6522cf2dc541 # v2026.04.15
+        uses: ivuorinen/actions/pr-lint@8395dad6b7d5d7d2e1d016cac1eede33ab404a3c # v2026.06.18

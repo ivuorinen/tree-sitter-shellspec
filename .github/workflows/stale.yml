@@ -9,9 +9,13 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
-  packages: read
-  statuses: read
+  contents: read # required to read repository metadata
+  packages: read # required to read packages
+  statuses: read # required to read commit statuses
+
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: false
 
 jobs:
   stale:
@@ -20,7 +24,7 @@ jobs:
 
     permissions:
       contents: write # only for delete-branch option
-      issues: write
-      pull-requests: write
+      issues: write # required to comment on and close stale issues
+      pull-requests: write # required to comment on and close stale PRs
     steps:
-      - uses: ivuorinen/actions/stale@f2d15a840e8888ba4f0c348ea70b6522cf2dc541 # v2026.04.15
+      - uses: ivuorinen/actions/stale@8395dad6b7d5d7d2e1d016cac1eede33ab404a3c # v2026.06.18
