@@ -35,7 +35,6 @@ jobs:
       - name: ⤵️ Checkout Repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
           persist-credentials: false
       - name: ⤵️ Sync Latest Labels Definitions
         uses: ivuorinen/actions/sync-labels@6a8c40d9c5ff01b901d382b0ef86d432215aae2a # v2026.09.09

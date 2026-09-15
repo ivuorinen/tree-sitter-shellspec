@@ -8,10 +8,7 @@ on:
   workflow_call:
   workflow_dispatch:
 
-permissions:
-  contents: read # required to read repository metadata
-  packages: read # required to read packages
-  statuses: read # required to read commit statuses
+permissions: {}
 
 concurrency:
   group: ${{ github.workflow }}
@@ -23,7 +20,6 @@ jobs:
     runs-on: ubuntu-latest
 
     permissions:
-      contents: write # only for delete-branch option
       issues: write # required to comment on and close stale issues
       pull-requests: write # required to comment on and close stale PRs
     steps:

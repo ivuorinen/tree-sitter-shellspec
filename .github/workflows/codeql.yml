@@ -29,10 +29,16 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        language: ["actions", "javascript"]
+        include:
+          - language: actions
+          - language: javascript
+          # The shipped C scanner (src/scanner.c) and parser; build-mode none needs no compile step
+          - language: c-cpp
+            build-mode: none
     steps:
       - name: CodeQL Analysis
         uses: ivuorinen/actions/codeql-analysis@6a8c40d9c5ff01b901d382b0ef86d432215aae2a # v2026.09.09
         with:
           language: ${{ matrix.language }}
+          build-mode: ${{ matrix.build-mode }}
           queries: security-and-quality
