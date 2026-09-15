@@ -16,23 +16,22 @@ Run comprehensive pre-release checks before tagging a release.
     npm test
     ```
 
-    Must be 100% passing. Report the total test count (must be >= 96).
+    Must be 100% passing. Report the total test count (must be >= 115, the threshold the CI coverage job enforces).
 
-2. **Verify spec files parse cleanly**:
+2. **Verify spec files parse cleanly** (`--quiet` exits non-zero on ERROR and MISSING nodes):
 
     ```bash
-    total_errors=0
+    failed_files=0
     for f in test/spec/*.sh; do
-      errors=$(tree-sitter parse "$f" 2>&1 | grep -c ERROR || true)
-      if [ "$errors" -gt 0 ]; then
-        echo "ERRORS in $f: $errors"
-        total_errors=$((total_errors + errors))
+      if ! npx tree-sitter parse --quiet "$f" > /dev/null; then
+        echo "PARSE ERRORS in $f"
+        failed_files=$((failed_files + 1))
       fi
     done
-    echo "Total spec file errors: $total_errors"
+    echo "Spec files with parse errors: $failed_files"
     ```
 
-    Must be 0 errors.
+    Must be 0 files.
 
 3. **Check highlight coverage**: Compare keywords in grammar.js against patterns in
     queries/highlights.scm. Report any uncovered keywords.
