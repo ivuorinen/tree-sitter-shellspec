@@ -19,6 +19,7 @@ Thank you for your interest in contributing to tree-sitter-shellspec! This docum
 
 - [Node.js](https://nodejs.org/) (v22 or later)
 - Tree-sitter CLI (provided via devDependency) — use `npx tree-sitter <cmd>`
+- A C/C++ compiler, `make` and Python 3 — `npm install` builds the Node binding with node-gyp
 - [Git](https://git-scm.com/)
 - Basic knowledge of [Tree-sitter grammars](https://tree-sitter.github.io/tree-sitter/creating-parsers)
 - Familiarity with [ShellSpec](https://shellspec.info/) syntax
@@ -73,15 +74,11 @@ Use the provided npm scripts for common development tasks:
 # Development loop (generate + test)
 npm run dev
 
-# Watch mode for continuous development
-npm run dev:watch
-
-# Clean and rebuild everything
+# Clean and regenerate the parser
 npm run rebuild
 
 # Check code style
 npm run lint
-npm run lint:yaml
 npm run lint:markdown
 ```
 
@@ -91,11 +88,11 @@ npm run lint:markdown
 
 The grammar in `grammar.js` extends [tree-sitter-bash](https://github.com/tree-sitter/tree-sitter-bash) and adds ShellSpec-specific constructs:
 
-- **Block types**: Describe, Context, It, Example, Specify
-- **Hook types**: BeforeEach, AfterEach, BeforeAll, AfterAll, etc.
-- **Utility blocks**: Data, Parameters, Skip, Pending, Todo
-- **Statement types**: Before/After hooks, Include directive
-- **Directives**: Include, conditional Skip
+- **Block types**: Describe, Context, ExampleGroup, It, Example, Specify (with focused/skipped variants), Mock
+- **Hook statements**: Before, After, BeforeEach, AfterEach, BeforeAll, AfterAll, BeforeCall, AfterCall, BeforeRun, AfterRun
+- **Utility blocks**: Parameters and Data blocks; `Parameters:value` single-line values
+- **Statement types**: When/The/Assert, Skip/Pending/Todo, Include, Path/File/Dir, Set, Dump, Intercept
+- **Directives**: Conditional `Skip if`, `%text`, `%const`, `%puts`/`%putsn`, `%preserve`, `%logger`
 
 ### Making Grammar Changes
 
@@ -135,7 +132,7 @@ ShellSpec code here
 - `describe_blocks.txt` - Describe block variations
 - `context_blocks.txt` - Context block variations
 - `it_blocks.txt` - It/Example/Specify blocks
-- `hook_blocks.txt` - Hook block patterns
+- `hook_blocks.txt` - Hook statements
 - `utility_blocks.txt` - Data/Parameters/Skip/etc.
 - `nested_structures.txt` - Complex nested patterns
 - `real_world_patterns.txt` - Patterns from official examples
@@ -149,8 +146,8 @@ ShellSpec code here
 npm test
 
 # Test specific patterns
-npx tree-sitter test --filter "describe_blocks"
-npx tree-sitter test --filter "real_world_patterns"
+npx tree-sitter test -i "describe_blocks"
+npx tree-sitter test -i "real_world_patterns"
 
 # Test with debug output
 npx tree-sitter test --debug
@@ -247,6 +244,8 @@ Use [Conventional Commits](https://conventionalcommits.org/):
 - `docs:` - Documentation changes
 - `test:` - Test additions or changes
 - `refactor:` - Code refactoring
+- `ci:` - CI workflow changes
+- `build:` - Build tooling and parser generation changes
 - `chore:` - Maintenance tasks
 
 ## Reporting Issues
@@ -282,17 +281,11 @@ Use the [Grammar Issue template](.github/ISSUE_TEMPLATE/grammar_issue.md) for:
 
 ### High Priority
 
-1. **Enhanced Data block support**
+1. **Unsupported ShellSpec syntax**
 
-- `:raw` and `:expand` modifiers
-- Pipe filter syntax (`Data | command`)
-- Multi-line `#|` syntax
-
-1. **Assertion parsing**
-
-- When/The statement structures
-- Matcher syntax parsing
-- Subject/predicate analysis
+- Tagging (`Describe "name" tag:value`)
+- Additional `%` directives such as `%data`
+- Concatenated arguments such as `--opt=$value` outside `Include` paths
 
 1. **Performance optimization**
 

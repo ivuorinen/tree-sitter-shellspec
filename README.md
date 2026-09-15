@@ -1,30 +1,31 @@
 # tree-sitter-shellspec
 
-[![Test Status](https://img.shields.io/badge/tests-120%2F120%20passing-brightgreen)](https://github.com/ivuorinen/tree-sitter-shellspec)
-[![Grammar Coverage](https://img.shields.io/badge/coverage-100%25-brightgreen)](https://github.com/ivuorinen/tree-sitter-shellspec)
 [![Tree-sitter](https://img.shields.io/badge/tree--sitter-grammar-blue)](https://tree-sitter.github.io/)
 
-A comprehensive [Tree-sitter](https://tree-sitter.github.io/) grammar for
+A [Tree-sitter](https://tree-sitter.github.io/) grammar for
 [ShellSpec](https://shellspec.info/) - a BDD (Behavior Driven Development) testing framework for POSIX shell scripts.
 
 ## Overview
 
-This grammar extends the [tree-sitter-bash](https://github.com/tree-sitter/tree-sitter-bash) grammar to provide complete parsing support
-for ShellSpec's BDD constructs.
+This grammar extends the [tree-sitter-bash](https://github.com/tree-sitter/tree-sitter-bash) grammar to parse
+ShellSpec's BDD constructs.
 
 It enables syntax highlighting, code navigation, and tooling integration for ShellSpec test files.
 
 ### Features
 
-- **Complete ShellSpec syntax support** - All block types, hooks, When/The/Assert DSL, Mock blocks, and % directives
-- **Real-world compatibility** - Tested against official ShellSpec examples
+- **ShellSpec syntax support** - Example groups, examples, hooks, When/The/Assert, Data and Parameters, Mock blocks,
+  and % directives (unsupported syntax is listed under [Areas for Contribution](#areas-for-contribution))
+- **Real-world compatibility** - The ShellSpec example specs in `test/spec/` parse without errors
 - **Bash integration** - Seamlessly handles mixed ShellSpec/bash code
-- **Production ready** - 100% test coverage with 120 comprehensive test cases
+- **Tested** - Corpus tests cover each supported construct, and CI enforces a minimum test count
 - **Editor support** - Works with any Tree-sitter compatible editor
 
 ## Installation
 
 ### Using npm
+
+The package is not published to npm yet. After the first release:
 
 ```bash
 npm install @ivuorinen/tree-sitter-shellspec
@@ -74,29 +75,17 @@ End
 # Variants: It, Example, Specify, fIt, fExample, fSpecify, xIt, xExample, xSpecify
 ```
 
-### Hook Types
+### Hooks
 
-#### Block-Style Hooks
-
-```shellspec
-BeforeEach 'setup test environment'
-  # Setup code here
-End
-
-AfterEach 'cleanup after test'
-  # Cleanup code here
-End
-
-# Available: BeforeEach, AfterEach, BeforeAll, AfterAll, BeforeCall, AfterCall, BeforeRun, AfterRun
-```
-
-#### Statement-Style Hooks
+ShellSpec hooks are single-line statements that name the functions (or inline code) to run.
 
 ```shellspec
 Before 'setup_function'
 Before 'setup1' 'setup2'  # Multiple functions
 After 'cleanup_function'
 Before 'variable=value'    # Inline code
+
+# Available: Before, After, BeforeEach, AfterEach, BeforeAll, AfterAll, BeforeCall, AfterCall, BeforeRun, AfterRun
 ```
 
 ### Utility Blocks
@@ -104,10 +93,12 @@ Before 'variable=value'    # Inline code
 #### Data Blocks
 
 ```shellspec
-Data 'test input data'
-  item1 value1
-  item2 value2
+Data
+  #|item1 value1
+  #|item2 value2
 End
+
+Data < input.txt  # File contents as stdin
 ```
 
 #### Parameters
@@ -117,20 +108,30 @@ Parameters
   'param1'
   'param2'
 End
+
+Parameters:value 1 2 3  # Single-line values
 ```
 
 #### Test Control
 
+`Skip`, `Pending` and `Todo` are statements inside an example group or example, not blocks.
+
 ```shellspec
-Skip 'not implemented yet'
-  # Skipped test code
-End
+Describe 'feature X'
+  It 'is not supported on this platform'
+    Skip 'not implemented yet'
+    When call feature_x
+    The status should be success
+  End
 
-Pending 'work in progress'
-  # Code that should fail for now
-End
+  It 'is expected to fail for now'
+    Pending 'work in progress'
+    When call feature_x
+    The status should be success
+  End
 
-Todo 'implement feature X'  # Note without block
+  Todo 'implement feature X'
+End
 ```
 
 ### Directives
@@ -163,7 +164,10 @@ It 'should handle errors'
   The stderr should not eq ""
 End
 
-Assert check_result
+It 'should validate the result'
+  When call add 2 3
+  Assert check_result
+End
 ```
 
 ### Mock Blocks
@@ -255,15 +259,17 @@ Describe 'Complex setup scenario'
   Before 'init_database' 'load_fixtures' 'start_services'
   After 'stop_services' 'cleanup_database'
 
-  BeforeEach 'reset test state'
+  reset_state() {
     test_counter=0
     temp_dir=$(mktemp -d)
-  End
+  }
 
-  AfterEach 'verify cleanup'
-    [ "$test_counter" -gt 0 ]
+  verify_cleanup() {
     rm -rf "$temp_dir"
-  End
+  }
+
+  BeforeEach 'reset_state'
+  AfterEach 'verify_cleanup'
 
   It 'runs with full setup chain'
     When call complex_operation
@@ -278,6 +284,7 @@ End
 
 - [Node.js](https://nodejs.org/) (v22 or later)
 - Tree-sitter CLI (provided via devDependency) — use `npx tree-sitter <cmd>`
+- A C/C++ compiler, `make` and Python 3 — `npm install` builds the Node binding with node-gyp
 
 ### Setup
 
@@ -301,25 +308,24 @@ npm run build
 
 # Development workflow
 npm run dev          # Generate + test
-npm run dev:watch    # Watch mode for development
 
 # Linting and formatting
 npm run lint                    # Check code style
-npm run lint:editorconfig:fix   # Auto-fix EditorConfig issues
-npm run lint:markdown           # Auto-fix markdown issues (includes --fix)
+npm run lint:editorconfig       # Check EditorConfig compliance
+npm run lint:markdown           # Check markdown style
 npm run format                  # Format code with prettier
 
 # Utilities
 npm run clean        # Clean generated files
-npm run rebuild      # Clean + generate + build
+npm run rebuild      # Clean + generate
 ```
 
 ### Testing
 
-The grammar includes comprehensive test coverage:
+The test suite includes:
 
-- **Comprehensive test cases** covering all ShellSpec constructs
-- **Real-world patterns** from official ShellSpec repository
+- **Corpus test cases** for every supported ShellSpec construct
+- **Real-world patterns** from the official ShellSpec repository
 - **Edge cases** and complex nesting scenarios
 - **Mixed content** (ShellSpec + bash code)
 
@@ -328,8 +334,8 @@ The grammar includes comprehensive test coverage:
 npm test
 
 # Test specific patterns
-tree-sitter test -i "describe_blocks"
-tree-sitter test -i "real_world_patterns"
+npx tree-sitter test -i "describe_blocks"
+npx tree-sitter test -i "real_world_patterns"
 ```
 
 ### Grammar Structure
@@ -341,7 +347,6 @@ The grammar extends tree-sitter-bash with 27 rules organized as follows:
 - `shellspec_describe_block` - Describe/fDescribe/xDescribe blocks
 - `shellspec_context_block` - Context/ExampleGroup blocks
 - `shellspec_it_block` - It/Example/Specify blocks
-- `shellspec_hook_block` - BeforeEach/AfterEach/etc. blocks
 - `shellspec_utility_block` - Parameters blocks
 - `shellspec_data_block` - Data blocks with content types
 - `shellspec_mock_block` - Mock command blocks
@@ -353,6 +358,7 @@ The grammar extends tree-sitter-bash with 27 rules organized as follows:
 - `shellspec_assert_statement` - Assert function assertions
 - `shellspec_hook_statement` - Before/After statements
 - `shellspec_directive_statement` - Include and conditional Skip
+- `shellspec_parameters_value_statement` - Parameters:value single-line values
 - `shellspec_path_statement` - Path alias declarations
 - `shellspec_set_statement` - Set option directives
 - `shellspec_dump_statement` - Dump debugging output
@@ -377,29 +383,38 @@ The grammar extends tree-sitter-bash with 27 rules organized as follows:
 
 ## Editor Integration
 
+The grammar is not yet part of the nvim-treesitter or Emacs grammar registries, so editors need a manual parser
+registration. ShellSpec spec files follow the `*_spec.sh` naming pattern.
+
 ### Neovim (with nvim-treesitter)
 
-Add to your Tree-sitter config:
+Register the parser (nvim-treesitter `master` API), map spec files to it, then run `:TSInstall shellspec`:
 
 ```lua
-require'nvim-treesitter.configs'.setup {
-  ensure_installed = { "bash", "shellspec" },
-  highlight = {
-    enable = true,
+local parser_config = require("nvim-treesitter.parsers").get_parser_configs()
+parser_config.shellspec = {
+  install_info = {
+    url = "https://github.com/ivuorinen/tree-sitter-shellspec",
+    files = { "src/parser.c", "src/scanner.c" },
+    branch = "main",
   },
+  filetype = "shellspec",
 }
+
+vim.filetype.add({ pattern = { [".*_spec%.sh"] = "shellspec" } })
 ```
 
-### VS Code
-
-Install a Tree-sitter extension that supports custom grammars, then add this grammar to your configuration.
+Copy `queries/highlights.scm` to `~/.config/nvim/queries/shellspec/highlights.scm`. Its first line, `; inherits: bash`,
+applies bash highlighting to the shell code around ShellSpec blocks.
 
 ### Emacs (with tree-sitter-mode)
 
-Add to your configuration:
+Scope the grammar to spec files with a derived mode:
 
 ```elisp
-(add-to-list 'tree-sitter-major-mode-language-alist '(sh-mode . shellspec))
+(define-derived-mode shellspec-mode sh-mode "ShellSpec")
+(add-to-list 'auto-mode-alist '("_spec\\.sh\\'" . shellspec-mode))
+(add-to-list 'tree-sitter-major-mode-language-alist '(shellspec-mode . shellspec))
 ```
 
 ## Contributing
@@ -431,7 +446,8 @@ Please report issues with:
 
 ## License
 
-MIT License - see [LICENSE](LICENSE) file for details.
+MIT License - see [LICENSE](LICENSE) file for details. Third-party notices are in
+[THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
 
 ## Acknowledgments
 
