@@ -45,4 +45,5 @@ yarn-error.log*
 .vscode/
 .fleet/
 shellspec.so
+build/
 .claude/settings.local.json

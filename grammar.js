@@ -7,9 +7,11 @@
 /// <reference types="tree-sitter-cli/dsl" />
 // @ts-check
 
-const bashGrammar = require("tree-sitter-bash/grammar");
+// ESM because the package is "type": "module" for the generated node binding.
+// tree-sitter-bash is CommonJS without an exports map, so the import needs the .js extension.
+import bashGrammar from "tree-sitter-bash/grammar.js";
 
-module.exports = grammar(bashGrammar, {
+export default grammar(bashGrammar, {
   name: "shellspec",
 
   // Precedence Strategy:
