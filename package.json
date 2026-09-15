@@ -56,5 +56,9 @@
     "nodemon": "^3.0.1",
     "prettier": "^3.6.2",
     "tree-sitter-cli": "^0.27.0"
+  },
+  "allowScripts": {
+    "tree-sitter-bash@0.25.1": true,
+    "tree-sitter-cli@0.27.0": true
   }
 }

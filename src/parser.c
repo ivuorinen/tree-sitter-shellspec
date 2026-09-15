@@ -12123,16 +12123,27 @@ static const TSSymbol ts_supertype_symbols[SUPERTYPE_COUNT] = {
 };
 
 static const TSMapSlice ts_supertype_map_slices[] = {
-  [sym__expression] = {.index = 0, .length = 7},
+  [sym__expression] = {.index = 0, .length = 18},
 };
 
 static const TSSymbol ts_supertype_map_entries[] = {
   [0] =
+    sym_ansi_c_string,
+    sym_arithmetic_expansion,
     sym_binary_expression,
+    sym_brace_expression,
+    sym_command_substitution,
     sym_concatenation,
+    sym_expansion,
+    sym_number,
     sym_parenthesized_expression,
     sym_postfix_expression,
+    sym_process_substitution,
+    sym_raw_string,
+    sym_simple_expansion,
+    sym_string,
     sym_ternary_expression,
+    sym_translated_string,
     sym_unary_expression,
     sym_word,
 };
