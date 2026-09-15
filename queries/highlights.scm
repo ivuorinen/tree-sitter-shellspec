@@ -1,5 +1,7 @@
+; inherits: bash
 ; ShellSpec Syntax Highlighting
-; Extends tree-sitter-bash highlighting
+; Extends tree-sitter-bash highlighting. tree-sitter.json loads the bash queries first;
+; nvim-treesitter-style consumers read the `inherits` line above.
 
 ; Block keywords (BDD test structure)
 [
@@ -110,6 +112,10 @@
 [
   "Include"
 ] @keyword.directive
+
+; Conditional skip keyword (`Skip if`), scoped so bash `if` statements keep their own capture
+(shellspec_directive_statement
+  "if" @keyword.control)
 
 ; % directives (text, const, output, preserve, logger)
 [
