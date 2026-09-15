@@ -129,3 +129,29 @@ End
   (shellspec_context_block
     description: (string
       (string_content))))
+
+================================================================================
+Focused ExampleGroup block
+================================================================================
+
+fExampleGroup 'focused group'
+End
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_context_block
+    description: (raw_string)))
+
+================================================================================
+Skipped ExampleGroup block
+================================================================================
+
+xExampleGroup 'skipped group'
+End
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_context_block
+    description: (raw_string)))

@@ -176,11 +176,11 @@
         },
         {
           "type": "SYMBOL",
-          "name": "shellspec_hook_block"
+          "name": "shellspec_utility_block"
         },
         {
           "type": "SYMBOL",
-          "name": "shellspec_utility_block"
+          "name": "shellspec_parameters_value_statement"
         },
         {
           "type": "SYMBOL",
@@ -7093,6 +7093,10 @@
               "members": [
                 {
                   "type": "SYMBOL",
+                  "name": "word"
+                },
+                {
+                  "type": "SYMBOL",
                   "name": "string"
                 },
                 {
@@ -7101,7 +7105,19 @@
                 },
                 {
                   "type": "SYMBOL",
-                  "name": "word"
+                  "name": "number"
+                },
+                {
+                  "type": "SYMBOL",
+                  "name": "simple_expansion"
+                },
+                {
+                  "type": "SYMBOL",
+                  "name": "expansion"
+                },
+                {
+                  "type": "SYMBOL",
+                  "name": "command_substitution"
                 }
               ]
             }
@@ -7163,6 +7179,10 @@
               "members": [
                 {
                   "type": "SYMBOL",
+                  "name": "word"
+                },
+                {
+                  "type": "SYMBOL",
                   "name": "string"
                 },
                 {
@@ -7171,7 +7191,19 @@
                 },
                 {
                   "type": "SYMBOL",
-                  "name": "word"
+                  "name": "number"
+                },
+                {
+                  "type": "SYMBOL",
+                  "name": "simple_expansion"
+                },
+                {
+                  "type": "SYMBOL",
+                  "name": "expansion"
+                },
+                {
+                  "type": "SYMBOL",
+                  "name": "command_substitution"
                 }
               ]
             }
@@ -7245,6 +7277,10 @@
               "members": [
                 {
                   "type": "SYMBOL",
+                  "name": "word"
+                },
+                {
+                  "type": "SYMBOL",
                   "name": "string"
                 },
                 {
@@ -7253,96 +7289,22 @@
                 },
                 {
                   "type": "SYMBOL",
-                  "name": "word"
+                  "name": "number"
+                },
+                {
+                  "type": "SYMBOL",
+                  "name": "simple_expansion"
+                },
+                {
+                  "type": "SYMBOL",
+                  "name": "expansion"
+                },
+                {
+                  "type": "SYMBOL",
+                  "name": "command_substitution"
                 }
               ]
             }
-          },
-          {
-            "type": "REPEAT",
-            "content": {
-              "type": "SYMBOL",
-              "name": "_terminated_statement"
-            }
-          },
-          {
-            "type": "STRING",
-            "value": "End"
-          }
-        ]
-      }
-    },
-    "shellspec_hook_block": {
-      "type": "PREC_RIGHT",
-      "value": 1,
-      "content": {
-        "type": "SEQ",
-        "members": [
-          {
-            "type": "CHOICE",
-            "members": [
-              {
-                "type": "STRING",
-                "value": "BeforeEach"
-              },
-              {
-                "type": "STRING",
-                "value": "AfterEach"
-              },
-              {
-                "type": "STRING",
-                "value": "BeforeAll"
-              },
-              {
-                "type": "STRING",
-                "value": "AfterAll"
-              },
-              {
-                "type": "STRING",
-                "value": "BeforeCall"
-              },
-              {
-                "type": "STRING",
-                "value": "AfterCall"
-              },
-              {
-                "type": "STRING",
-                "value": "BeforeRun"
-              },
-              {
-                "type": "STRING",
-                "value": "AfterRun"
-              }
-            ]
-          },
-          {
-            "type": "CHOICE",
-            "members": [
-              {
-                "type": "FIELD",
-                "name": "label",
-                "content": {
-                  "type": "CHOICE",
-                  "members": [
-                    {
-                      "type": "SYMBOL",
-                      "name": "string"
-                    },
-                    {
-                      "type": "SYMBOL",
-                      "name": "raw_string"
-                    },
-                    {
-                      "type": "SYMBOL",
-                      "name": "word"
-                    }
-                  ]
-                }
-              },
-              {
-                "type": "BLANK"
-              }
-            ]
           },
           {
             "type": "REPEAT",
@@ -7377,44 +7339,11 @@
               },
               {
                 "type": "STRING",
-                "value": "Parameters:value"
-              },
-              {
-                "type": "STRING",
                 "value": "Parameters:matrix"
               },
               {
                 "type": "STRING",
                 "value": "Parameters:dynamic"
-              }
-            ]
-          },
-          {
-            "type": "CHOICE",
-            "members": [
-              {
-                "type": "FIELD",
-                "name": "label",
-                "content": {
-                  "type": "CHOICE",
-                  "members": [
-                    {
-                      "type": "SYMBOL",
-                      "name": "string"
-                    },
-                    {
-                      "type": "SYMBOL",
-                      "name": "raw_string"
-                    },
-                    {
-                      "type": "SYMBOL",
-                      "name": "word"
-                    }
-                  ]
-                }
-              },
-              {
-                "type": "BLANK"
               }
             ]
           },
@@ -7428,6 +7357,59 @@
           {
             "type": "STRING",
             "value": "End"
+          }
+        ]
+      }
+    },
+    "shellspec_parameters_value_statement": {
+      "type": "PREC_RIGHT",
+      "value": 2,
+      "content": {
+        "type": "SEQ",
+        "members": [
+          {
+            "type": "STRING",
+            "value": "Parameters:value"
+          },
+          {
+            "type": "REPEAT1",
+            "content": {
+              "type": "FIELD",
+              "name": "value",
+              "content": {
+                "type": "CHOICE",
+                "members": [
+                  {
+                    "type": "SYMBOL",
+                    "name": "word"
+                  },
+                  {
+                    "type": "SYMBOL",
+                    "name": "string"
+                  },
+                  {
+                    "type": "SYMBOL",
+                    "name": "raw_string"
+                  },
+                  {
+                    "type": "SYMBOL",
+                    "name": "number"
+                  },
+                  {
+                    "type": "SYMBOL",
+                    "name": "simple_expansion"
+                  },
+                  {
+                    "type": "SYMBOL",
+                    "name": "expansion"
+                  },
+                  {
+                    "type": "SYMBOL",
+                    "name": "command_substitution"
+                  }
+                ]
+              }
+            }
           }
         ]
       }
@@ -7472,6 +7454,10 @@
                     "members": [
                       {
                         "type": "SYMBOL",
+                        "name": "word"
+                      },
+                      {
+                        "type": "SYMBOL",
                         "name": "string"
                       },
                       {
@@ -7480,7 +7466,19 @@
                       },
                       {
                         "type": "SYMBOL",
-                        "name": "word"
+                        "name": "number"
+                      },
+                      {
+                        "type": "SYMBOL",
+                        "name": "simple_expansion"
+                      },
+                      {
+                        "type": "SYMBOL",
+                        "name": "expansion"
+                      },
+                      {
+                        "type": "SYMBOL",
+                        "name": "command_substitution"
                       }
                     ]
                   }
@@ -7523,47 +7521,8 @@
                 "type": "CHOICE",
                 "members": [
                   {
-                    "type": "SEQ",
-                    "members": [
-                      {
-                        "type": "STRING",
-                        "value": "Data"
-                      },
-                      {
-                        "type": "CHOICE",
-                        "members": [
-                          {
-                            "type": "SEQ",
-                            "members": [
-                              {
-                                "type": "STRING",
-                                "value": ":"
-                              },
-                              {
-                                "type": "FIELD",
-                                "name": "modifier",
-                                "content": {
-                                  "type": "CHOICE",
-                                  "members": [
-                                    {
-                                      "type": "STRING",
-                                      "value": "raw"
-                                    },
-                                    {
-                                      "type": "STRING",
-                                      "value": "expand"
-                                    }
-                                  ]
-                                }
-                              }
-                            ]
-                          },
-                          {
-                            "type": "BLANK"
-                          }
-                        ]
-                      }
-                    ]
+                    "type": "STRING",
+                    "value": "Data"
                   },
                   {
                     "type": "STRING",
@@ -7604,97 +7563,6 @@
         },
         {
           "type": "PREC_RIGHT",
-          "value": 4,
-          "content": {
-            "type": "SEQ",
-            "members": [
-              {
-                "type": "STRING",
-                "value": "Data"
-              },
-              {
-                "type": "CHOICE",
-                "members": [
-                  {
-                    "type": "SEQ",
-                    "members": [
-                      {
-                        "type": "STRING",
-                        "value": ":"
-                      },
-                      {
-                        "type": "FIELD",
-                        "name": "modifier",
-                        "content": {
-                          "type": "CHOICE",
-                          "members": [
-                            {
-                              "type": "STRING",
-                              "value": "raw"
-                            },
-                            {
-                              "type": "STRING",
-                              "value": "expand"
-                            }
-                          ]
-                        }
-                      }
-                    ]
-                  },
-                  {
-                    "type": "BLANK"
-                  }
-                ]
-              },
-              {
-                "type": "CHOICE",
-                "members": [
-                  {
-                    "type": "FIELD",
-                    "name": "label",
-                    "content": {
-                      "type": "CHOICE",
-                      "members": [
-                        {
-                          "type": "SYMBOL",
-                          "name": "string"
-                        },
-                        {
-                          "type": "SYMBOL",
-                          "name": "raw_string"
-                        },
-                        {
-                          "type": "SYMBOL",
-                          "name": "word"
-                        }
-                      ]
-                    }
-                  },
-                  {
-                    "type": "BLANK"
-                  }
-                ]
-              },
-              {
-                "type": "FIELD",
-                "name": "statements",
-                "content": {
-                  "type": "REPEAT",
-                  "content": {
-                    "type": "SYMBOL",
-                    "name": "_terminated_statement"
-                  }
-                }
-              },
-              {
-                "type": "STRING",
-                "value": "End"
-              }
-            ]
-          }
-        },
-        {
-          "type": "PREC_RIGHT",
           "value": 3,
           "content": {
             "type": "SEQ",
@@ -7711,6 +7579,10 @@
                   "members": [
                     {
                       "type": "SYMBOL",
+                      "name": "word"
+                    },
+                    {
+                      "type": "SYMBOL",
                       "name": "string"
                     },
                     {
@@ -7719,7 +7591,19 @@
                     },
                     {
                       "type": "SYMBOL",
-                      "name": "word"
+                      "name": "number"
+                    },
+                    {
+                      "type": "SYMBOL",
+                      "name": "simple_expansion"
+                    },
+                    {
+                      "type": "SYMBOL",
+                      "name": "expansion"
+                    },
+                    {
+                      "type": "SYMBOL",
+                      "name": "command_substitution"
                     }
                   ]
                 }
@@ -7734,6 +7618,10 @@
                     "members": [
                       {
                         "type": "SYMBOL",
+                        "name": "word"
+                      },
+                      {
+                        "type": "SYMBOL",
                         "name": "string"
                       },
                       {
@@ -7742,7 +7630,19 @@
                       },
                       {
                         "type": "SYMBOL",
-                        "name": "word"
+                        "name": "number"
+                      },
+                      {
+                        "type": "SYMBOL",
+                        "name": "simple_expansion"
+                      },
+                      {
+                        "type": "SYMBOL",
+                        "name": "expansion"
+                      },
+                      {
+                        "type": "SYMBOL",
+                        "name": "command_substitution"
                       }
                     ]
                   }
@@ -7762,6 +7662,10 @@
                     "members": [
                       {
                         "type": "SYMBOL",
+                        "name": "word"
+                      },
+                      {
+                        "type": "SYMBOL",
                         "name": "string"
                       },
                       {
@@ -7770,10 +7674,76 @@
                       },
                       {
                         "type": "SYMBOL",
-                        "name": "word"
+                        "name": "number"
+                      },
+                      {
+                        "type": "SYMBOL",
+                        "name": "simple_expansion"
+                      },
+                      {
+                        "type": "SYMBOL",
+                        "name": "expansion"
+                      },
+                      {
+                        "type": "SYMBOL",
+                        "name": "command_substitution"
                       }
                     ]
                   }
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "PREC_RIGHT",
+          "value": 4,
+          "content": {
+            "type": "SEQ",
+            "members": [
+              {
+                "type": "STRING",
+                "value": "Data"
+              },
+              {
+                "type": "STRING",
+                "value": "<"
+              },
+              {
+                "type": "FIELD",
+                "name": "file",
+                "content": {
+                  "type": "CHOICE",
+                  "members": [
+                    {
+                      "type": "SYMBOL",
+                      "name": "word"
+                    },
+                    {
+                      "type": "SYMBOL",
+                      "name": "string"
+                    },
+                    {
+                      "type": "SYMBOL",
+                      "name": "raw_string"
+                    },
+                    {
+                      "type": "SYMBOL",
+                      "name": "number"
+                    },
+                    {
+                      "type": "SYMBOL",
+                      "name": "simple_expansion"
+                    },
+                    {
+                      "type": "SYMBOL",
+                      "name": "expansion"
+                    },
+                    {
+                      "type": "SYMBOL",
+                      "name": "command_substitution"
+                    }
+                  ]
                 }
               }
             ]
@@ -7787,45 +7757,15 @@
               "value": "Data"
             },
             {
-              "type": "CHOICE",
-              "members": [
-                {
-                  "type": "SEQ",
-                  "members": [
-                    {
-                      "type": "STRING",
-                      "value": ":"
-                    },
-                    {
-                      "type": "FIELD",
-                      "name": "modifier",
-                      "content": {
-                        "type": "CHOICE",
-                        "members": [
-                          {
-                            "type": "STRING",
-                            "value": "raw"
-                          },
-                          {
-                            "type": "STRING",
-                            "value": "expand"
-                          }
-                        ]
-                      }
-                    }
-                  ]
-                },
-                {
-                  "type": "BLANK"
-                }
-              ]
-            },
-            {
               "type": "FIELD",
               "name": "argument",
               "content": {
                 "type": "CHOICE",
                 "members": [
+                  {
+                    "type": "SYMBOL",
+                    "name": "word"
+                  },
                   {
                     "type": "SYMBOL",
                     "name": "string"
@@ -7836,7 +7776,19 @@
                   },
                   {
                     "type": "SYMBOL",
-                    "name": "word"
+                    "name": "number"
+                  },
+                  {
+                    "type": "SYMBOL",
+                    "name": "simple_expansion"
+                  },
+                  {
+                    "type": "SYMBOL",
+                    "name": "expansion"
+                  },
+                  {
+                    "type": "SYMBOL",
+                    "name": "command_substitution"
                   }
                 ]
               }
@@ -7910,6 +7862,10 @@
               "members": [
                 {
                   "type": "SYMBOL",
+                  "name": "word"
+                },
+                {
+                  "type": "SYMBOL",
                   "name": "string"
                 },
                 {
@@ -7918,7 +7874,19 @@
                 },
                 {
                   "type": "SYMBOL",
-                  "name": "word"
+                  "name": "number"
+                },
+                {
+                  "type": "SYMBOL",
+                  "name": "simple_expansion"
+                },
+                {
+                  "type": "SYMBOL",
+                  "name": "expansion"
+                },
+                {
+                  "type": "SYMBOL",
+                  "name": "command_substitution"
                 }
               ]
             }
@@ -7933,6 +7901,10 @@
                 "members": [
                   {
                     "type": "SYMBOL",
+                    "name": "word"
+                  },
+                  {
+                    "type": "SYMBOL",
                     "name": "string"
                   },
                   {
@@ -7941,7 +7913,19 @@
                   },
                   {
                     "type": "SYMBOL",
-                    "name": "word"
+                    "name": "number"
+                  },
+                  {
+                    "type": "SYMBOL",
+                    "name": "simple_expansion"
+                  },
+                  {
+                    "type": "SYMBOL",
+                    "name": "expansion"
+                  },
+                  {
+                    "type": "SYMBOL",
+                    "name": "command_substitution"
                   }
                 ]
               }
@@ -7957,6 +7941,10 @@
         "members": [
           {
             "type": "SYMBOL",
+            "name": "word"
+          },
+          {
+            "type": "SYMBOL",
             "name": "string"
           },
           {
@@ -7965,29 +7953,61 @@
           },
           {
             "type": "SYMBOL",
-            "name": "word"
+            "name": "number"
+          },
+          {
+            "type": "SYMBOL",
+            "name": "simple_expansion"
+          },
+          {
+            "type": "SYMBOL",
+            "name": "expansion"
+          },
+          {
+            "type": "SYMBOL",
+            "name": "command_substitution"
           }
         ]
       }
     },
     "shellspec_matcher": {
-      "type": "REPEAT1",
+      "type": "PREC_RIGHT",
+      "value": 0,
       "content": {
-        "type": "CHOICE",
-        "members": [
-          {
-            "type": "SYMBOL",
-            "name": "string"
-          },
-          {
-            "type": "SYMBOL",
-            "name": "raw_string"
-          },
-          {
-            "type": "SYMBOL",
-            "name": "word"
-          }
-        ]
+        "type": "REPEAT1",
+        "content": {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "word"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "string"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "raw_string"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "number"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "simple_expansion"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "expansion"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "command_substitution"
+            }
+          ]
+        }
       }
     },
     "shellspec_the_statement": {
@@ -8059,6 +8079,10 @@
                 "members": [
                   {
                     "type": "SYMBOL",
+                    "name": "word"
+                  },
+                  {
+                    "type": "SYMBOL",
                     "name": "string"
                   },
                   {
@@ -8067,7 +8091,19 @@
                   },
                   {
                     "type": "SYMBOL",
-                    "name": "word"
+                    "name": "number"
+                  },
+                  {
+                    "type": "SYMBOL",
+                    "name": "simple_expansion"
+                  },
+                  {
+                    "type": "SYMBOL",
+                    "name": "expansion"
+                  },
+                  {
+                    "type": "SYMBOL",
+                    "name": "command_substitution"
                   }
                 ]
               }
@@ -8094,6 +8130,10 @@
               "members": [
                 {
                   "type": "SYMBOL",
+                  "name": "word"
+                },
+                {
+                  "type": "SYMBOL",
                   "name": "string"
                 },
                 {
@@ -8102,7 +8142,19 @@
                 },
                 {
                   "type": "SYMBOL",
-                  "name": "word"
+                  "name": "number"
+                },
+                {
+                  "type": "SYMBOL",
+                  "name": "simple_expansion"
+                },
+                {
+                  "type": "SYMBOL",
+                  "name": "expansion"
+                },
+                {
+                  "type": "SYMBOL",
+                  "name": "command_substitution"
                 }
               ]
             }
@@ -8154,6 +8206,10 @@
                 "members": [
                   {
                     "type": "SYMBOL",
+                    "name": "word"
+                  },
+                  {
+                    "type": "SYMBOL",
                     "name": "string"
                   },
                   {
@@ -8162,7 +8218,19 @@
                   },
                   {
                     "type": "SYMBOL",
-                    "name": "word"
+                    "name": "number"
+                  },
+                  {
+                    "type": "SYMBOL",
+                    "name": "simple_expansion"
+                  },
+                  {
+                    "type": "SYMBOL",
+                    "name": "expansion"
+                  },
+                  {
+                    "type": "SYMBOL",
+                    "name": "command_substitution"
                   }
                 ]
               }
@@ -8191,6 +8259,10 @@
                 "members": [
                   {
                     "type": "SYMBOL",
+                    "name": "word"
+                  },
+                  {
+                    "type": "SYMBOL",
                     "name": "string"
                   },
                   {
@@ -8199,7 +8271,19 @@
                   },
                   {
                     "type": "SYMBOL",
-                    "name": "word"
+                    "name": "number"
+                  },
+                  {
+                    "type": "SYMBOL",
+                    "name": "simple_expansion"
+                  },
+                  {
+                    "type": "SYMBOL",
+                    "name": "expansion"
+                  },
+                  {
+                    "type": "SYMBOL",
+                    "name": "command_substitution"
                   }
                 ]
               }
@@ -8236,6 +8320,10 @@
                 "members": [
                   {
                     "type": "SYMBOL",
+                    "name": "word"
+                  },
+                  {
+                    "type": "SYMBOL",
                     "name": "string"
                   },
                   {
@@ -8244,7 +8332,19 @@
                   },
                   {
                     "type": "SYMBOL",
-                    "name": "word"
+                    "name": "number"
+                  },
+                  {
+                    "type": "SYMBOL",
+                    "name": "simple_expansion"
+                  },
+                  {
+                    "type": "SYMBOL",
+                    "name": "expansion"
+                  },
+                  {
+                    "type": "SYMBOL",
+                    "name": "command_substitution"
                   }
                 ]
               }
@@ -8314,6 +8414,10 @@
                 "members": [
                   {
                     "type": "SYMBOL",
+                    "name": "word"
+                  },
+                  {
+                    "type": "SYMBOL",
                     "name": "string"
                   },
                   {
@@ -8322,7 +8426,19 @@
                   },
                   {
                     "type": "SYMBOL",
-                    "name": "word"
+                    "name": "number"
+                  },
+                  {
+                    "type": "SYMBOL",
+                    "name": "simple_expansion"
+                  },
+                  {
+                    "type": "SYMBOL",
+                    "name": "expansion"
+                  },
+                  {
+                    "type": "SYMBOL",
+                    "name": "command_substitution"
                   }
                 ]
               }
@@ -8351,16 +8467,41 @@
                   "type": "CHOICE",
                   "members": [
                     {
-                      "type": "SYMBOL",
-                      "name": "string"
+                      "type": "CHOICE",
+                      "members": [
+                        {
+                          "type": "SYMBOL",
+                          "name": "word"
+                        },
+                        {
+                          "type": "SYMBOL",
+                          "name": "string"
+                        },
+                        {
+                          "type": "SYMBOL",
+                          "name": "raw_string"
+                        },
+                        {
+                          "type": "SYMBOL",
+                          "name": "number"
+                        },
+                        {
+                          "type": "SYMBOL",
+                          "name": "simple_expansion"
+                        },
+                        {
+                          "type": "SYMBOL",
+                          "name": "expansion"
+                        },
+                        {
+                          "type": "SYMBOL",
+                          "name": "command_substitution"
+                        }
+                      ]
                     },
                     {
                       "type": "SYMBOL",
-                      "name": "raw_string"
-                    },
-                    {
-                      "type": "SYMBOL",
-                      "name": "word"
+                      "name": "concatenation"
                     }
                   ]
                 }
@@ -8389,6 +8530,10 @@
                     "members": [
                       {
                         "type": "SYMBOL",
+                        "name": "word"
+                      },
+                      {
+                        "type": "SYMBOL",
                         "name": "string"
                       },
                       {
@@ -8397,7 +8542,19 @@
                       },
                       {
                         "type": "SYMBOL",
-                        "name": "word"
+                        "name": "number"
+                      },
+                      {
+                        "type": "SYMBOL",
+                        "name": "simple_expansion"
+                      },
+                      {
+                        "type": "SYMBOL",
+                        "name": "expansion"
+                      },
+                      {
+                        "type": "SYMBOL",
+                        "name": "command_substitution"
                       }
                     ]
                   }
@@ -8411,20 +8568,37 @@
                       "type": "CHOICE",
                       "members": [
                         {
-                          "type": "SYMBOL",
-                          "name": "word"
-                        },
-                        {
-                          "type": "SYMBOL",
-                          "name": "string"
-                        },
-                        {
-                          "type": "SYMBOL",
-                          "name": "raw_string"
-                        },
-                        {
-                          "type": "SYMBOL",
-                          "name": "command_substitution"
+                          "type": "CHOICE",
+                          "members": [
+                            {
+                              "type": "SYMBOL",
+                              "name": "word"
+                            },
+                            {
+                              "type": "SYMBOL",
+                              "name": "string"
+                            },
+                            {
+                              "type": "SYMBOL",
+                              "name": "raw_string"
+                            },
+                            {
+                              "type": "SYMBOL",
+                              "name": "number"
+                            },
+                            {
+                              "type": "SYMBOL",
+                              "name": "simple_expansion"
+                            },
+                            {
+                              "type": "SYMBOL",
+                              "name": "expansion"
+                            },
+                            {
+                              "type": "SYMBOL",
+                              "name": "command_substitution"
+                            }
+                          ]
                         },
                         {
                           "type": "SYMBOL",
@@ -8451,25 +8625,49 @@
             "value": "Todo"
           },
           {
-            "type": "FIELD",
-            "name": "description",
-            "content": {
-              "type": "CHOICE",
-              "members": [
-                {
-                  "type": "SYMBOL",
-                  "name": "string"
-                },
-                {
-                  "type": "SYMBOL",
-                  "name": "raw_string"
-                },
-                {
-                  "type": "SYMBOL",
-                  "name": "word"
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "FIELD",
+                "name": "description",
+                "content": {
+                  "type": "CHOICE",
+                  "members": [
+                    {
+                      "type": "SYMBOL",
+                      "name": "word"
+                    },
+                    {
+                      "type": "SYMBOL",
+                      "name": "string"
+                    },
+                    {
+                      "type": "SYMBOL",
+                      "name": "raw_string"
+                    },
+                    {
+                      "type": "SYMBOL",
+                      "name": "number"
+                    },
+                    {
+                      "type": "SYMBOL",
+                      "name": "simple_expansion"
+                    },
+                    {
+                      "type": "SYMBOL",
+                      "name": "expansion"
+                    },
+                    {
+                      "type": "SYMBOL",
+                      "name": "command_substitution"
+                    }
+                  ]
                 }
-              ]
-            }
+              },
+              {
+                "type": "BLANK"
+              }
+            ]
           }
         ]
       }
@@ -8485,25 +8683,49 @@
             "value": "Pending"
           },
           {
-            "type": "FIELD",
-            "name": "reason",
-            "content": {
-              "type": "CHOICE",
-              "members": [
-                {
-                  "type": "SYMBOL",
-                  "name": "string"
-                },
-                {
-                  "type": "SYMBOL",
-                  "name": "raw_string"
-                },
-                {
-                  "type": "SYMBOL",
-                  "name": "word"
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "FIELD",
+                "name": "reason",
+                "content": {
+                  "type": "CHOICE",
+                  "members": [
+                    {
+                      "type": "SYMBOL",
+                      "name": "word"
+                    },
+                    {
+                      "type": "SYMBOL",
+                      "name": "string"
+                    },
+                    {
+                      "type": "SYMBOL",
+                      "name": "raw_string"
+                    },
+                    {
+                      "type": "SYMBOL",
+                      "name": "number"
+                    },
+                    {
+                      "type": "SYMBOL",
+                      "name": "simple_expansion"
+                    },
+                    {
+                      "type": "SYMBOL",
+                      "name": "expansion"
+                    },
+                    {
+                      "type": "SYMBOL",
+                      "name": "command_substitution"
+                    }
+                  ]
                 }
-              ]
-            }
+              },
+              {
+                "type": "BLANK"
+              }
+            ]
           }
         ]
       }
@@ -8519,25 +8741,49 @@
             "value": "Skip"
           },
           {
-            "type": "FIELD",
-            "name": "reason",
-            "content": {
-              "type": "CHOICE",
-              "members": [
-                {
-                  "type": "SYMBOL",
-                  "name": "string"
-                },
-                {
-                  "type": "SYMBOL",
-                  "name": "raw_string"
-                },
-                {
-                  "type": "SYMBOL",
-                  "name": "word"
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "FIELD",
+                "name": "reason",
+                "content": {
+                  "type": "CHOICE",
+                  "members": [
+                    {
+                      "type": "SYMBOL",
+                      "name": "word"
+                    },
+                    {
+                      "type": "SYMBOL",
+                      "name": "string"
+                    },
+                    {
+                      "type": "SYMBOL",
+                      "name": "raw_string"
+                    },
+                    {
+                      "type": "SYMBOL",
+                      "name": "number"
+                    },
+                    {
+                      "type": "SYMBOL",
+                      "name": "simple_expansion"
+                    },
+                    {
+                      "type": "SYMBOL",
+                      "name": "expansion"
+                    },
+                    {
+                      "type": "SYMBOL",
+                      "name": "command_substitution"
+                    }
+                  ]
                 }
-              ]
-            }
+              },
+              {
+                "type": "BLANK"
+              }
+            ]
           }
         ]
       }
@@ -8585,6 +8831,10 @@
                         "members": [
                           {
                             "type": "SYMBOL",
+                            "name": "word"
+                          },
+                          {
+                            "type": "SYMBOL",
                             "name": "string"
                           },
                           {
@@ -8593,7 +8843,19 @@
                           },
                           {
                             "type": "SYMBOL",
-                            "name": "word"
+                            "name": "number"
+                          },
+                          {
+                            "type": "SYMBOL",
+                            "name": "simple_expansion"
+                          },
+                          {
+                            "type": "SYMBOL",
+                            "name": "expansion"
+                          },
+                          {
+                            "type": "SYMBOL",
+                            "name": "command_substitution"
                           }
                         ]
                       }
@@ -8668,6 +8930,10 @@
               "members": [
                 {
                   "type": "SYMBOL",
+                  "name": "word"
+                },
+                {
+                  "type": "SYMBOL",
                   "name": "string"
                 },
                 {
@@ -8676,7 +8942,19 @@
                 },
                 {
                   "type": "SYMBOL",
-                  "name": "word"
+                  "name": "number"
+                },
+                {
+                  "type": "SYMBOL",
+                  "name": "simple_expansion"
+                },
+                {
+                  "type": "SYMBOL",
+                  "name": "expansion"
+                },
+                {
+                  "type": "SYMBOL",
+                  "name": "command_substitution"
                 }
               ]
             }
@@ -8721,6 +8999,10 @@
                 "members": [
                   {
                     "type": "SYMBOL",
+                    "name": "word"
+                  },
+                  {
+                    "type": "SYMBOL",
                     "name": "string"
                   },
                   {
@@ -8729,7 +9011,19 @@
                   },
                   {
                     "type": "SYMBOL",
-                    "name": "word"
+                    "name": "number"
+                  },
+                  {
+                    "type": "SYMBOL",
+                    "name": "simple_expansion"
+                  },
+                  {
+                    "type": "SYMBOL",
+                    "name": "expansion"
+                  },
+                  {
+                    "type": "SYMBOL",
+                    "name": "command_substitution"
                   }
                 ]
               }
@@ -8758,6 +9052,10 @@
                 "members": [
                   {
                     "type": "SYMBOL",
+                    "name": "word"
+                  },
+                  {
+                    "type": "SYMBOL",
                     "name": "string"
                   },
                   {
@@ -8766,7 +9064,19 @@
                   },
                   {
                     "type": "SYMBOL",
-                    "name": "word"
+                    "name": "number"
+                  },
+                  {
+                    "type": "SYMBOL",
+                    "name": "simple_expansion"
+                  },
+                  {
+                    "type": "SYMBOL",
+                    "name": "expansion"
+                  },
+                  {
+                    "type": "SYMBOL",
+                    "name": "command_substitution"
                   }
                 ]
               }
@@ -8795,6 +9105,10 @@
                 "members": [
                   {
                     "type": "SYMBOL",
+                    "name": "word"
+                  },
+                  {
+                    "type": "SYMBOL",
                     "name": "string"
                   },
                   {
@@ -8803,7 +9117,19 @@
                   },
                   {
                     "type": "SYMBOL",
-                    "name": "word"
+                    "name": "number"
+                  },
+                  {
+                    "type": "SYMBOL",
+                    "name": "simple_expansion"
+                  },
+                  {
+                    "type": "SYMBOL",
+                    "name": "expansion"
+                  },
+                  {
+                    "type": "SYMBOL",
+                    "name": "command_substitution"
                   }
                 ]
               }
@@ -8856,27 +9182,7 @@
       "pipeline"
     ],
     [
-      "_expression",
-      "command_name"
-    ],
-    [
-      "command",
-      "variable_assignments"
-    ],
-    [
-      "function_definition",
-      "command_name"
-    ],
-    [
-      "command_name",
-      "shellspec_data_block"
-    ],
-    [
-      "command_name",
-      "shellspec_hook_statement"
-    ],
-    [
-      "shellspec_hook_block"
+      "shellspec_utility_block"
     ]
   ],
   "precedences": [],

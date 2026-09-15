@@ -93,3 +93,54 @@ End
       reason: (raw_string))
     (shellspec_when_statement
       function: (word))))
+
+================================================================================
+Bare Skip inside It block
+================================================================================
+
+It 'is skipped'
+  Skip
+  When call my_func
+End
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_it_block
+    description: (raw_string)
+    (shellspec_skip_statement)
+    (shellspec_when_statement
+      function: (word))))
+
+================================================================================
+Bare Pending inside It block
+================================================================================
+
+It 'is pending'
+  Pending
+  When call my_func
+End
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_it_block
+    description: (raw_string)
+    (shellspec_pending_statement)
+    (shellspec_when_statement
+      function: (word))))
+
+================================================================================
+Bare Todo
+================================================================================
+
+Describe 'feature'
+  Todo
+End
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_describe_block
+    description: (raw_string)
+    (shellspec_todo_statement)))
