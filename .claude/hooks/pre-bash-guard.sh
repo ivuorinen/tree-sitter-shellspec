@@ -37,12 +37,19 @@ process.stdin.on("data", (chunk) => (raw += chunk)).on("end", () => {
     const segment = part.trim();
     if (/^git\s+(checkout|restore)\b/.test(segment)) continue;
     if (generatedPath.test(segment)) {
-      if (/>{1,2}\s*["\x27]?\S*src\/(parser\.c|grammar\.json|node-types\.json|tree_sitter\b)/.test(segment)) {
+      // `>|` is the clobber-anyway redirect. The bar has to be matched explicitly:
+      // \S* cannot consume it without also consuming the space that follows.
+      if (/>{1,2}\|?\s*["\x27]?\S*src\/(parser\.c|grammar\.json|node-types\.json|tree_sitter\b)/.test(segment)) {
         reasons.add("redirects output into a generated file");
       } else if (/\b(sed|perl)\b.*\s-[a-zA-Z]*i/.test(segment)) {
         reasons.add("edits a generated file in place");
       } else if (/^(sudo\s+)?(cp|mv|rm|tee|truncate|install|dd|ln)\b/.test(segment) || /\|\s*tee\b/.test(segment)) {
         reasons.add("writes, moves or deletes a generated file");
+      } else if (/^(sudo\s+)?(python3?|node|perl|ruby|awk|busybox)\b/.test(segment)) {
+        // The path test already fired, so an interpreter naming a generated file is
+        // a write until proven otherwise: a python3 -c or node -e one-liner opening
+        // src/parser.c for writing matched no other reason and was allowed through.
+        reasons.add("runs an interpreter that names a generated file");
       }
     }
     if (/(^|[\s(])tree-sitter\s+generate\b/.test(segment) && !/(npx\s+|node_modules\/\.bin\/)tree-sitter\s+generate\b/.test(segment)) {
