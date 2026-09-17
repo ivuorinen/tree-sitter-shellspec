@@ -11,7 +11,7 @@ No catalogued pattern matched with Medium or higher confidence.
 
 Structural evidence examined:
 
-- Single hand-written source of truth: `grammar.js` (410 lines), which calls
+- Single hand-written source of truth: `grammar.js`, which calls
   `grammar(bashGrammar, {...})` to inherit and extend `tree-sitter-bash/grammar`.
 - Generated artifacts under `src/` (`parser.c`, `grammar.json`, `node-types.json`,
   `tree_sitter/*.h`) produced by `tree-sitter generate`, post-patched by
