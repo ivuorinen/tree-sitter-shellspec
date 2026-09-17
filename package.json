@@ -13,8 +13,10 @@
   },
   "files": [
     "grammar.js",
+    "tree-sitter.json",
     "src",
     "queries",
+    "types",
     "binding.gyp",
     "bindings",
     "scripts",
