@@ -30,6 +30,12 @@ DISABLE_LINTERS:
   - SPELL_LYCHEE # Disabled due to too many false positives
   - SPELL_CSPELL # Disabled due to too many false positives
   - REPOSITORY_TRUFFLEHOG # Disabled due to being far too slow
+  # ts-standard aborts with "Unable to locate the project file. A project file
+  # (tsconfig.json or tsconfig.eslint.json) is required" — it cannot run without one.
+  # This is not a TypeScript project: the only .ts files are hand-written .d.ts
+  # declarations that let `// @ts-check` type-check grammar.js. Adding a tsconfig.json
+  # purely to satisfy a linter would invert that.
+  - TYPESCRIPT_STANDARD
 
 ACTION_ZIZMOR_UNSECURED_ENV_VARIABLES:
   - GITHUB_TOKEN
