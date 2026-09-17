@@ -22,11 +22,17 @@ import bashGrammar from "tree-sitter-bash/grammar.js";
  * lists, so `--opt=$x` parses as two adjacent arguments. `Include` takes a single
  * path and adds `concatenation` explicitly.
  *
+ * `test_command` is included because `[ ... ]` is an argument in its own right
+ * throughout the DSL — `Assert cmd [ "$a" = "$b" ]`, `When run cmd [ 1 -gt 0 ]`,
+ * `should satisfy [ ... ]`. tree-sitter-bash parses brackets as `$.test_command`,
+ * never as literal `[`/`]` tokens, so omitting it here made every such line a
+ * MISSING ";" that dragged the enclosing block into error recovery.
+ *
  * @param {GrammarSymbols<string>} $ grammar symbols
  * @returns {ChoiceRule}
  */
 function argument($) {
-  return choice($.word, $.string, $.raw_string, $.number, $.simple_expansion, $.expansion, $.command_substitution);
+  return choice($.word, $.string, $.raw_string, $.number, $.simple_expansion, $.expansion, $.command_substitution, $.test_command);
 }
 
 export default grammar(bashGrammar, {
@@ -55,6 +61,17 @@ export default grammar(bashGrammar, {
     ]),
 
   rules: {
+    // tree-sitter-bash 0.25.1 omits the POSIX `<>` (open for reading and writing)
+    // operator from file_redirect: its choice lists < > >> &> &>> <& >& >| and the
+    // two closing forms, but not `<>`. ShellSpec specs target POSIX shell, where
+    // `: <> "$file"` is ordinary, so add it back rather than wait on upstream.
+    // The `original` branch keeps this harmless once a release carries the fix.
+    file_redirect: ($, original) =>
+      choice(
+        /** @type {RuleOrLiteral} */ (original),
+        prec.left(seq(field("descriptor", optional($.file_descriptor)), "<>", field("destination", repeat1($._literal)))),
+      ),
+
     // Extend the main statement rule to include ShellSpec blocks and directives
     _statement_not_subshell: ($, original) =>
       choice(
@@ -78,6 +95,7 @@ export default grammar(bashGrammar, {
         $.shellspec_set_statement,
         $.shellspec_dump_statement,
         $.shellspec_intercept_statement,
+        $.shellspec_usefd_statement,
         // Phase 3: Todo standalone statement
         $.shellspec_todo_statement,
         // Phase 4: Pending/Skip standalone statements
@@ -148,16 +166,25 @@ export default grammar(bashGrammar, {
         prec.right(3, seq("Data", field("argument", argument($)), repeat(field("extra_argument", argument($))), "|", repeat1(field("filter", argument($))))),
         // File input: `Data < FILE` (no End)
         prec.right(4, seq("Data", "<", field("file", argument($)))),
-        // String argument style (no End) - lowest precedence
-        seq("Data", field("argument", argument($))),
+        // Command with argument(s), no filter and no End (lowest precedence).
+        // `Data printf '%s\n' foo bar` runs a command, so the argument list repeats —
+        // matching the pipe-filter variant above rather than contradicting it.
+        // prec.right is required, not cosmetic: the repeat is otherwise ambiguous with
+        // the end of an enclosing command substitution (`` `Data x y` ``), which
+        // tree-sitter reports as an unresolved conflict. 2 keeps this variant below the
+        // #| blocks (5, 6), `Data < FILE` (4) and the pipe-filter form (3).
+        prec.right(2, seq("Data", field("argument", argument($)), repeat(field("extra_argument", argument($))))),
       ),
 
-    // Phase 1: When statement — core ShellSpec assertion DSL
+    // Phase 1: When statement — core ShellSpec assertion DSL.
+    // The optional `I` is ShellSpec's readable-English form (`When I run ...`);
+    // shellspec_when() in lib/core/dsl.sh shifts it off before dispatching.
     shellspec_when_statement: ($) =>
       prec.right(
         2,
         seq(
           "When",
+          optional(field("modifier", "I")),
           field("type", choice("call", seq("run", optional(choice("command", "script", "source"))))),
           field("function", argument($)),
           repeat(field("argument", argument($))),
@@ -190,6 +217,12 @@ export default grammar(bashGrammar, {
     // Phase 2: Dump statement (standalone, no arguments)
     shellspec_dump_statement: () => prec.right(2, "Dump"),
 
+    // ShellSpec `UseFD <fd>`: reserve a file descriptor for the example group.
+    // Listed in ShellSpec's own keyword table (lib/libexec/grammar/dsls). Without a
+    // rule it degraded silently into a bash command — no ERROR, so the spec-file
+    // parse check could never surface it.
+    shellspec_usefd_statement: ($) => prec.right(2, seq("UseFD", repeat1(field("argument", argument($))))),
+
     // Phase 2: Intercept statement
     shellspec_intercept_statement: ($) => prec.right(2, seq("Intercept", repeat1(field("argument", argument($))))),
 
@@ -208,24 +241,33 @@ export default grammar(bashGrammar, {
       prec.right(
         2,
         choice(
-          // Include directive; the single path may be a concatenation such as `$ROOT/lib.sh`
-          seq("Include", field("path", choice(argument($), $.concatenation))),
+          // Include directive; the path may be a concatenation such as `$ROOT/lib.sh`.
+          // Trailing words become the included script's positional parameters —
+          // translator.sh's include() forwards them with `eval trans include "$@"`.
+          seq("Include", field("path", choice(argument($), $.concatenation)), repeat(field("argument", argument($)))),
           // Conditional `Skip if` (plain Skip is shellspec_skip_statement)
-          prec.right(3, seq("Skip", "if", field("reason", argument($)), field("condition", repeat1(choice(argument($), $.test_command))))),
+          prec.right(3, seq("Skip", "if", field("reason", argument($)), field("condition", repeat1(argument($))))),
+          // Reason-first ordering: `Skip "reason" if [ condition ]`. shellspec_skip()
+          // branches on whether $1 is the literal `if`, so both orderings are real.
+          prec.right(3, seq("Skip", field("reason", argument($)), "if", field("condition", repeat1(argument($))))),
         ),
       ),
 
     // Phase 3: Todo standalone statement (without End block).
     // The description is optional: ShellSpec accepts a bare `Todo`.
-    shellspec_todo_statement: ($) => prec.right(2, seq("Todo", optional(field("description", argument($))))),
+    // `repeat`, not `optional`: these DSL words are shell functions invoked with "$@",
+    // so trailing words are syntactically valid. With `optional`, the second word fell
+    // out of the rule and was re-parsed as a fresh statement — and when that word was
+    // `if`, it opened a bash if_statement that never closed and swallowed the file.
+    shellspec_todo_statement: ($) => prec.right(2, seq("Todo", repeat(field("description", argument($))))),
 
     // Phase 4: Pending standalone statement (without End block).
     // The reason is optional: ShellSpec accepts a bare `Pending`.
-    shellspec_pending_statement: ($) => prec.right(2, seq("Pending", optional(field("reason", argument($))))),
+    shellspec_pending_statement: ($) => prec.right(2, seq("Pending", repeat(field("reason", argument($))))),
 
     // Phase 4: Skip standalone statement (without End block).
     // The reason is optional: ShellSpec accepts a bare `Skip` (official example: `Skip # without reason`).
-    shellspec_skip_statement: ($) => prec.right(2, seq("Skip", optional(field("reason", argument($))))),
+    shellspec_skip_statement: ($) => prec.right(2, seq("Skip", repeat(field("reason", argument($))))),
 
     // Phase 4: %text directive
     shellspec_text_directive: ($) =>

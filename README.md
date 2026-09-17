@@ -340,7 +340,7 @@ npx tree-sitter test -i "real_world_patterns"
 
 ### Grammar Structure
 
-The grammar extends tree-sitter-bash with 27 rules organized as follows:
+The grammar extends tree-sitter-bash with 28 rules organized as follows:
 
 **Block rules:**
 
@@ -363,6 +363,7 @@ The grammar extends tree-sitter-bash with 27 rules organized as follows:
 - `shellspec_set_statement` - Set option directives
 - `shellspec_dump_statement` - Dump debugging output
 - `shellspec_intercept_statement` - Intercept function calls
+- `shellspec_usefd_statement` - UseFD file-descriptor reservations
 - `shellspec_todo_statement` - Todo markers
 - `shellspec_pending_statement` - Pending markers
 - `shellspec_skip_statement` - Skip markers

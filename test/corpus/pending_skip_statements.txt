@@ -144,3 +144,66 @@ End
   (shellspec_describe_block
     description: (raw_string)
     (shellspec_todo_statement)))
+
+================================================================================
+Skip with reason before if condition
+================================================================================
+
+Skip "not available" if [ ! "$FDVAR" ]
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_directive_statement
+    reason: (string
+      (string_content))
+    condition: (test_command
+      (unary_expression
+        (string
+          (simple_expansion
+            (variable_name)))))))
+
+================================================================================
+Skip with multiple arguments
+================================================================================
+
+Skip "reason" "extra"
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_skip_statement
+    reason: (string
+      (string_content))
+    reason: (string
+      (string_content))))
+
+================================================================================
+Todo with multiple arguments
+================================================================================
+
+Todo "write" "this"
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_todo_statement
+    description: (string
+      (string_content))
+    description: (string
+      (string_content))))
+
+================================================================================
+Pending with multiple arguments
+================================================================================
+
+Pending "later" "maybe"
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_pending_statement
+    reason: (string
+      (string_content))
+    reason: (string
+      (string_content))))

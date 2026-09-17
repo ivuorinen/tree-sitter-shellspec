@@ -305,3 +305,20 @@ End
         (string_content)))
     (shellspec_when_statement
       function: (word))))
+
+================================================================================
+Data with command and multiple arguments
+================================================================================
+
+Data printf '%s\n' "foo" "bar"
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_data_block
+    argument: (word)
+    extra_argument: (raw_string)
+    extra_argument: (string
+      (string_content))
+    extra_argument: (string
+      (string_content))))

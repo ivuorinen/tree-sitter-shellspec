@@ -63,7 +63,7 @@ npm run precommit
 
 ### Core Grammar Structure
 
-The grammar extends `tree-sitter-bash` with 27 ShellSpec-specific rules (block, statement, `%` directive
+The grammar extends `tree-sitter-bash` with 28 ShellSpec-specific rules (block, statement, `%` directive
 and helper rules). README.md "Grammar Structure" lists every rule.
 
 ### Grammar Pattern
@@ -117,7 +117,7 @@ Supported ShellSpec syntax is documented in README.md "Grammar Support".
 
 ### Quality Gates
 
-- **Minimum tests**: 115, enforced by the CI coverage job (currently 134 tests passing)
+- **Minimum tests**: 115, enforced by the CI coverage job (currently 150 tests passing)
 - **Coverage**: All ShellSpec constructs must be tested
 - **CI validation**: Tests run on Node 22 and 24
 

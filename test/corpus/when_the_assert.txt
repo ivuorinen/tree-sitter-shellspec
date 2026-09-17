@@ -301,3 +301,119 @@ Assert check_status $status
     argument: (word)
     argument: (simple_expansion
       (variable_name))))
+
+================================================================================
+Assert with bracket test expression
+================================================================================
+
+Assert [ "$a" = "$b" ]
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_assert_statement
+    argument: (test_command
+      (binary_expression
+        left: (string
+          (simple_expansion
+            (variable_name)))
+        right: (string
+          (simple_expansion
+            (variable_name)))))))
+
+================================================================================
+Assert with command and bracket test expression
+================================================================================
+
+Assert custom_assertion [ "123" = "123" ]
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_assert_statement
+    argument: (word)
+    argument: (test_command
+      (binary_expression
+        left: (string
+          (string_content))
+        right: (string
+          (string_content))))))
+
+================================================================================
+When run with bracket test expression
+================================================================================
+
+When run shellspec_syntax_param count [ 1 -gt 0 ]
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_when_statement
+    function: (word)
+    argument: (word)
+    argument: (test_command
+      (binary_expression
+        left: (number)
+        operator: (test_operator)
+        right: (number)))))
+
+================================================================================
+The with satisfy matcher and bracket test expression
+================================================================================
+
+The value "a" should satisfy [ 1 -gt 0 ]
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_the_statement
+    subject: (shellspec_subject
+      (word)
+      (string
+        (string_content)))
+    matcher: (shellspec_matcher
+      (word)
+      (test_command
+        (binary_expression
+          left: (number)
+          operator: (test_operator)
+          right: (number))))))
+
+================================================================================
+When I run
+================================================================================
+
+When I run foo cat
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_when_statement
+    function: (word)
+    argument: (word)))
+
+================================================================================
+When I call
+================================================================================
+
+When I call add 1 2
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_when_statement
+    function: (word)
+    argument: (number)
+    argument: (number)))
+
+================================================================================
+When I run script
+================================================================================
+
+When I run script ./bin/prog
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_when_statement
+    function: (word)))
