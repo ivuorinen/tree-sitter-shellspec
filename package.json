@@ -2,7 +2,9 @@
   "name": "@ivuorinen/tree-sitter-shellspec",
   "version": "0.1.0",
   "description": "ShellSpec grammar for tree-sitter (extends bash)",
-  "main": "grammar.js",
+  "type": "module",
+  "main": "bindings/node/index.js",
+  "types": "bindings/node/index.d.ts",
   "author": "Ismo Vuorinen",
   "license": "MIT",
   "repository": {
@@ -11,13 +13,17 @@
   },
   "files": [
     "grammar.js",
+    "tree-sitter.json",
     "src",
     "queries",
+    "types",
     "binding.gyp",
     "bindings",
-    "scripts"
+    "scripts",
+    "THIRD_PARTY_NOTICES.md"
   ],
   "scripts": {
+    "install": "node-gyp-build",
     "generate": "npx tree-sitter generate && ./scripts/post-generate.sh",
     "generate:only": "npx tree-sitter generate",
     "test": "npx tree-sitter test",
@@ -25,8 +31,7 @@
     "web": "npx tree-sitter web-ui",
     "build": "npx tree-sitter build .",
     "dev": "npm run generate && npm run test",
-    "dev:watch": "nodemon --watch grammar.js --watch test/ --ext js,txt --exec 'npm run dev'",
-    "lint": "npx mega-linter-runner",
+    "lint": "npx mega-linter-runner@10.1.0",
     "lint:markdown": "markdownlint . --config .markdownlint.json --ignore node_modules",
     "lint:markdown:fix": "markdownlint . --config .markdownlint.json --ignore node_modules --fix",
     "lint:editorconfig": "editorconfig-checker",
@@ -36,24 +41,22 @@
     "clean": "rm -rf src/parser.c src/grammar.json src/node-types.json",
     "rebuild": "npm run clean && npm run generate"
   },
-  "tree-sitter": [
-    {
-      "scope": "source.shellspec",
-      "file-types": [
-        "shellspec"
-      ],
-      "path": ".",
-      "grammar-path": "grammar.js",
-      "highlights": "queries/highlights.scm"
-    }
-  ],
   "dependencies": {
-    "tree-sitter-bash": "^0.25.1"
+    "node-addon-api": "^8.9.2",
+    "node-gyp-build": "^4.8.4",
+    "tree-sitter-bash": "0.25.1"
+  },
+  "peerDependencies": {
+    "tree-sitter": "^0.25.0"
+  },
+  "peerDependenciesMeta": {
+    "tree-sitter": {
+      "optional": true
+    }
   },
   "devDependencies": {
     "editorconfig-checker": "^7.0.0",
     "markdownlint-cli": "^0.49.1",
-    "nodemon": "^3.0.1",
     "prettier": "^3.6.2",
     "tree-sitter-cli": "^0.27.0"
   },

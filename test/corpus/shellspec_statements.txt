@@ -94,3 +94,68 @@ Intercept "network_call"
   (shellspec_intercept_statement
     argument: (string
       (string_content))))
+
+================================================================================
+Include with arguments
+================================================================================
+
+Include "$FIXTURE/include.sh" A B C
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_directive_statement
+    path: (string
+      (simple_expansion
+        (variable_name))
+      (string_content))
+    argument: (word)
+    argument: (word)
+    argument: (word)))
+
+================================================================================
+UseFD with number
+================================================================================
+
+UseFD 5
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_usefd_statement
+    argument: (number)))
+
+================================================================================
+UseFD with variable name
+================================================================================
+
+UseFD FD
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_usefd_statement
+    argument: (word)))
+
+================================================================================
+Read-write redirect in a function body
+================================================================================
+
+append() {
+  : <> "$MARK_FILE"
+}
+
+--------------------------------------------------------------------------------
+
+(program
+  (function_definition
+    name: (word)
+    body: (compound_statement
+      (redirected_statement
+        body: (command
+          name: (command_name
+            (word)))
+        redirect: (file_redirect
+          destination: (string
+            (simple_expansion
+              (variable_name))))))))

@@ -1,0 +1,35 @@
+[build-system]
+build-backend = "setuptools.build_meta"
+requires = [ "setuptools>=62.4.0", "wheel" ]
+
+[project]
+authors = [ { name = "Ismo Vuorinen" } ]
+classifiers = [
+  "Intended Audience :: Developers",
+  "Topic :: Software Development :: Compilers",
+  "Topic :: Text Processing :: Linguistic",
+  "Typing :: Typed",
+]
+description = "ShellSpec grammar for tree-sitter (extends bash)"
+keywords = [ "incremental", "parsing", "tree-sitter", "shellspec" ]
+license.text = "MIT"
+name = "tree-sitter-shellspec"
+readme = "README.md"
+requires-python = ">=3.10"
+version = "0.1.0"
+
+[project.urls]
+Homepage = "https://github.com/ivuorinen/tree-sitter-shellspec"
+
+[project.optional-dependencies]
+# src/parser.c declares LANGUAGE_VERSION 15, and ABI 15 landed in the C library at
+# 0.25.0 (0.24.x tops out at 14). This is a floor, not a fix for a live break: the
+# previous "~=0.24" is a two-component compatible release, i.e. >=0.24, ==0.*, so it
+# already permitted 0.25 and a clean install resolved to 0.26.0. The floor matters only
+# when something else pins the runtime down — a constraints file or lockfile naming
+# 0.24.7 satisfies ~=0.24 and then fails at load time, but cannot satisfy ~=0.25.
+core = [ "tree-sitter~=0.25" ]
+
+[tool.cibuildwheel]
+build = "cp310-*"
+build-frontend = "build"

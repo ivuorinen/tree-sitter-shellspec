@@ -1,3 +1,19 @@
+// External scanner for tree-sitter-shellspec.
+//
+// Derived from tree-sitter-bash v0.25.1 src/scanner.c (https://github.com/tree-sitter/tree-sitter-bash),
+// Copyright (c) 2017 Max Brunsfeld, MIT License. See THIRD_PARTY_NOTICES.md.
+//
+// The TokenType enum must keep the exact order of the `externals` this grammar inherits
+// from tree-sitter-bash; a reordered or extended upstream externals list mis-tokenizes
+// heredocs and expansions without any build error. Local changes versus upstream:
+// - entry points renamed from tree_sitter_bash_* to tree_sitter_shellspec_*
+// - <stdlib.h> is included explicitly for calloc/free
+// - deserialize(): a zero-length state deletes and clears every heredoc instead of
+//   only resetting them, so no stale heredoc stack entries survive a reset
+// - deserialize(): reserves at least one byte for an empty delimiter
+// - deserialize(): NUL-terminates a restored delimiter that lacks a trailing NUL,
+//   because heredoc end matching compares delimiters with strcmp()
+
 #include "tree_sitter/array.h"
 #include "tree_sitter/parser.h"
 

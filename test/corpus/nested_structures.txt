@@ -78,17 +78,13 @@ Describe with hooks and tests
 ================================================================================
 
 Describe "complete feature"
-  BeforeEach
-    setup_test
-  End
+  BeforeEach 'setup_test'
 
   It "should work correctly"
     run_test
   End
 
-  AfterEach
-    cleanup_test
-  End
+  AfterEach 'cleanup_test'
 End
 
 --------------------------------------------------------------------------------
@@ -97,34 +93,26 @@ End
   (shellspec_describe_block
     description: (string
       (string_content))
-    (shellspec_hook_block
-      (command
-        name: (command_name
-          (word))))
+    (shellspec_hook_statement
+      argument: (raw_string))
     (shellspec_it_block
       description: (string
         (string_content))
       (command
         name: (command_name
           (word))))
-    (shellspec_hook_block
-      (command
-        name: (command_name
-          (word))))))
+    (shellspec_hook_statement
+      argument: (raw_string))))
 
 ================================================================================
 Complex nested structure
 ================================================================================
 
 Describe "main functionality"
-  BeforeAll
-    global_setup
-  End
+  BeforeAll 'global_setup'
 
   Context "when user is authenticated"
-    BeforeEach
-      login_user
-    End
+    BeforeEach 'login_user'
 
     It "should access protected resource"
       access_resource
@@ -136,14 +124,10 @@ Describe "main functionality"
       End
     End
 
-    AfterEach
-      logout_user
-    End
+    AfterEach 'logout_user'
   End
 
-  AfterAll
-    global_cleanup
-  End
+  AfterAll 'global_cleanup'
 End
 
 --------------------------------------------------------------------------------
@@ -152,17 +136,13 @@ End
   (shellspec_describe_block
     description: (string
       (string_content))
-    (shellspec_hook_block
-      (command
-        name: (command_name
-          (word))))
+    (shellspec_hook_statement
+      argument: (raw_string))
     (shellspec_context_block
       description: (string
         (string_content))
-      (shellspec_hook_block
-        (command
-          name: (command_name
-            (word))))
+      (shellspec_hook_statement
+        argument: (raw_string))
       (shellspec_it_block
         description: (string
           (string_content))
@@ -178,14 +158,10 @@ End
           (command
             name: (command_name
               (word)))))
-      (shellspec_hook_block
-        (command
-          name: (command_name
-            (word)))))
-    (shellspec_hook_block
-      (command
-        name: (command_name
-          (word))))))
+      (shellspec_hook_statement
+        argument: (raw_string)))
+    (shellspec_hook_statement
+      argument: (raw_string))))
 
 ================================================================================
 Mixed with regular bash

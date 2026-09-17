@@ -6,9 +6,12 @@
       "scope": "source.shellspec",
       "path": ".",
       "file-types": [
-        "shellspec"
+        "shellspec",
+        "sh"
       ],
+      "content-regex": "(?m)^\\s*[fx]?(Describe|Context|ExampleGroup|It|Example|Specify)\\s",
       "highlights": [
+        "queries/bash-highlights.scm",
         "queries/highlights.scm"
       ],
       "injection-regex": "shellspec"

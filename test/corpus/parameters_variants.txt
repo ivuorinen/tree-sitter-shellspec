@@ -11,12 +11,12 @@ End
 
 (program
   (shellspec_utility_block
-    label: (string
-      (string_content))
     (command
       name: (command_name
         (string
-          (string_content))))
+          (string_content)))
+      argument: (string
+        (string_content)))
     (command
       name: (command_name
         (string
@@ -28,21 +28,14 @@ End
 Parameters:value variant
 ================================================================================
 
-Parameters:value
-  val1
-  val2
-End
+Parameters:value val1 val2
 
 --------------------------------------------------------------------------------
 
 (program
-  (shellspec_utility_block
-    (command
-      name: (command_name
-        (word)))
-    (command
-      name: (command_name
-        (word)))))
+  (shellspec_parameters_value_statement
+    value: (word)
+    value: (word)))
 
 ================================================================================
 Parameters:matrix variant
@@ -57,12 +50,12 @@ End
 
 (program
   (shellspec_utility_block
-    label: (string
-      (string_content))
     (command
       name: (command_name
         (string
-          (string_content))))
+          (string_content)))
+      argument: (string
+        (string_content)))
     (command
       name: (command_name
         (string
@@ -87,11 +80,12 @@ End
         (word)))))
 
 ================================================================================
-Parameters:block with label
+Parameters:block with multiple rows
 ================================================================================
 
-Parameters:block "test cases"
+Parameters:block
   "case1" "expected1"
+  "case2" "expected2"
 End
 
 --------------------------------------------------------------------------------
@@ -101,10 +95,43 @@ End
     (command
       name: (command_name
         (string
-          (string_content))))
+          (string_content)))
+      argument: (string
+        (string_content)))
     (command
       name: (command_name
         (string
           (string_content)))
       argument: (string
         (string_content)))))
+
+================================================================================
+Parameters:value inside Describe
+================================================================================
+
+Describe 'addition'
+  Parameters:value 1 2 3
+  It "uses $1"
+    When call echo "$1"
+  End
+End
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_describe_block
+    description: (raw_string)
+    (shellspec_parameters_value_statement
+      value: (number)
+      value: (number)
+      value: (number))
+    (shellspec_it_block
+      description: (string
+        (string_content)
+        (simple_expansion
+          (variable_name)))
+      (shellspec_when_statement
+        function: (word)
+        argument: (string
+          (simple_expansion
+            (variable_name)))))))
