@@ -105,6 +105,12 @@ uninstall:
 		'$(DESTDIR)$(LIBDIR)'/lib$(LANGUAGE_NAME).$(SOEXT) \
 		'$(DESTDIR)$(INCLUDEDIR)'/tree_sitter/$(LANGUAGE_NAME).h \
 		'$(DESTDIR)$(PCLIBDIR)'/$(LANGUAGE_NAME).pc
+# The MinGW branch of `install` writes the DLL to BINDIR and the DLL plus its import
+# library to LIBDIR. None of those paths is covered above, so remove them explicitly.
+ifneq ($(findstring mingw32,$(MACHINE)),)
+	$(RM) '$(DESTDIR)$(BINDIR)'/lib$(LANGUAGE_NAME).dll \
+		'$(DESTDIR)$(LIBDIR)'/lib$(LANGUAGE_NAME).dll.a
+endif
 	$(RM) -r '$(DESTDIR)$(DATADIR)'/tree-sitter/queries/shellspec
 
 clean:

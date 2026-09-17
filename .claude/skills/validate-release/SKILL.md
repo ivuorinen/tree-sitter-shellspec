@@ -29,6 +29,11 @@ Run comprehensive pre-release checks before tagging a release.
       fi
     done
     echo "Spec files with parse errors: $failed_files"
+    # Exit 1, not "exit $failed_files": an exit status is taken modulo 256, so a
+    # count of 256 would report success.
+    if [ "$failed_files" -gt 0 ]; then
+      exit 1
+    fi
     ```
 
     Must be 0 files.

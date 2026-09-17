@@ -32,9 +32,16 @@ process.stdin.on("data", (chunk) => (raw += chunk)).on("end", () => {
     process.exit(2);
   }
   const generatedPath = /(^|[^\w.-])src\/(parser\.c|grammar\.json|node-types\.json|tree_sitter\b)/;
+  // Equivalent spellings of the same path defeat a literal match: src/"parser.c"
+  // and src/./parser.c both name src/parser.c, in either quote style. Strip quote
+  // characters and collapse /./ before matching so the checks see one canonical form.
+  // This is normalisation, not Bash parsing: $VAR indirection still gets through,
+  // and no regex can close that. The guard is a safety net for honest mistakes,
+  // not a sandbox boundary.
+  const normalize = (s) => s.replace(/["\x27]/g, "").replace(/(^|[^.])\.\//g, "$1");
   const reasons = new Set();
   for (const part of command.split(/&&|\|\||;|\n/)) {
-    const segment = part.trim();
+    const segment = normalize(part.trim());
     if (/^git\s+(checkout|restore)\b/.test(segment)) continue;
     if (generatedPath.test(segment)) {
       // `>|` is the clobber-anyway redirect. The bar has to be matched explicitly:

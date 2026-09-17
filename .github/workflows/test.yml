@@ -71,8 +71,17 @@ jobs:
 
       # Fails when grammar.js changed but the committed src/ output was not regenerated,
       # so CI never tests (or releases) a parser that differs from the committed one.
+      # `git status --porcelain`, not `git diff --exit-code`: diff only sees tracked
+      # files, so a generator that emits a *new* output under src/ would leave it
+      # untracked and the gate would pass while the build used an uncommitted file.
       - name: Verify Committed Generated Files
-        run: git diff --exit-code -- src/
+        run: |
+          changes=$(git status --porcelain -- src/)
+          if [ -n "$changes" ]; then
+            echo "::error::src/ differs from the committed output; run 'npm run generate' and commit."
+            printf '%s\n' "$changes"
+            exit 1
+          fi
         shell: bash
 
       - name: Test Parser with Sample Code

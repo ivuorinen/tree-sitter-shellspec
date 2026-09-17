@@ -5,7 +5,11 @@ This project includes material from the following MIT-licensed projects.
 ## tree-sitter-bash
 
 - Source: <https://github.com/tree-sitter/tree-sitter-bash>
-- Used in: `src/scanner.c`, the external scanner, derived from tree-sitter-bash v0.25.1 `src/scanner.c`
+- Used in:
+  - `src/scanner.c`, the external scanner, derived from tree-sitter-bash v0.25.1 `src/scanner.c`
+  - `queries/bash-highlights.scm`, vendored verbatim from v0.25.1 `queries/highlights.scm`
+  - `grammar.js` extends tree-sitter-bash's grammar, so the generated `src/parser.c`,
+    `src/grammar.json` and `src/node-types.json` embed its rules
 
 ```text
 The MIT License (MIT)

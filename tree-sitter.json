@@ -11,7 +11,7 @@
       ],
       "content-regex": "(?m)^\\s*[fx]?(Describe|Context|ExampleGroup|It|Example|Specify)\\s",
       "highlights": [
-        "node_modules/tree-sitter-bash/queries/highlights.scm",
+        "queries/bash-highlights.scm",
         "queries/highlights.scm"
       ],
       "injection-regex": "shellspec"
