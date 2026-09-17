@@ -11,6 +11,11 @@ bindings/
 # Findings store written by the nitpicker audit tooling
 docs/audit/findings/
 
+# Owned by ts-standard, whose rules are fixed (single quotes, no semicolons) and cannot be
+# reconfigured. Prettier here is semi: true / singleQuote: false, so the two would revert
+# each other on every run. One file, one formatter.
+types/
+
 # JSON is formatted by the pretty-format-json pre-commit hook (MegaLinter's JSON_PRETTIER is disabled);
 # Prettier collapses arrays that hook expands again
 *.json
