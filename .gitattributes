@@ -1,8 +1,20 @@
 * text=auto eol=lf
 
-# Generated source files
+# Patterns here cover only the bindings tree-sitter.json declares (c, go, node,
+# python, rust, swift). Adding a binding means adding its patterns too.
+
+# Generated source files.
+# src/scanner.c is deliberately absent: it is hand-maintained (derived from
+# tree-sitter-bash, with local changes listed in its header) and must stay
+# reviewable. Everything else under src/ is rewritten by `tree-sitter generate`.
 src/*.json linguist-generated
-src/parser.c linguist-generated
+# -diff on parser.c only: it is ~860k lines, so `git diff`, `git show` and
+# `git log -p` are unusable without it. Git prints "Binary files differ"
+# instead; use `git diff --text` to read it when debugging generation. The
+# `git diff --exit-code -- src/` gate in test.yml still detects changes, since
+# -diff changes rendering, not detection. The JSON outputs stay diffable:
+# they are the readable record of what a grammar change did.
+src/parser.c linguist-generated -diff
 src/tree_sitter/* linguist-generated
 
 # C bindings
@@ -13,7 +25,6 @@ Makefile linguist-generated
 # Rust bindings
 bindings/rust/* linguist-generated
 Cargo.toml linguist-generated
-Cargo.lock linguist-generated
 
 # Node.js bindings (package.json is hand-maintained here and stays reviewable)
 bindings/node/* linguist-generated
@@ -28,18 +39,7 @@ pyproject.toml linguist-generated
 # Go bindings
 bindings/go/* linguist-generated
 go.mod linguist-generated
-go.sum linguist-generated
 
 # Swift bindings
 bindings/swift/** linguist-generated
 Package.swift linguist-generated
-Package.resolved linguist-generated
-
-# Zig bindings
-bindings/zig/* linguist-generated
-build.zig linguist-generated
-build.zig.zon linguist-generated
-
-# Java bindings
-pom.xml linguist-generated
-bindings/java/** linguist-generated
