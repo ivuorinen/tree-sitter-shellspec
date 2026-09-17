@@ -43,6 +43,12 @@ JSON_V8R_FILTER_REGEX_EXCLUDE: "tree-sitter\\.json"
 # Exclude some paths from all linters as they are generated or LLM-managed
 YAML_V8R_FILTER_REGEX_EXCLUDE: "(mega-linter\\.yml|\\.serena/)"
 
-# Exclude some paths from all linters as they are generated or LLM-managed
+# Exclude some paths from all linters as they are generated or LLM-managed.
+# bindings/ is scaffolding emitted by `tree-sitter init` for six languages; linting it
+# reported 18 errors across golangci-lint, revive, mypy, pylint, pyright and
+# ts-standard, and every fix would be erased the next time the bindings are
+# regenerated. IGNORE_GENERATED_FILES does not cover it: MegaLinter looks for an
+# `@generated` marker in the file body, not the linguist-generated mark in
+# .gitattributes. Same rationale as src/ above.
 FILTER_REGEX_EXCLUDE: >-
-  (node_modules|test/spec|src/|megalinter-reports|\.serena|\.claude|docs/audit/findings)
+  (node_modules|test/spec|src/|bindings/|megalinter-reports|\.serena|\.claude|docs/audit/findings)
