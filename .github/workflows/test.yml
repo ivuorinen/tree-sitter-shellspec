@@ -134,6 +134,32 @@ jobs:
           exit "$failed"
         shell: bash
 
+      # test/spec/ is a copy of ShellSpec's tutorial `examples/`, which exercises each
+      # construct in its simplest documented form. The framework's own regression suite
+      # is harder and is where real usage lives: it once had 8 failing files that the
+      # tutorial corpus could not surface (bracket test arguments, `When I run`,
+      # `Skip "reason" if`, `Include` with arguments, multi-argument `Data`, `<>`).
+      # Pinned to a tag on purpose — a moving ref would let an upstream commit turn
+      # this build red on its own.
+      - name: Parse the upstream ShellSpec suite
+        env:
+          SHELLSPEC_REF: "0.28.1"
+        run: |
+          git clone --depth 1 --branch "$SHELLSPEC_REF" \
+            https://github.com/shellspec/shellspec .tmp-shellspec
+          failed=0
+          count=0
+          while IFS= read -r f; do
+            count=$((count + 1))
+            npx tree-sitter parse --quiet "$f" > /dev/null || { echo "❌ parse errors: $f"; failed=1; }
+          done <<EOF
+          $(find .tmp-shellspec/spec .tmp-shellspec/examples -name '*.sh' | sort)
+          EOF
+          echo "parsed $count upstream files"
+          rm -rf .tmp-shellspec
+          exit "$failed"
+        shell: bash
+
   coverage:
     name: 📊 Test Coverage
     runs-on: ubuntu-latest

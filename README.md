@@ -16,7 +16,8 @@ It enables syntax highlighting, code navigation, and tooling integration for She
 
 - **ShellSpec syntax support** - Example groups, examples, hooks, When/The/Assert, Data and Parameters, Mock blocks,
   and % directives (unsupported syntax is listed under [Areas for Contribution](#areas-for-contribution))
-- **Real-world compatibility** - The ShellSpec example specs in `test/spec/` parse without errors
+- **Real-world compatibility** - Both ShellSpec's tutorial examples (`test/spec/`) and its own
+  regression suite (the upstream `spec/` and `examples/` trees, parsed in CI) are ERROR-free
 - **Bash integration** - Seamlessly handles mixed ShellSpec/bash code
 - **Tested** - Corpus tests cover each supported construct, and CI enforces a minimum test count
 - **Editor support** - Works with any Tree-sitter compatible editor
