@@ -47,3 +47,11 @@ yarn-error.log*
 shellspec.so
 build/
 .claude/settings.local.json
+
+# Python build artifacts. `pip install .` / `pip install '.[core]'` — a normal thing to
+# do in a repo that ships pyproject.toml and bindings/python — writes an .egg-info
+# directory next to the package and leaves it untracked.
+*.egg-info/
+__pycache__/
+*.py[cod]
+.venv/

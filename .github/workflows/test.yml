@@ -169,6 +169,76 @@ jobs:
           exit "$failed"
         shell: bash
 
+  # The corpus tests run through the tree-sitter CLI's own runtime, so they cannot catch
+  # a binding whose declared runtime is too old for the grammar's ABI. That gap is not
+  # hypothetical: parser.c targets ABI 15, and the Go binding's only available runtime
+  # tops out at 14. These steps load the built grammar through each language's real
+  # runtime, which is the only way that class of breakage surfaces.
+  bindings:
+    name: 🔌 Bindings
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    needs: test
+    permissions:
+      contents: read # required to check out the repository
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 24
+
+      - name: Install Dependencies
+        run: npm ci
+        shell: bash
+
+      - name: Build the native addon
+        run: npm run build
+        shell: bash
+
+      # `tree-sitter` is declared as an OPTIONAL peerDependency, and npm refuses to add
+      # one to node_modules: `npm i --no-save tree-sitter` exits 0 and installs nothing,
+      # as do --legacy-peer-deps and --force. Installing into a separate prefix and
+      # symlinking it in is what actually works, and leaves package.json and
+      # package-lock.json untouched. The explicit resolve check is the point of the
+      # step: without it a silent no-op would leave the test below passing vacuously.
+      - name: Install the tree-sitter runtime
+        run: |
+          npm i --prefix "$RUNNER_TEMP/ts-runtime" tree-sitter@^0.25
+          ln -s "$RUNNER_TEMP/ts-runtime/node_modules/tree-sitter" node_modules/tree-sitter
+          node -e "console.log('tree-sitter runtime', require('tree-sitter/package.json').version)" || {
+            echo "::error::tree-sitter runtime is not resolvable; the Node binding test would pass without testing anything"
+            exit 1
+          }
+        shell: bash
+
+      - name: Node binding
+        run: node --test bindings/node/binding_test.js
+        shell: bash
+
+      - name: Setup Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.12"
+
+      - name: Python binding
+        run: |
+          python -m pip install --upgrade pip
+          pip install '.[core]'
+          python -c "import tree_sitter; print('tree-sitter runtime', tree_sitter.__version__)"
+          python -m unittest discover -s bindings/python/tests -v
+        shell: bash
+
+      # The Go binding is deliberately absent. go-tree-sitter's newest release (v0.24.0)
+      # bundles the C library at ABI 14 and cannot load this ABI 15 grammar, so a Go step
+      # would fail by design rather than report a regression. See README
+      # "Known Limitations"; add a step here once an ABI 15 release exists.
+
   coverage:
     name: 📊 Test Coverage
     runs-on: ubuntu-latest
