@@ -32,8 +32,10 @@ jobs:
         include:
           - language: actions
           - language: javascript
-          # The shipped C scanner (src/scanner.c) and parser; build-mode none needs no compile step
-          - language: c-cpp
+          # The shipped C scanner (src/scanner.c) and parser; build-mode none needs no compile step.
+          # `cpp`, not CodeQL's newer `c-cpp`: the wrapper action validates the language against
+          # `java|csharp|cpp|c|go|swift|kotlin` and rejects `c-cpp` before CodeQL ever starts.
+          - language: cpp
             build-mode: none
     steps:
       - name: CodeQL Analysis
