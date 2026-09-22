@@ -425,14 +425,11 @@ Contributions are welcome! Please see our [contributing guidelines](CONTRIBUTING
 
 ### Known Limitations
 
-- **The Go binding cannot load this grammar yet.** The generated parser targets
-  tree-sitter ABI 15, but the newest release of
-  [go-tree-sitter](https://github.com/tree-sitter/go-tree-sitter) (`v0.24.0`) bundles the
-  C library at ABI 14 (`TREE_SITTER_LANGUAGE_VERSION 14`,
-  `TREE_SITTER_MIN_COMPATIBLE_LANGUAGE_VERSION 13`), so `Parser.SetLanguage` rejects it.
-  There is no dependency bump that fixes this — it needs an upstream release supporting
-  ABI 15. The binding is kept so it works as soon as one ships. The C, Node, Python,
-  Rust and Swift bindings are unaffected: each pins a runtime at ABI 15 or newer.
+- **Every binding needs a runtime at ABI 15 or newer.** The generated parser targets
+  tree-sitter ABI 15. Older runtimes reject it at `set_language` time, e.g.
+  [go-tree-sitter](https://github.com/tree-sitter/go-tree-sitter) `v0.24.0` stops at
+  ABI 14. Each binding's declared runtime floor (`go-tree-sitter v0.25.0`,
+  `tree-sitter` `0.25` for Node and Python) already enforces this.
 
 ### Areas for Contribution
 

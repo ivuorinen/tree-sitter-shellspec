@@ -148,14 +148,16 @@ jobs:
       # is harder and is where real usage lives: it once had 8 failing files that the
       # tutorial corpus could not surface (bracket test arguments, `When I run`,
       # `Skip "reason" if`, `Include` with arguments, multi-argument `Data`, `<>`).
-      # Pinned to a tag on purpose — a moving ref would let an upstream commit turn
-      # this build red on its own.
+      # Pinned to a commit on purpose — a moving ref, a tag included, would let an
+      # upstream push or retag turn this build red on its own.
       - name: Parse the upstream ShellSpec suite
         env:
-          SHELLSPEC_REF: "0.28.1"
+          SHELLSPEC_REF: "90e48c950239f3b8a9fdfa3e869592872c77b981" # 0.28.1
         run: |
-          git clone --depth 1 --branch "$SHELLSPEC_REF" \
-            https://github.com/shellspec/shellspec .tmp-shellspec
+          git init --quiet .tmp-shellspec
+          git -C .tmp-shellspec fetch --quiet --depth 1 \
+            https://github.com/shellspec/shellspec "$SHELLSPEC_REF"
+          git -C .tmp-shellspec checkout --quiet --detach FETCH_HEAD
           failed=0
           count=0
           while IFS= read -r f; do
@@ -171,9 +173,9 @@ jobs:
 
   # The corpus tests run through the tree-sitter CLI's own runtime, so they cannot catch
   # a binding whose declared runtime is too old for the grammar's ABI. That gap is not
-  # hypothetical: parser.c targets ABI 15, and the Go binding's only available runtime
-  # tops out at 14. These steps load the built grammar through each language's real
-  # runtime, which is the only way that class of breakage surfaces.
+  # hypothetical: parser.c targets ABI 15, and go-tree-sitter v0.24.0 tops out at 14.
+  # These steps load the built grammar through each language's real runtime, which is
+  # the only way that class of breakage surfaces.
   bindings:
     name: 🔌 Bindings
     runs-on: ubuntu-latest
@@ -234,10 +236,14 @@ jobs:
           python -m unittest discover -s bindings/python/tests -v
         shell: bash
 
-      # The Go binding is deliberately absent. go-tree-sitter's newest release (v0.24.0)
-      # bundles the C library at ABI 14 and cannot load this ABI 15 grammar, so a Go step
-      # would fail by design rather than report a regression. See README
-      # "Known Limitations"; add a step here once an ABI 15 release exists.
+      - name: Setup Go
+        uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        with:
+          go-version-file: go.mod
+
+      - name: Go binding
+        run: go test -v ./bindings/go/
+        shell: bash
 
   coverage:
     name: 📊 Test Coverage
