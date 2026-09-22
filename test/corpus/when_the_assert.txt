@@ -21,8 +21,8 @@ When call add 2 3
 (program
   (shellspec_when_statement
     function: (word)
-    argument: (word)
-    argument: (word)))
+    argument: (number)
+    argument: (number)))
 
 ================================================================================
 When call function with string argument
@@ -61,9 +61,9 @@ When run command expr 1 + 2
 (program
   (shellspec_when_statement
     function: (word)
+    argument: (number)
     argument: (word)
-    argument: (word)
-    argument: (word)))
+    argument: (number)))
 
 ================================================================================
 When run script
@@ -167,7 +167,7 @@ The line 1 of output should eq "first"
   (shellspec_the_statement
     subject: (shellspec_subject
       (word)
-      (word)
+      (number)
       (word)
       (word))
     matcher: (shellspec_matcher
@@ -218,14 +218,14 @@ End
       (string_content))
     (shellspec_when_statement
       function: (word)
-      argument: (word)
-      argument: (word))
+      argument: (number)
+      argument: (number))
     (shellspec_the_statement
       subject: (shellspec_subject
         (word))
       matcher: (shellspec_matcher
         (word)
-        (word)))))
+        (number)))))
 
 ================================================================================
 Assert inside It block
@@ -248,3 +248,172 @@ End
         (string_content)))
     (shellspec_assert_statement
       argument: (word))))
+
+================================================================================
+When call with unquoted expansion arguments
+================================================================================
+
+When call greet $name ${title} $(whoami)
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_when_statement
+    function: (word)
+    argument: (simple_expansion
+      (variable_name))
+    argument: (expansion
+      (variable_name))
+    argument: (command_substitution
+      (command
+        name: (command_name
+          (word))))))
+
+================================================================================
+The with expansion subject and matcher
+================================================================================
+
+The value $result should eq $expected
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_the_statement
+    subject: (shellspec_subject
+      (word)
+      (simple_expansion
+        (variable_name)))
+    matcher: (shellspec_matcher
+      (word)
+      (simple_expansion
+        (variable_name)))))
+
+================================================================================
+Assert with expansion argument
+================================================================================
+
+Assert check_status $status
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_assert_statement
+    argument: (word)
+    argument: (simple_expansion
+      (variable_name))))
+
+================================================================================
+Assert with bracket test expression
+================================================================================
+
+Assert [ "$a" = "$b" ]
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_assert_statement
+    argument: (test_command
+      (binary_expression
+        left: (string
+          (simple_expansion
+            (variable_name)))
+        right: (string
+          (simple_expansion
+            (variable_name)))))))
+
+================================================================================
+Assert with command and bracket test expression
+================================================================================
+
+Assert custom_assertion [ "123" = "123" ]
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_assert_statement
+    argument: (word)
+    argument: (test_command
+      (binary_expression
+        left: (string
+          (string_content))
+        right: (string
+          (string_content))))))
+
+================================================================================
+When run with bracket test expression
+================================================================================
+
+When run shellspec_syntax_param count [ 1 -gt 0 ]
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_when_statement
+    function: (word)
+    argument: (word)
+    argument: (test_command
+      (binary_expression
+        left: (number)
+        operator: (test_operator)
+        right: (number)))))
+
+================================================================================
+The with satisfy matcher and bracket test expression
+================================================================================
+
+The value "a" should satisfy [ 1 -gt 0 ]
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_the_statement
+    subject: (shellspec_subject
+      (word)
+      (string
+        (string_content)))
+    matcher: (shellspec_matcher
+      (word)
+      (test_command
+        (binary_expression
+          left: (number)
+          operator: (test_operator)
+          right: (number))))))
+
+================================================================================
+When I run
+================================================================================
+
+When I run foo cat
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_when_statement
+    function: (word)
+    argument: (word)))
+
+================================================================================
+When I call
+================================================================================
+
+When I call add 1 2
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_when_statement
+    function: (word)
+    argument: (number)
+    argument: (number)))
+
+================================================================================
+When I run script
+================================================================================
+
+When I run script ./bin/prog
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_when_statement
+    function: (word)))

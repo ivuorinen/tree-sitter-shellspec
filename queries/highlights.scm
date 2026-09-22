@@ -1,5 +1,7 @@
+; inherits: bash
 ; ShellSpec Syntax Highlighting
-; Extends tree-sitter-bash highlighting
+; Extends tree-sitter-bash highlighting. tree-sitter.json loads the bash queries first;
+; nvim-treesitter-style consumers read the `inherits` line above.
 
 ; Block keywords (BDD test structure)
 [
@@ -61,6 +63,11 @@
   "source"
 ] @keyword.operator
 
+; The optional `I` in `When I run` / `When I call`, scoped to the statement so a
+; bash word `I` elsewhere keeps its own capture
+(shellspec_when_statement
+  modifier: "I" @keyword.operator)
+
 ; The statement keywords
 [
   "should"
@@ -91,7 +98,7 @@
   "Todo"
 ] @keyword.function.pending
 
-; Statement keywords (Path/File/Dir, Set, Dump, Intercept)
+; Statement keywords (Path/File/Dir, Set, Dump, Intercept, UseFD)
 [
   "Path"
   "File"
@@ -99,6 +106,7 @@
   "Set"
   "Dump"
   "Intercept"
+  "UseFD"
 ] @keyword
 
 ; Block terminator
@@ -110,6 +118,10 @@
 [
   "Include"
 ] @keyword.directive
+
+; Conditional skip keyword (`Skip if`), scoped so bash `if` statements keep their own capture
+(shellspec_directive_statement
+  "if" @keyword.control)
 
 ; % directives (text, const, output, preserve, logger)
 [
@@ -125,6 +137,17 @@
   "%preserve"
   "%logger"
 ] @keyword.directive
+
+; Data / %text line bodies. Bash heredoc bodies inherit @string from the bash
+; queries, so `#|` content is treated the same way rather than left unhighlighted.
+"#|" @punctuation.special
+
+(shellspec_data_line_content) @string
+
+; The statement subject and matcher slots
+(shellspec_the_statement
+  subject: (shellspec_subject) @variable.parameter
+  matcher: (shellspec_matcher) @function.method)
 
 ; Comments (inherit from bash)
 (comment) @comment

@@ -1,0 +1,3 @@
+node_modules/
+# Findings store written by the nitpicker audit tooling
+docs/audit/findings/

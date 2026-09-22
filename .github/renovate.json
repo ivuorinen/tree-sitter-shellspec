@@ -2,5 +2,27 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
     "github>ivuorinen/renovate-config"
+  ],
+  "packageRules": [
+    {
+      "description": "A dev-tool major changes tooling only, so drop the preset's breaking-change marker (chore(deps)!:).",
+      "matchDepTypes": [
+        "devDependencies"
+      ],
+      "matchUpdateTypes": [
+        "major"
+      ],
+      "commitMessagePrefix": "chore(deps): "
+    },
+    {
+      "description": "A pre-commit hook major changes tooling only, so drop the preset's breaking-change marker (chore(deps)!:).",
+      "matchManagers": [
+        "pre-commit"
+      ],
+      "matchUpdateTypes": [
+        "major"
+      ],
+      "commitMessagePrefix": "chore(deps): "
+    }
   ]
 }

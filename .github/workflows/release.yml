@@ -121,8 +121,10 @@ jobs:
 
       # No dependency cache in the publish path: a cache poisoned from a PR-triggered
       # run must never reach the release/publish jobs.
+      # Plain `npm ci`: a lockfile that drifted from package.json fails the job instead of
+      # being re-resolved by a fallback install.
       - name: Install Dependencies
-        run: npm ci || { echo "❌ npm install failed"; npm install; }
+        run: npm ci
 
       - name: 🔍 Run Security Audit
         run: npm audit --audit-level=high
@@ -137,9 +139,6 @@ jobs:
     environment: release
     permissions:
       contents: write # required to push the release tag and create the GitHub release
-      packages: write # required to publish the package
-      issues: write # required by release tooling to comment on issues
-      pull-requests: write # required by release tooling to comment on PRs
 
     steps:
       - name: ⤵️ Checkout Repository
@@ -159,8 +158,13 @@ jobs:
 
       # No dependency or grammar cache in the publish path: a cache poisoned from a
       # PR-triggered run must never reach the published artifact.
+      # Install scripts are skipped here so no dependency code runs next to the persisted
+      # write token; tree-sitter-cli's script (it downloads the CLI binary that generate and
+      # build need) is the only one this job requires, so it is rebuilt explicitly.
       - name: Install Dependencies
-        run: npm ci || { echo "❌ npm install failed"; npm install; }
+        run: |
+          npm ci --ignore-scripts
+          npm rebuild tree-sitter-cli
 
       - name: Generate Grammar
         run: npm run generate
@@ -168,17 +172,17 @@ jobs:
       - name: 🏗️ Build Parser
         run: npm run build
 
-      - name: 🔎 Verify package.json version matches input
-        if: github.event_name == 'workflow_dispatch'
+      # Runs for tag pushes and manual dispatch alike, so a tag can never publish a
+      # package.json version that differs from the release version.
+      - name: 🔎 Verify package.json version matches the release version
         env:
-          INPUT_VERSION: ${{ github.event.inputs.version }}
+          VERSION: ${{ needs.validate.outputs.version }}
         run: |
-          INPUT="$INPUT_VERSION"
-          EXPECTED="v${INPUT#v}"
-          PKG="v$(node -p "require('./package.json').version")"
+          EXPECTED="${VERSION#v}"
+          PKG="$(node -p "require('./package.json').version")"
           if [ "$PKG" != "$EXPECTED" ]; then
-            echo "package.json version ($PKG) does not match requested release ($EXPECTED)."
-            echo "Bump package.json in a PR before running workflow_dispatch."
+            echo "package.json version ($PKG) does not match the release version ($EXPECTED)."
+            echo "Bump package.json in a PR before tagging or dispatching a release."
             exit 1
           fi
 
@@ -230,17 +234,8 @@ jobs:
             echo "\`\`\`"
           } >> release_notes.md
 
-      - name: 🚀 Create GitHub Release
-        env:
-          GH_TOKEN: ${{ github.token }}
-          VERSION: ${{ needs.validate.outputs.version }}
-        run: |
-          args=(--title "Release ${VERSION}" --notes-file release_notes.md)
-          if [[ "$VERSION" == *"-"* ]]; then
-            args+=(--prerelease)
-          fi
-          gh release create "$VERSION" "${args[@]}"
-
+      # npm publish runs before the GitHub release: a failed publish then leaves no
+      # orphan GitHub release pointing at a version that never reached npm.
       - name: 📦 Publish to npm
         # Token-based publish: trusted publishing requires the package to be
         # configured for an OIDC trusted publisher on npmjs.com (external setup).
@@ -255,6 +250,17 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
           VERSION: ${{ needs.validate.outputs.version }}
+
+      - name: 🚀 Create GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ needs.validate.outputs.version }}
+        run: |
+          args=(--title "Release ${VERSION}" --notes-file release_notes.md)
+          if [[ "$VERSION" == *"-"* ]]; then
+            args+=(--prerelease)
+          fi
+          gh release create "$VERSION" "${args[@]}"
 
       - name: 📊 Release Summary
         env:

@@ -1,4 +1,7 @@
 ---
+# Generated parser files must stay byte-identical to `npm run generate` output (CI diffs them),
+# so no fixer hook may touch them.
+exclude: ^src/(parser\.c|grammar\.json|node-types\.json|tree_sitter/)
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v6.0.0

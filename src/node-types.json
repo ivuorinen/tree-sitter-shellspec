@@ -790,10 +790,6 @@
           "named": true
         },
         {
-          "type": "shellspec_hook_block",
-          "named": true
-        },
-        {
           "type": "shellspec_hook_statement",
           "named": true
         },
@@ -815,6 +811,10 @@
         },
         {
           "type": "shellspec_output_directive",
+          "named": true
+        },
+        {
+          "type": "shellspec_parameters_value_statement",
           "named": true
         },
         {
@@ -847,6 +847,10 @@
         },
         {
           "type": "shellspec_todo_statement",
+          "named": true
+        },
+        {
+          "type": "shellspec_usefd_statement",
           "named": true
         },
         {
@@ -1235,10 +1239,6 @@
           "named": true
         },
         {
-          "type": "shellspec_hook_block",
-          "named": true
-        },
-        {
           "type": "shellspec_hook_statement",
           "named": true
         },
@@ -1260,6 +1260,10 @@
         },
         {
           "type": "shellspec_output_directive",
+          "named": true
+        },
+        {
+          "type": "shellspec_parameters_value_statement",
           "named": true
         },
         {
@@ -1292,6 +1296,10 @@
         },
         {
           "type": "shellspec_todo_statement",
+          "named": true
+        },
+        {
+          "type": "shellspec_usefd_statement",
           "named": true
         },
         {
@@ -1442,10 +1450,6 @@
           "named": true
         },
         {
-          "type": "shellspec_hook_block",
-          "named": true
-        },
-        {
           "type": "shellspec_hook_statement",
           "named": true
         },
@@ -1467,6 +1471,10 @@
         },
         {
           "type": "shellspec_output_directive",
+          "named": true
+        },
+        {
+          "type": "shellspec_parameters_value_statement",
           "named": true
         },
         {
@@ -1499,6 +1507,10 @@
         },
         {
           "type": "shellspec_todo_statement",
+          "named": true
+        },
+        {
+          "type": "shellspec_usefd_statement",
           "named": true
         },
         {
@@ -1783,10 +1795,6 @@
           "named": true
         },
         {
-          "type": "shellspec_hook_block",
-          "named": true
-        },
-        {
           "type": "shellspec_hook_statement",
           "named": true
         },
@@ -1808,6 +1816,10 @@
         },
         {
           "type": "shellspec_output_directive",
+          "named": true
+        },
+        {
+          "type": "shellspec_parameters_value_statement",
           "named": true
         },
         {
@@ -1840,6 +1852,10 @@
         },
         {
           "type": "shellspec_todo_statement",
+          "named": true
+        },
+        {
+          "type": "shellspec_usefd_statement",
           "named": true
         },
         {
@@ -1962,10 +1978,6 @@
           "named": true
         },
         {
-          "type": "shellspec_hook_block",
-          "named": true
-        },
-        {
           "type": "shellspec_hook_statement",
           "named": true
         },
@@ -1987,6 +1999,10 @@
         },
         {
           "type": "shellspec_output_directive",
+          "named": true
+        },
+        {
+          "type": "shellspec_parameters_value_statement",
           "named": true
         },
         {
@@ -2019,6 +2035,10 @@
         },
         {
           "type": "shellspec_todo_statement",
+          "named": true
+        },
+        {
+          "type": "shellspec_usefd_statement",
           "named": true
         },
         {
@@ -2141,10 +2161,6 @@
           "named": true
         },
         {
-          "type": "shellspec_hook_block",
-          "named": true
-        },
-        {
           "type": "shellspec_hook_statement",
           "named": true
         },
@@ -2166,6 +2182,10 @@
         },
         {
           "type": "shellspec_output_directive",
+          "named": true
+        },
+        {
+          "type": "shellspec_parameters_value_statement",
           "named": true
         },
         {
@@ -2198,6 +2218,10 @@
         },
         {
           "type": "shellspec_todo_statement",
+          "named": true
+        },
+        {
+          "type": "shellspec_usefd_statement",
           "named": true
         },
         {
@@ -2887,10 +2911,6 @@
             "named": true
           },
           {
-            "type": "shellspec_hook_block",
-            "named": true
-          },
-          {
             "type": "shellspec_hook_statement",
             "named": true
           },
@@ -2912,6 +2932,10 @@
           },
           {
             "type": "shellspec_output_directive",
+            "named": true
+          },
+          {
+            "type": "shellspec_parameters_value_statement",
             "named": true
           },
           {
@@ -2944,6 +2968,10 @@
           },
           {
             "type": "shellspec_todo_statement",
+            "named": true
+          },
+          {
+            "type": "shellspec_usefd_statement",
             "named": true
           },
           {
@@ -3175,10 +3203,6 @@
             "named": true
           },
           {
-            "type": "shellspec_hook_block",
-            "named": true
-          },
-          {
             "type": "shellspec_hook_statement",
             "named": true
           },
@@ -3200,6 +3224,10 @@
           },
           {
             "type": "shellspec_output_directive",
+            "named": true
+          },
+          {
+            "type": "shellspec_parameters_value_statement",
             "named": true
           },
           {
@@ -3232,6 +3260,10 @@
           },
           {
             "type": "shellspec_todo_statement",
+            "named": true
+          },
+          {
+            "type": "shellspec_usefd_statement",
             "named": true
           },
           {
@@ -3358,10 +3390,6 @@
           "named": true
         },
         {
-          "type": "shellspec_hook_block",
-          "named": true
-        },
-        {
           "type": "shellspec_hook_statement",
           "named": true
         },
@@ -3383,6 +3411,10 @@
         },
         {
           "type": "shellspec_output_directive",
+          "named": true
+        },
+        {
+          "type": "shellspec_parameters_value_statement",
           "named": true
         },
         {
@@ -3415,6 +3447,10 @@
         },
         {
           "type": "shellspec_todo_statement",
+          "named": true
+        },
+        {
+          "type": "shellspec_usefd_statement",
           "named": true
         },
         {
@@ -3537,10 +3573,6 @@
           "named": true
         },
         {
-          "type": "shellspec_hook_block",
-          "named": true
-        },
-        {
           "type": "shellspec_hook_statement",
           "named": true
         },
@@ -3562,6 +3594,10 @@
         },
         {
           "type": "shellspec_output_directive",
+          "named": true
+        },
+        {
+          "type": "shellspec_parameters_value_statement",
           "named": true
         },
         {
@@ -3594,6 +3630,10 @@
         },
         {
           "type": "shellspec_todo_statement",
+          "named": true
+        },
+        {
+          "type": "shellspec_usefd_statement",
           "named": true
         },
         {
@@ -3789,10 +3829,6 @@
           "named": true
         },
         {
-          "type": "shellspec_hook_block",
-          "named": true
-        },
-        {
           "type": "shellspec_hook_statement",
           "named": true
         },
@@ -3814,6 +3850,10 @@
         },
         {
           "type": "shellspec_output_directive",
+          "named": true
+        },
+        {
+          "type": "shellspec_parameters_value_statement",
           "named": true
         },
         {
@@ -3846,6 +3886,10 @@
         },
         {
           "type": "shellspec_todo_statement",
+          "named": true
+        },
+        {
+          "type": "shellspec_usefd_statement",
           "named": true
         },
         {
@@ -4006,10 +4050,6 @@
           "named": true
         },
         {
-          "type": "shellspec_hook_block",
-          "named": true
-        },
-        {
           "type": "shellspec_hook_statement",
           "named": true
         },
@@ -4031,6 +4071,10 @@
         },
         {
           "type": "shellspec_output_directive",
+          "named": true
+        },
+        {
+          "type": "shellspec_parameters_value_statement",
           "named": true
         },
         {
@@ -4063,6 +4107,10 @@
         },
         {
           "type": "shellspec_todo_statement",
+          "named": true
+        },
+        {
+          "type": "shellspec_usefd_statement",
           "named": true
         },
         {
@@ -4186,10 +4234,6 @@
           "named": true
         },
         {
-          "type": "shellspec_hook_block",
-          "named": true
-        },
-        {
           "type": "shellspec_hook_statement",
           "named": true
         },
@@ -4211,6 +4255,10 @@
         },
         {
           "type": "shellspec_output_directive",
+          "named": true
+        },
+        {
+          "type": "shellspec_parameters_value_statement",
           "named": true
         },
         {
@@ -4243,6 +4291,10 @@
         },
         {
           "type": "shellspec_todo_statement",
+          "named": true
+        },
+        {
+          "type": "shellspec_usefd_statement",
           "named": true
         },
         {
@@ -4365,10 +4417,6 @@
             "named": true
           },
           {
-            "type": "shellspec_hook_block",
-            "named": true
-          },
-          {
             "type": "shellspec_hook_statement",
             "named": true
           },
@@ -4390,6 +4438,10 @@
           },
           {
             "type": "shellspec_output_directive",
+            "named": true
+          },
+          {
+            "type": "shellspec_parameters_value_statement",
             "named": true
           },
           {
@@ -4422,6 +4474,10 @@
           },
           {
             "type": "shellspec_todo_statement",
+            "named": true
+          },
+          {
+            "type": "shellspec_usefd_statement",
             "named": true
           },
           {
@@ -4497,11 +4553,31 @@
         "required": true,
         "types": [
           {
+            "type": "command_substitution",
+            "named": true
+          },
+          {
+            "type": "expansion",
+            "named": true
+          },
+          {
+            "type": "number",
+            "named": true
+          },
+          {
             "type": "raw_string",
             "named": true
           },
           {
+            "type": "simple_expansion",
+            "named": true
+          },
+          {
             "type": "string",
+            "named": true
+          },
+          {
+            "type": "test_command",
             "named": true
           },
           {
@@ -4531,11 +4607,31 @@
         "required": true,
         "types": [
           {
+            "type": "command_substitution",
+            "named": true
+          },
+          {
+            "type": "expansion",
+            "named": true
+          },
+          {
+            "type": "number",
+            "named": true
+          },
+          {
             "type": "raw_string",
             "named": true
           },
           {
+            "type": "simple_expansion",
+            "named": true
+          },
+          {
             "type": "string",
+            "named": true
+          },
+          {
+            "type": "test_command",
             "named": true
           },
           {
@@ -4555,11 +4651,31 @@
         "required": true,
         "types": [
           {
+            "type": "command_substitution",
+            "named": true
+          },
+          {
+            "type": "expansion",
+            "named": true
+          },
+          {
+            "type": "number",
+            "named": true
+          },
+          {
             "type": "raw_string",
             "named": true
           },
           {
+            "type": "simple_expansion",
+            "named": true
+          },
+          {
             "type": "string",
+            "named": true
+          },
+          {
+            "type": "test_command",
             "named": true
           },
           {
@@ -4650,10 +4766,6 @@
           "named": true
         },
         {
-          "type": "shellspec_hook_block",
-          "named": true
-        },
-        {
           "type": "shellspec_hook_statement",
           "named": true
         },
@@ -4675,6 +4787,10 @@
         },
         {
           "type": "shellspec_output_directive",
+          "named": true
+        },
+        {
+          "type": "shellspec_parameters_value_statement",
           "named": true
         },
         {
@@ -4707,6 +4823,10 @@
         },
         {
           "type": "shellspec_todo_statement",
+          "named": true
+        },
+        {
+          "type": "shellspec_usefd_statement",
           "named": true
         },
         {
@@ -4753,11 +4873,31 @@
         "required": false,
         "types": [
           {
+            "type": "command_substitution",
+            "named": true
+          },
+          {
+            "type": "expansion",
+            "named": true
+          },
+          {
+            "type": "number",
+            "named": true
+          },
+          {
             "type": "raw_string",
             "named": true
           },
           {
+            "type": "simple_expansion",
+            "named": true
+          },
+          {
             "type": "string",
+            "named": true
+          },
+          {
+            "type": "test_command",
             "named": true
           },
           {
@@ -4781,11 +4921,69 @@
         "required": false,
         "types": [
           {
+            "type": "command_substitution",
+            "named": true
+          },
+          {
+            "type": "expansion",
+            "named": true
+          },
+          {
+            "type": "number",
+            "named": true
+          },
+          {
             "type": "raw_string",
             "named": true
           },
           {
+            "type": "simple_expansion",
+            "named": true
+          },
+          {
             "type": "string",
+            "named": true
+          },
+          {
+            "type": "test_command",
+            "named": true
+          },
+          {
+            "type": "word",
+            "named": true
+          }
+        ]
+      },
+      "file": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "command_substitution",
+            "named": true
+          },
+          {
+            "type": "expansion",
+            "named": true
+          },
+          {
+            "type": "number",
+            "named": true
+          },
+          {
+            "type": "raw_string",
+            "named": true
+          },
+          {
+            "type": "simple_expansion",
+            "named": true
+          },
+          {
+            "type": "string",
+            "named": true
+          },
+          {
+            "type": "test_command",
             "named": true
           },
           {
@@ -4799,213 +4997,27 @@
         "required": false,
         "types": [
           {
-            "type": "raw_string",
+            "type": "command_substitution",
             "named": true
           },
           {
-            "type": "string",
+            "type": "expansion",
             "named": true
           },
           {
-            "type": "word",
+            "type": "number",
             "named": true
-          }
-        ]
-      },
-      "label": {
-        "multiple": false,
-        "required": false,
-        "types": [
+          },
           {
             "type": "raw_string",
             "named": true
           },
           {
+            "type": "simple_expansion",
+            "named": true
+          },
+          {
             "type": "string",
-            "named": true
-          },
-          {
-            "type": "word",
-            "named": true
-          }
-        ]
-      },
-      "modifier": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "expand",
-            "named": false
-          },
-          {
-            "type": "raw",
-            "named": false
-          }
-        ]
-      },
-      "statements": {
-        "multiple": true,
-        "required": false,
-        "types": [
-          {
-            "type": "&",
-            "named": false
-          },
-          {
-            "type": ";",
-            "named": false
-          },
-          {
-            "type": ";;",
-            "named": false
-          },
-          {
-            "type": "c_style_for_statement",
-            "named": true
-          },
-          {
-            "type": "case_statement",
-            "named": true
-          },
-          {
-            "type": "command",
-            "named": true
-          },
-          {
-            "type": "compound_statement",
-            "named": true
-          },
-          {
-            "type": "declaration_command",
-            "named": true
-          },
-          {
-            "type": "for_statement",
-            "named": true
-          },
-          {
-            "type": "function_definition",
-            "named": true
-          },
-          {
-            "type": "if_statement",
-            "named": true
-          },
-          {
-            "type": "list",
-            "named": true
-          },
-          {
-            "type": "negated_command",
-            "named": true
-          },
-          {
-            "type": "pipeline",
-            "named": true
-          },
-          {
-            "type": "redirected_statement",
-            "named": true
-          },
-          {
-            "type": "shellspec_assert_statement",
-            "named": true
-          },
-          {
-            "type": "shellspec_const_directive",
-            "named": true
-          },
-          {
-            "type": "shellspec_context_block",
-            "named": true
-          },
-          {
-            "type": "shellspec_data_block",
-            "named": true
-          },
-          {
-            "type": "shellspec_describe_block",
-            "named": true
-          },
-          {
-            "type": "shellspec_directive_statement",
-            "named": true
-          },
-          {
-            "type": "shellspec_dump_statement",
-            "named": true
-          },
-          {
-            "type": "shellspec_hook_block",
-            "named": true
-          },
-          {
-            "type": "shellspec_hook_statement",
-            "named": true
-          },
-          {
-            "type": "shellspec_intercept_statement",
-            "named": true
-          },
-          {
-            "type": "shellspec_it_block",
-            "named": true
-          },
-          {
-            "type": "shellspec_logger_directive",
-            "named": true
-          },
-          {
-            "type": "shellspec_mock_block",
-            "named": true
-          },
-          {
-            "type": "shellspec_output_directive",
-            "named": true
-          },
-          {
-            "type": "shellspec_path_statement",
-            "named": true
-          },
-          {
-            "type": "shellspec_pending_statement",
-            "named": true
-          },
-          {
-            "type": "shellspec_preserve_directive",
-            "named": true
-          },
-          {
-            "type": "shellspec_set_statement",
-            "named": true
-          },
-          {
-            "type": "shellspec_skip_statement",
-            "named": true
-          },
-          {
-            "type": "shellspec_text_directive",
-            "named": true
-          },
-          {
-            "type": "shellspec_the_statement",
-            "named": true
-          },
-          {
-            "type": "shellspec_todo_statement",
-            "named": true
-          },
-          {
-            "type": "shellspec_utility_block",
-            "named": true
-          },
-          {
-            "type": "shellspec_when_statement",
-            "named": true
-          },
-          {
-            "type": "subshell",
             "named": true
           },
           {
@@ -5013,19 +5025,7 @@
             "named": true
           },
           {
-            "type": "unset_command",
-            "named": true
-          },
-          {
-            "type": "variable_assignment",
-            "named": true
-          },
-          {
-            "type": "variable_assignments",
-            "named": true
-          },
-          {
-            "type": "while_statement",
+            "type": "word",
             "named": true
           }
         ]
@@ -5041,11 +5041,31 @@
         "required": true,
         "types": [
           {
+            "type": "command_substitution",
+            "named": true
+          },
+          {
+            "type": "expansion",
+            "named": true
+          },
+          {
+            "type": "number",
+            "named": true
+          },
+          {
             "type": "raw_string",
             "named": true
           },
           {
+            "type": "simple_expansion",
+            "named": true
+          },
+          {
             "type": "string",
+            "named": true
+          },
+          {
+            "type": "test_command",
             "named": true
           },
           {
@@ -5136,10 +5156,6 @@
           "named": true
         },
         {
-          "type": "shellspec_hook_block",
-          "named": true
-        },
-        {
           "type": "shellspec_hook_statement",
           "named": true
         },
@@ -5161,6 +5177,10 @@
         },
         {
           "type": "shellspec_output_directive",
+          "named": true
+        },
+        {
+          "type": "shellspec_parameters_value_statement",
           "named": true
         },
         {
@@ -5193,6 +5213,10 @@
         },
         {
           "type": "shellspec_todo_statement",
+          "named": true
+        },
+        {
+          "type": "shellspec_usefd_statement",
           "named": true
         },
         {
@@ -5234,6 +5258,44 @@
     "type": "shellspec_directive_statement",
     "named": true,
     "fields": {
+      "argument": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": "command_substitution",
+            "named": true
+          },
+          {
+            "type": "expansion",
+            "named": true
+          },
+          {
+            "type": "number",
+            "named": true
+          },
+          {
+            "type": "raw_string",
+            "named": true
+          },
+          {
+            "type": "simple_expansion",
+            "named": true
+          },
+          {
+            "type": "string",
+            "named": true
+          },
+          {
+            "type": "test_command",
+            "named": true
+          },
+          {
+            "type": "word",
+            "named": true
+          }
+        ]
+      },
       "condition": {
         "multiple": true,
         "required": false,
@@ -5243,7 +5305,19 @@
             "named": true
           },
           {
+            "type": "expansion",
+            "named": true
+          },
+          {
+            "type": "number",
+            "named": true
+          },
+          {
             "type": "raw_string",
+            "named": true
+          },
+          {
+            "type": "simple_expansion",
             "named": true
           },
           {
@@ -5265,11 +5339,35 @@
         "required": false,
         "types": [
           {
+            "type": "command_substitution",
+            "named": true
+          },
+          {
+            "type": "concatenation",
+            "named": true
+          },
+          {
+            "type": "expansion",
+            "named": true
+          },
+          {
+            "type": "number",
+            "named": true
+          },
+          {
             "type": "raw_string",
             "named": true
           },
           {
+            "type": "simple_expansion",
+            "named": true
+          },
+          {
             "type": "string",
+            "named": true
+          },
+          {
+            "type": "test_command",
             "named": true
           },
           {
@@ -5283,11 +5381,31 @@
         "required": false,
         "types": [
           {
+            "type": "command_substitution",
+            "named": true
+          },
+          {
+            "type": "expansion",
+            "named": true
+          },
+          {
+            "type": "number",
+            "named": true
+          },
+          {
             "type": "raw_string",
             "named": true
           },
           {
+            "type": "simple_expansion",
+            "named": true
+          },
+          {
             "type": "string",
+            "named": true
+          },
+          {
+            "type": "test_command",
             "named": true
           },
           {
@@ -5304,204 +5422,6 @@
     "fields": {}
   },
   {
-    "type": "shellspec_hook_block",
-    "named": true,
-    "fields": {
-      "label": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "raw_string",
-            "named": true
-          },
-          {
-            "type": "string",
-            "named": true
-          },
-          {
-            "type": "word",
-            "named": true
-          }
-        ]
-      }
-    },
-    "children": {
-      "multiple": true,
-      "required": false,
-      "types": [
-        {
-          "type": "c_style_for_statement",
-          "named": true
-        },
-        {
-          "type": "case_statement",
-          "named": true
-        },
-        {
-          "type": "command",
-          "named": true
-        },
-        {
-          "type": "compound_statement",
-          "named": true
-        },
-        {
-          "type": "declaration_command",
-          "named": true
-        },
-        {
-          "type": "for_statement",
-          "named": true
-        },
-        {
-          "type": "function_definition",
-          "named": true
-        },
-        {
-          "type": "if_statement",
-          "named": true
-        },
-        {
-          "type": "list",
-          "named": true
-        },
-        {
-          "type": "negated_command",
-          "named": true
-        },
-        {
-          "type": "pipeline",
-          "named": true
-        },
-        {
-          "type": "redirected_statement",
-          "named": true
-        },
-        {
-          "type": "shellspec_assert_statement",
-          "named": true
-        },
-        {
-          "type": "shellspec_const_directive",
-          "named": true
-        },
-        {
-          "type": "shellspec_context_block",
-          "named": true
-        },
-        {
-          "type": "shellspec_data_block",
-          "named": true
-        },
-        {
-          "type": "shellspec_describe_block",
-          "named": true
-        },
-        {
-          "type": "shellspec_directive_statement",
-          "named": true
-        },
-        {
-          "type": "shellspec_dump_statement",
-          "named": true
-        },
-        {
-          "type": "shellspec_hook_block",
-          "named": true
-        },
-        {
-          "type": "shellspec_hook_statement",
-          "named": true
-        },
-        {
-          "type": "shellspec_intercept_statement",
-          "named": true
-        },
-        {
-          "type": "shellspec_it_block",
-          "named": true
-        },
-        {
-          "type": "shellspec_logger_directive",
-          "named": true
-        },
-        {
-          "type": "shellspec_mock_block",
-          "named": true
-        },
-        {
-          "type": "shellspec_output_directive",
-          "named": true
-        },
-        {
-          "type": "shellspec_path_statement",
-          "named": true
-        },
-        {
-          "type": "shellspec_pending_statement",
-          "named": true
-        },
-        {
-          "type": "shellspec_preserve_directive",
-          "named": true
-        },
-        {
-          "type": "shellspec_set_statement",
-          "named": true
-        },
-        {
-          "type": "shellspec_skip_statement",
-          "named": true
-        },
-        {
-          "type": "shellspec_text_directive",
-          "named": true
-        },
-        {
-          "type": "shellspec_the_statement",
-          "named": true
-        },
-        {
-          "type": "shellspec_todo_statement",
-          "named": true
-        },
-        {
-          "type": "shellspec_utility_block",
-          "named": true
-        },
-        {
-          "type": "shellspec_when_statement",
-          "named": true
-        },
-        {
-          "type": "subshell",
-          "named": true
-        },
-        {
-          "type": "test_command",
-          "named": true
-        },
-        {
-          "type": "unset_command",
-          "named": true
-        },
-        {
-          "type": "variable_assignment",
-          "named": true
-        },
-        {
-          "type": "variable_assignments",
-          "named": true
-        },
-        {
-          "type": "while_statement",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
     "type": "shellspec_hook_statement",
     "named": true,
     "fields": {
@@ -5510,11 +5430,31 @@
         "required": true,
         "types": [
           {
+            "type": "command_substitution",
+            "named": true
+          },
+          {
+            "type": "expansion",
+            "named": true
+          },
+          {
+            "type": "number",
+            "named": true
+          },
+          {
             "type": "raw_string",
             "named": true
           },
           {
+            "type": "simple_expansion",
+            "named": true
+          },
+          {
             "type": "string",
+            "named": true
+          },
+          {
+            "type": "test_command",
             "named": true
           },
           {
@@ -5534,11 +5474,31 @@
         "required": true,
         "types": [
           {
+            "type": "command_substitution",
+            "named": true
+          },
+          {
+            "type": "expansion",
+            "named": true
+          },
+          {
+            "type": "number",
+            "named": true
+          },
+          {
             "type": "raw_string",
             "named": true
           },
           {
+            "type": "simple_expansion",
+            "named": true
+          },
+          {
             "type": "string",
+            "named": true
+          },
+          {
+            "type": "test_command",
             "named": true
           },
           {
@@ -5558,11 +5518,31 @@
         "required": true,
         "types": [
           {
+            "type": "command_substitution",
+            "named": true
+          },
+          {
+            "type": "expansion",
+            "named": true
+          },
+          {
+            "type": "number",
+            "named": true
+          },
+          {
             "type": "raw_string",
             "named": true
           },
           {
+            "type": "simple_expansion",
+            "named": true
+          },
+          {
             "type": "string",
+            "named": true
+          },
+          {
+            "type": "test_command",
             "named": true
           },
           {
@@ -5653,10 +5633,6 @@
           "named": true
         },
         {
-          "type": "shellspec_hook_block",
-          "named": true
-        },
-        {
           "type": "shellspec_hook_statement",
           "named": true
         },
@@ -5678,6 +5654,10 @@
         },
         {
           "type": "shellspec_output_directive",
+          "named": true
+        },
+        {
+          "type": "shellspec_parameters_value_statement",
           "named": true
         },
         {
@@ -5710,6 +5690,10 @@
         },
         {
           "type": "shellspec_todo_statement",
+          "named": true
+        },
+        {
+          "type": "shellspec_usefd_statement",
           "named": true
         },
         {
@@ -5756,11 +5740,31 @@
         "required": true,
         "types": [
           {
+            "type": "command_substitution",
+            "named": true
+          },
+          {
+            "type": "expansion",
+            "named": true
+          },
+          {
+            "type": "number",
+            "named": true
+          },
+          {
             "type": "raw_string",
             "named": true
           },
           {
+            "type": "simple_expansion",
+            "named": true
+          },
+          {
             "type": "string",
+            "named": true
+          },
+          {
+            "type": "test_command",
             "named": true
           },
           {
@@ -5780,11 +5784,31 @@
       "required": true,
       "types": [
         {
+          "type": "command_substitution",
+          "named": true
+        },
+        {
+          "type": "expansion",
+          "named": true
+        },
+        {
+          "type": "number",
+          "named": true
+        },
+        {
           "type": "raw_string",
           "named": true
         },
         {
+          "type": "simple_expansion",
+          "named": true
+        },
+        {
           "type": "string",
+          "named": true
+        },
+        {
+          "type": "test_command",
           "named": true
         },
         {
@@ -5803,11 +5827,31 @@
         "required": true,
         "types": [
           {
+            "type": "command_substitution",
+            "named": true
+          },
+          {
+            "type": "expansion",
+            "named": true
+          },
+          {
+            "type": "number",
+            "named": true
+          },
+          {
             "type": "raw_string",
             "named": true
           },
           {
+            "type": "simple_expansion",
+            "named": true
+          },
+          {
             "type": "string",
+            "named": true
+          },
+          {
+            "type": "test_command",
             "named": true
           },
           {
@@ -5898,10 +5942,6 @@
           "named": true
         },
         {
-          "type": "shellspec_hook_block",
-          "named": true
-        },
-        {
           "type": "shellspec_hook_statement",
           "named": true
         },
@@ -5923,6 +5963,10 @@
         },
         {
           "type": "shellspec_output_directive",
+          "named": true
+        },
+        {
+          "type": "shellspec_parameters_value_statement",
           "named": true
         },
         {
@@ -5955,6 +5999,10 @@
         },
         {
           "type": "shellspec_todo_statement",
+          "named": true
+        },
+        {
+          "type": "shellspec_usefd_statement",
           "named": true
         },
         {
@@ -6001,11 +6049,75 @@
         "required": true,
         "types": [
           {
+            "type": "command_substitution",
+            "named": true
+          },
+          {
+            "type": "expansion",
+            "named": true
+          },
+          {
+            "type": "number",
+            "named": true
+          },
+          {
             "type": "raw_string",
             "named": true
           },
           {
+            "type": "simple_expansion",
+            "named": true
+          },
+          {
             "type": "string",
+            "named": true
+          },
+          {
+            "type": "test_command",
+            "named": true
+          },
+          {
+            "type": "word",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "shellspec_parameters_value_statement",
+    "named": true,
+    "fields": {
+      "value": {
+        "multiple": true,
+        "required": true,
+        "types": [
+          {
+            "type": "command_substitution",
+            "named": true
+          },
+          {
+            "type": "expansion",
+            "named": true
+          },
+          {
+            "type": "number",
+            "named": true
+          },
+          {
+            "type": "raw_string",
+            "named": true
+          },
+          {
+            "type": "simple_expansion",
+            "named": true
+          },
+          {
+            "type": "string",
+            "named": true
+          },
+          {
+            "type": "test_command",
             "named": true
           },
           {
@@ -6025,11 +6137,31 @@
         "required": true,
         "types": [
           {
+            "type": "command_substitution",
+            "named": true
+          },
+          {
+            "type": "expansion",
+            "named": true
+          },
+          {
+            "type": "number",
+            "named": true
+          },
+          {
             "type": "raw_string",
             "named": true
           },
           {
+            "type": "simple_expansion",
+            "named": true
+          },
+          {
             "type": "string",
+            "named": true
+          },
+          {
+            "type": "test_command",
             "named": true
           },
           {
@@ -6045,15 +6177,35 @@
     "named": true,
     "fields": {
       "reason": {
-        "multiple": false,
-        "required": true,
+        "multiple": true,
+        "required": false,
         "types": [
+          {
+            "type": "command_substitution",
+            "named": true
+          },
+          {
+            "type": "expansion",
+            "named": true
+          },
+          {
+            "type": "number",
+            "named": true
+          },
           {
             "type": "raw_string",
             "named": true
           },
           {
+            "type": "simple_expansion",
+            "named": true
+          },
+          {
             "type": "string",
+            "named": true
+          },
+          {
+            "type": "test_command",
             "named": true
           },
           {
@@ -6073,11 +6225,31 @@
         "required": true,
         "types": [
           {
+            "type": "command_substitution",
+            "named": true
+          },
+          {
+            "type": "expansion",
+            "named": true
+          },
+          {
+            "type": "number",
+            "named": true
+          },
+          {
             "type": "raw_string",
             "named": true
           },
           {
+            "type": "simple_expansion",
+            "named": true
+          },
+          {
             "type": "string",
+            "named": true
+          },
+          {
+            "type": "test_command",
             "named": true
           },
           {
@@ -6097,11 +6269,31 @@
         "required": true,
         "types": [
           {
+            "type": "command_substitution",
+            "named": true
+          },
+          {
+            "type": "expansion",
+            "named": true
+          },
+          {
+            "type": "number",
+            "named": true
+          },
+          {
             "type": "raw_string",
             "named": true
           },
           {
+            "type": "simple_expansion",
+            "named": true
+          },
+          {
             "type": "string",
+            "named": true
+          },
+          {
+            "type": "test_command",
             "named": true
           },
           {
@@ -6117,15 +6309,35 @@
     "named": true,
     "fields": {
       "reason": {
-        "multiple": false,
-        "required": true,
+        "multiple": true,
+        "required": false,
         "types": [
+          {
+            "type": "command_substitution",
+            "named": true
+          },
+          {
+            "type": "expansion",
+            "named": true
+          },
+          {
+            "type": "number",
+            "named": true
+          },
           {
             "type": "raw_string",
             "named": true
           },
           {
+            "type": "simple_expansion",
+            "named": true
+          },
+          {
             "type": "string",
+            "named": true
+          },
+          {
+            "type": "test_command",
             "named": true
           },
           {
@@ -6145,11 +6357,31 @@
       "required": true,
       "types": [
         {
+          "type": "command_substitution",
+          "named": true
+        },
+        {
+          "type": "expansion",
+          "named": true
+        },
+        {
+          "type": "number",
+          "named": true
+        },
+        {
           "type": "raw_string",
           "named": true
         },
         {
+          "type": "simple_expansion",
+          "named": true
+        },
+        {
           "type": "string",
+          "named": true
+        },
+        {
+          "type": "test_command",
           "named": true
         },
         {
@@ -6178,11 +6410,31 @@
         "required": false,
         "types": [
           {
+            "type": "command_substitution",
+            "named": true
+          },
+          {
+            "type": "expansion",
+            "named": true
+          },
+          {
+            "type": "number",
+            "named": true
+          },
+          {
             "type": "raw_string",
             "named": true
           },
           {
+            "type": "simple_expansion",
+            "named": true
+          },
+          {
             "type": "string",
+            "named": true
+          },
+          {
+            "type": "test_command",
             "named": true
           },
           {
@@ -6234,15 +6486,79 @@
     "named": true,
     "fields": {
       "description": {
-        "multiple": false,
-        "required": true,
+        "multiple": true,
+        "required": false,
         "types": [
+          {
+            "type": "command_substitution",
+            "named": true
+          },
+          {
+            "type": "expansion",
+            "named": true
+          },
+          {
+            "type": "number",
+            "named": true
+          },
           {
             "type": "raw_string",
             "named": true
           },
           {
+            "type": "simple_expansion",
+            "named": true
+          },
+          {
             "type": "string",
+            "named": true
+          },
+          {
+            "type": "test_command",
+            "named": true
+          },
+          {
+            "type": "word",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "shellspec_usefd_statement",
+    "named": true,
+    "fields": {
+      "argument": {
+        "multiple": true,
+        "required": true,
+        "types": [
+          {
+            "type": "command_substitution",
+            "named": true
+          },
+          {
+            "type": "expansion",
+            "named": true
+          },
+          {
+            "type": "number",
+            "named": true
+          },
+          {
+            "type": "raw_string",
+            "named": true
+          },
+          {
+            "type": "simple_expansion",
+            "named": true
+          },
+          {
+            "type": "string",
+            "named": true
+          },
+          {
+            "type": "test_command",
             "named": true
           },
           {
@@ -6256,26 +6572,7 @@
   {
     "type": "shellspec_utility_block",
     "named": true,
-    "fields": {
-      "label": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "raw_string",
-            "named": true
-          },
-          {
-            "type": "string",
-            "named": true
-          },
-          {
-            "type": "word",
-            "named": true
-          }
-        ]
-      }
-    },
+    "fields": {},
     "children": {
       "multiple": true,
       "required": false,
@@ -6357,10 +6654,6 @@
           "named": true
         },
         {
-          "type": "shellspec_hook_block",
-          "named": true
-        },
-        {
           "type": "shellspec_hook_statement",
           "named": true
         },
@@ -6382,6 +6675,10 @@
         },
         {
           "type": "shellspec_output_directive",
+          "named": true
+        },
+        {
+          "type": "shellspec_parameters_value_statement",
           "named": true
         },
         {
@@ -6414,6 +6711,10 @@
         },
         {
           "type": "shellspec_todo_statement",
+          "named": true
+        },
+        {
+          "type": "shellspec_usefd_statement",
           "named": true
         },
         {
@@ -6460,11 +6761,31 @@
         "required": false,
         "types": [
           {
+            "type": "command_substitution",
+            "named": true
+          },
+          {
+            "type": "expansion",
+            "named": true
+          },
+          {
+            "type": "number",
+            "named": true
+          },
+          {
             "type": "raw_string",
             "named": true
           },
           {
+            "type": "simple_expansion",
+            "named": true
+          },
+          {
             "type": "string",
+            "named": true
+          },
+          {
+            "type": "test_command",
             "named": true
           },
           {
@@ -6478,7 +6799,23 @@
         "required": true,
         "types": [
           {
+            "type": "command_substitution",
+            "named": true
+          },
+          {
+            "type": "expansion",
+            "named": true
+          },
+          {
+            "type": "number",
+            "named": true
+          },
+          {
             "type": "raw_string",
+            "named": true
+          },
+          {
+            "type": "simple_expansion",
             "named": true
           },
           {
@@ -6486,8 +6823,22 @@
             "named": true
           },
           {
+            "type": "test_command",
+            "named": true
+          },
+          {
             "type": "word",
             "named": true
+          }
+        ]
+      },
+      "modifier": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "I",
+            "named": false
           }
         ]
       },
@@ -6744,10 +7095,6 @@
           "named": true
         },
         {
-          "type": "shellspec_hook_block",
-          "named": true
-        },
-        {
           "type": "shellspec_hook_statement",
           "named": true
         },
@@ -6769,6 +7116,10 @@
         },
         {
           "type": "shellspec_output_directive",
+          "named": true
+        },
+        {
+          "type": "shellspec_parameters_value_statement",
           "named": true
         },
         {
@@ -6801,6 +7152,10 @@
         },
         {
           "type": "shellspec_todo_statement",
+          "named": true
+        },
+        {
+          "type": "shellspec_usefd_statement",
           "named": true
         },
         {
@@ -7281,10 +7636,6 @@
             "named": true
           },
           {
-            "type": "shellspec_hook_block",
-            "named": true
-          },
-          {
             "type": "shellspec_hook_statement",
             "named": true
           },
@@ -7306,6 +7657,10 @@
           },
           {
             "type": "shellspec_output_directive",
+            "named": true
+          },
+          {
+            "type": "shellspec_parameters_value_statement",
             "named": true
           },
           {
@@ -7338,6 +7693,10 @@
           },
           {
             "type": "shellspec_todo_statement",
+            "named": true
+          },
+          {
+            "type": "shellspec_usefd_statement",
             "named": true
           },
           {
@@ -7666,6 +8025,10 @@
     "named": false
   },
   {
+    "type": "<>",
+    "named": false
+  },
+  {
     "type": "=",
     "named": false
   },
@@ -7814,6 +8177,10 @@
     "named": false
   },
   {
+    "type": "I",
+    "named": false
+  },
+  {
     "type": "Include",
     "named": false
   },
@@ -7895,6 +8262,10 @@
   },
   {
     "type": "U",
+    "named": false
+  },
+  {
+    "type": "UseFD",
     "named": false
   },
   {
@@ -7987,10 +8358,6 @@
     "named": false
   },
   {
-    "type": "expand",
-    "named": false
-  },
-  {
     "type": "export",
     "named": false
   },
@@ -8068,10 +8435,6 @@
   },
   {
     "type": "not",
-    "named": false
-  },
-  {
-    "type": "raw",
     "named": false
   },
   {

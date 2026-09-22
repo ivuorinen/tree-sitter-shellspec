@@ -11,7 +11,7 @@ Before 'setup'
     argument: (raw_string)))
 
 ================================================================================
-After hook with multiple arguments
+Before hook with multiple arguments
 ================================================================================
 
 Before 'setup1' 'setup2'
@@ -93,3 +93,48 @@ End
       matcher: (shellspec_matcher
         (word)
         (raw_string)))))
+
+================================================================================
+Include with variable path
+================================================================================
+
+Include $SHELLSPEC_PROJECT_ROOT/lib/helper.sh
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_directive_statement
+    path: (concatenation
+      (simple_expansion
+        (variable_name))
+      (word))))
+
+================================================================================
+Bare Skip from official skip example
+================================================================================
+
+Describe 'temporary skip'
+  Example 'with Skip helper'
+    Skip # without reason
+    When call foo
+    The status should be success
+  End
+End
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_describe_block
+    description: (raw_string)
+    (shellspec_it_block
+      description: (raw_string)
+      (shellspec_skip_statement)
+      (comment)
+      (shellspec_when_statement
+        function: (word))
+      (shellspec_the_statement
+        subject: (shellspec_subject
+          (word))
+        matcher: (shellspec_matcher
+          (word)
+          (word))))))

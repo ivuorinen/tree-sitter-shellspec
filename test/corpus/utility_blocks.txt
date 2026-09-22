@@ -3,50 +3,18 @@ Data block
 ================================================================================
 
 Data
-  item1
-  item2
-  item3
+  #|item1
+  #|item2
+  #|item3
 End
 
 --------------------------------------------------------------------------------
 
 (program
   (shellspec_data_block
-    statements: (command
-      name: (command_name
-        (word)))
-    statements: (command
-      name: (command_name
-        (word)))
-    statements: (command
-      name: (command_name
-        (word)))))
-
-================================================================================
-Data block with label
-================================================================================
-
-Data "test data"
-  "value 1"
-  "value 2"
-End
-
---------------------------------------------------------------------------------
-
-(program
-  (shellspec_data_block
-    statements: (command
-      name: (command_name
-        (string
-          (string_content))))
-    statements: (command
-      name: (command_name
-        (string
-          (string_content))))
-    statements: (command
-      name: (command_name
-        (string
-          (string_content))))))
+    data_line: (shellspec_data_line_content)
+    data_line: (shellspec_data_line_content)
+    data_line: (shellspec_data_line_content)))
 
 ================================================================================
 Parameters block
@@ -69,10 +37,10 @@ End
         (word)))))
 
 ================================================================================
-Parameters with label
+Parameters block with string rows
 ================================================================================
 
-Parameters "test parameters"
+Parameters
   "first param"
   "second param"
 End
@@ -81,10 +49,6 @@ End
 
 (program
   (shellspec_utility_block
-    (command
-      name: (command_name
-        (string
-          (string_content))))
     (command
       name: (command_name
         (string
@@ -173,19 +137,13 @@ Todo 'implement feature X'
 Empty utility block
 ================================================================================
 
-Data "empty data"
+Parameters
 End
 
 --------------------------------------------------------------------------------
 
 (program
-  (shellspec_data_block
-    statements: (command
-      name: (command_name
-        (string
-          (string_content))))))
-
-
+  (shellspec_utility_block))
 
 ================================================================================
 Data string argument style
@@ -213,45 +171,32 @@ Data get_test_data
     argument: (word)))
 
 ================================================================================
-Data block with :raw modifier
+Data:raw block
 ================================================================================
 
-Data :raw
-  'raw data here'
+Data:raw
+  #|raw data here
 End
 
 --------------------------------------------------------------------------------
 
 (program
   (shellspec_data_block
-    statements: (command
-      name: (command_name
-        (word)))
-    statements: (command
-      name: (command_name
-        (raw_string)))))
+    data_line: (shellspec_data_line_content)))
 
 ================================================================================
-Data block with :expand modifier
+Data:expand block
 ================================================================================
 
-Data :expand
-  "expanded $variable"
+Data:expand
+  #|expanded $variable
 End
 
 --------------------------------------------------------------------------------
 
 (program
   (shellspec_data_block
-    statements: (command
-      name: (command_name
-        (word)))
-    statements: (command
-      name: (command_name
-        (string
-          (string_content)
-          (simple_expansion
-            (variable_name)))))))
+    data_line: (shellspec_data_line_content)))
 
 ================================================================================
 Data block with pipe filter
@@ -321,3 +266,59 @@ Data 'abc' | tr 'abc' 'ABC'
     filter: (word)
     filter: (raw_string)
     filter: (raw_string)))
+
+================================================================================
+Data file input
+================================================================================
+
+It 'reads stdin from a file'
+  Data < input.txt
+  When call cat
+End
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_it_block
+    description: (raw_string)
+    (shellspec_data_block
+      file: (word))
+    (shellspec_when_statement
+      function: (word))))
+
+================================================================================
+Data file input with quoted path
+================================================================================
+
+It 'reads stdin from a quoted path'
+  Data < "input file.txt"
+  When call cat
+End
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_it_block
+    description: (raw_string)
+    (shellspec_data_block
+      file: (string
+        (string_content)))
+    (shellspec_when_statement
+      function: (word))))
+
+================================================================================
+Data with command and multiple arguments
+================================================================================
+
+Data printf '%s\n' "foo" "bar"
+
+--------------------------------------------------------------------------------
+
+(program
+  (shellspec_data_block
+    argument: (word)
+    extra_argument: (raw_string)
+    extra_argument: (string
+      (string_content))
+    extra_argument: (string
+      (string_content))))

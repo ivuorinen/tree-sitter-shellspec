@@ -42,66 +42,50 @@ jobs:
         uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         id: cache-npm
         with:
-          path: |
-            ~/.npm
-            ~/.yarn
-            ~/.cache/yarn
-            ~/.pnpm-store
-            ~/.cache/pnpm
-            node_modules/.cache
-          key: ${{ runner.os }}-node-${{ matrix.node-version }}-${{ hashFiles('**/package-lock.json', '**/yarn.lock', '**/pnpm-lock.yaml') }}
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ matrix.node-version }}-${{ hashFiles('package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-node-${{ matrix.node-version }}-
             ${{ runner.os }}-node-
 
+      # Plain `npm ci`: a lockfile that drifted from package.json fails the job instead of
+      # being re-resolved by a fallback install.
       - name: Install Dependencies
-        run: npm ci || { echo "❌ npm install failed"; npm install; }
+        run: npm ci
         shell: bash
 
-      - name: Cache npx store
-        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-        id: cache-npx
-        with:
-          path: |
-            ~/.npm/_npx
-            ~/.cache/yarn/global
-            ~/.local/share/pnpm/global
-          key: ${{ runner.os }}-npx-${{ hashFiles('package.json') }}
+      # src/scanner.c is derived from tree-sitter-bash's scanner. Its TokenType enum must list
+      # the external tokens in the same order as the pinned tree-sitter-bash grammar.
+      # Whitespace is stripped because the local copy is re-indented to 2 spaces.
+      - name: Verify Scanner Token Enum Matches tree-sitter-bash
+        run: |
+          enum_tokens() { sed -n '/^enum TokenType/,/^};/p' "$1" | tr -d ' \t'; }
+          diff <(enum_tokens node_modules/tree-sitter-bash/src/scanner.c) <(enum_tokens src/scanner.c)
+        shell: bash
 
-      - name: Cache Generated Grammar
-        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-        id: cache-grammar
-        with:
-          path: |
-            src/parser.c
-            src/tree_sitter/
-            binding.gyp
-          key: ${{ runner.os }}-grammar-${{ hashFiles('grammar.js', 'package.json', 'src/scanner.c') }}
-
+      # Always regenerate: a cached src/parser.c keyed without the lockfile could hand the
+      # tests a parser built by a different tree-sitter-cli or tree-sitter-bash version.
       - name: Generate Grammar
-        if: steps.cache-grammar.outputs.cache-hit != 'true'
         run: npm run generate
         shell: bash
 
-      - name: Cache Built Parser
-        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-        id: cache-parser
-        with:
-          path: |
-            build/
-          key: >-
-            ${{ runner.os }}-parser-${{ matrix.node-version }}-${{
-            hashFiles('package-lock.json', 'src/parser.c', 'binding.gyp',
-            'src/**/*.cc', 'src/**/*.h') }}
-
-      - name: Build Parser
-        if: steps.cache-parser.outputs.cache-hit != 'true'
-        run: npm run build
+      # Fails when grammar.js changed but the committed src/ output was not regenerated,
+      # so CI never tests (or releases) a parser that differs from the committed one.
+      # `git status --porcelain`, not `git diff --exit-code`: diff only sees tracked
+      # files, so a generator that emits a *new* output under src/ would leave it
+      # untracked and the gate would pass while the build used an uncommitted file.
+      - name: Verify Committed Generated Files
+        run: |
+          changes=$(git status --porcelain -- src/)
+          if [ -n "$changes" ]; then
+            echo "::error::src/ differs from the committed output; run 'npm run generate' and commit."
+            printf '%s\n' "$changes"
+            exit 1
+          fi
         shell: bash
 
       - name: Test Parser with Sample Code
         run: |
-          # Ensure parser is built
           npm run build
 
           cat << 'EOF' > test_sample.shellspec
@@ -148,14 +132,57 @@ jobs:
           echo "✅ Parser successfully handled sample code"
         shell: bash
 
-  lint:
-    name: 🧹 Code Quality
+      # Real-world ShellSpec files. `tree-sitter parse --quiet` exits non-zero on ERROR and
+      # MISSING nodes alike; grepping the output for "ERROR" misses MISSING nodes.
+      - name: Parse Real ShellSpec Spec Files
+        run: |
+          failed=0
+          for f in test/spec/*.sh; do
+            npx tree-sitter parse --quiet "$f" > /dev/null || { echo "❌ parse errors: $f"; failed=1; }
+          done
+          exit "$failed"
+        shell: bash
+
+      # test/spec/ is a copy of ShellSpec's tutorial `examples/`, which exercises each
+      # construct in its simplest documented form. The framework's own regression suite
+      # is harder and is where real usage lives: it once had 8 failing files that the
+      # tutorial corpus could not surface (bracket test arguments, `When I run`,
+      # `Skip "reason" if`, `Include` with arguments, multi-argument `Data`, `<>`).
+      # Pinned to a commit on purpose — a moving ref, a tag included, would let an
+      # upstream push or retag turn this build red on its own.
+      - name: Parse the upstream ShellSpec suite
+        env:
+          SHELLSPEC_REF: "90e48c950239f3b8a9fdfa3e869592872c77b981" # 0.28.1
+        run: |
+          git init --quiet .tmp-shellspec
+          git -C .tmp-shellspec fetch --quiet --depth 1 \
+            https://github.com/shellspec/shellspec "$SHELLSPEC_REF"
+          git -C .tmp-shellspec checkout --quiet --detach FETCH_HEAD
+          failed=0
+          count=0
+          while IFS= read -r f; do
+            count=$((count + 1))
+            npx tree-sitter parse --quiet "$f" > /dev/null || { echo "❌ parse errors: $f"; failed=1; }
+          done <<EOF
+          $(find .tmp-shellspec/spec .tmp-shellspec/examples -name '*.sh' | sort)
+          EOF
+          echo "parsed $count upstream files"
+          rm -rf .tmp-shellspec
+          exit "$failed"
+        shell: bash
+
+  # The corpus tests run through the tree-sitter CLI's own runtime, so they cannot catch
+  # a binding whose declared runtime is too old for the grammar's ABI. That gap is not
+  # hypothetical: parser.c targets ABI 15, and go-tree-sitter v0.24.0 tops out at 14.
+  # These steps load the built grammar through each language's real runtime, which is
+  # the only way that class of breakage surfaces.
+  bindings:
+    name: 🔌 Bindings
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    needs: test
     permissions:
       contents: read # required to check out the repository
-      issues: write # required for the linter to post status to issues
-      pull-requests: write # required for the linter to post status to PRs
 
     steps:
       - name: Checkout Repository
@@ -168,27 +195,55 @@ jobs:
         with:
           node-version: 24
 
-      - name: Cache Node.js dependencies
-        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-        with:
-          path: |
-            ~/.npm
-            ~/.yarn
-            ~/.cache/yarn
-            ~/.pnpm-store
-            ~/.cache/pnpm
-            node_modules/.cache
-          key: ${{ runner.os }}-node-24-${{ hashFiles('**/package-lock.json', '**/yarn.lock', '**/pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-node-24-
-            ${{ runner.os }}-node-
-
       - name: Install Dependencies
-        run: npm ci || { echo "❌ npm install failed"; npm install; }
+        run: npm ci
         shell: bash
 
-      - name: 🧹 Run Linter
-        uses: ivuorinen/actions/pr-lint@6a8c40d9c5ff01b901d382b0ef86d432215aae2a # v2026.09.09
+      - name: Build the native addon
+        run: npm run build
+        shell: bash
+
+      # `tree-sitter` is declared as an OPTIONAL peerDependency, and npm refuses to add
+      # one to node_modules: `npm i --no-save tree-sitter` exits 0 and installs nothing,
+      # as do --legacy-peer-deps and --force. Installing into a separate prefix and
+      # symlinking it in is what actually works, and leaves package.json and
+      # package-lock.json untouched. The explicit resolve check is the point of the
+      # step: without it a silent no-op would leave the test below passing vacuously.
+      - name: Install the tree-sitter runtime
+        run: |
+          npm i --prefix "$RUNNER_TEMP/ts-runtime" tree-sitter@^0.25
+          ln -s "$RUNNER_TEMP/ts-runtime/node_modules/tree-sitter" node_modules/tree-sitter
+          node -e "console.log('tree-sitter runtime', require('tree-sitter/package.json').version)" || {
+            echo "::error::tree-sitter runtime is not resolvable; the Node binding test would pass without testing anything"
+            exit 1
+          }
+        shell: bash
+
+      - name: Node binding
+        run: node --test bindings/node/binding_test.js
+        shell: bash
+
+      - name: Setup Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.12"
+
+      - name: Python binding
+        run: |
+          python -m pip install --upgrade pip
+          pip install '.[core]'
+          python -c "import tree_sitter; print('tree-sitter runtime', tree_sitter.__version__)"
+          python -m unittest discover -s bindings/python/tests -v
+        shell: bash
+
+      - name: Setup Go
+        uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        with:
+          go-version-file: go.mod
+
+      - name: Go binding
+        run: go test -v ./bindings/go/
+        shell: bash
 
   coverage:
     name: 📊 Test Coverage
@@ -212,20 +267,14 @@ jobs:
       - name: Cache Node.js dependencies
         uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
-          path: |
-            ~/.npm
-            ~/.yarn
-            ~/.cache/yarn
-            ~/.pnpm-store
-            ~/.cache/pnpm
-            node_modules/.cache
-          key: ${{ runner.os }}-node-24-${{ hashFiles('**/package-lock.json', '**/yarn.lock', '**/pnpm-lock.yaml') }}
+          path: ~/.npm
+          key: ${{ runner.os }}-node-24-${{ hashFiles('package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-node-24-
             ${{ runner.os }}-node-
 
       - name: Install Dependencies
-        run: npm ci || { echo "❌ npm install failed"; npm install; }
+        run: npm ci
 
       - name: Test Coverage Analysis
         id: coverage
@@ -239,9 +288,10 @@ jobs:
           TEST_EXIT=$?
           set -e  # Re-enable exit on error
 
-          TOTAL_TESTS=$(echo "$TEST_OUTPUT" | grep -cE "^\s+[0-9]+\." || echo "0")
-          PASSING_TESTS=$(echo "$TEST_OUTPUT" | grep -cE "^\s+[0-9]+\. ✓" || echo "0")
-          FAILING_TESTS=$(echo "$TEST_OUTPUT" | grep -cE "^\s+[0-9]+\. ✗" || echo "0")
+          # grep -c already prints 0 when nothing matches; `|| true` only swallows its exit 1
+          TOTAL_TESTS=$(echo "$TEST_OUTPUT" | grep -cE "^\s+[0-9]+\." || true)
+          PASSING_TESTS=$(echo "$TEST_OUTPUT" | grep -cE "^\s+[0-9]+\. ✓" || true)
+          FAILING_TESTS=$(echo "$TEST_OUTPUT" | grep -cE "^\s+[0-9]+\. ✗" || true)
 
           {
             echo "- **Total Tests:** $TOTAL_TESTS"

@@ -23,14 +23,13 @@ Run the full grammar validation workflow:
 
     All tests must pass (100% success rate required). If any fail, report which tests failed.
 
-3. **Verify real spec files parse without errors**:
+3. **Verify real spec files parse without errors** (`--quiet` exits non-zero on ERROR and MISSING nodes; grepping for "ERROR" misses MISSING):
 
     ```bash
     for f in test/spec/*.sh; do
-      errors=$(tree-sitter parse "$f" 2>&1 | grep -c ERROR || true)
-      if [ "$errors" -gt 0 ]; then
-        echo "ERRORS in $f: $errors"
-        tree-sitter parse "$f" 2>&1 | grep ERROR
+      if ! npx tree-sitter parse --quiet "$f" > /dev/null; then
+        echo "PARSE ERRORS in $f"
+        npx tree-sitter parse "$f" 2>&1 | grep -E 'ERROR|MISSING'
       fi
     done
     ```

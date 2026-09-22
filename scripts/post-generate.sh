@@ -31,6 +31,11 @@ if ! grep -q "if (len == 0) return false;" src/tree_sitter/parser.h; then
     }
     if (/^}/ && $in_func) { $in_func = 0; }
   ' src/tree_sitter/parser.h
+  # perl exits 0 even when no line matched, so confirm the guard actually landed
+  if ! grep -q "if (len == 0) return false;" src/tree_sitter/parser.h; then
+    echo "    ✗ set_contains guard NOT applied: parser.h layout changed, update this script" >&2
+    exit 1
+  fi
   echo "    ✓ Applied buffer overflow fix to parser.h"
 else
   echo "    ✓ Buffer overflow fix already present"
