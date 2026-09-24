@@ -163,6 +163,9 @@ Use the `/debug-parse-failure` skill.
 Workflows live in `.github/workflows/`. `test.yml` regenerates the parser, fails when committed `src/` differs,
 and runs the test suite on Node 22 and 24, the spec-file parse check and the coverage gate; `pr-lint.yml` runs
 MegaLinter. Disabled linters and the reason for each are listed in `.mega-linter.yml`.
+`release.yml` runs release-please on pushes to `main` and, when a release PR merges, verifies the manifest versions
+(`.github/scripts/check_versions.py`), builds the npm tarball, Python sdist and crate, and publishes all three through OIDC trusted
+publishing after approval on the `release` environment. Its build job also runs on pull requests as a packaging check.
 
 ## Important Notes
 

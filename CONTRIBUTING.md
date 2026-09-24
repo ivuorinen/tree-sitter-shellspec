@@ -10,6 +10,7 @@ Thank you for your interest in contributing to tree-sitter-shellspec! This docum
 - [Testing](#testing)
 - [Code Style](#code-style)
 - [Submitting Changes](#submitting-changes)
+- [Releasing](#releasing)
 - [Reporting Issues](#reporting-issues)
 - [Areas for Contribution](#areas-for-contribution)
 
@@ -247,6 +248,34 @@ Use [Conventional Commits](https://conventionalcommits.org/):
 - `ci:` - CI workflow changes
 - `build:` - Build tooling and parser generation changes
 - `chore:` - Maintenance tasks
+- `deps:` - Runtime dependency updates (these release; see [Releasing](#releasing))
+
+## Releasing
+
+Releases are automated with [release-please](https://github.com/googleapis/release-please).
+
+1. Merging to `main` updates an open release PR. It bumps the version in every manifest and adds the new entries to `CHANGELOG.md`.
+    `feat`, `fix`, `perf` and `deps` commits appear in the changelog and cause a release; other types do not.
+2. Merging the release PR tags `vX.Y.Z` and creates the GitHub release. The tag is the release for the Go module and the Swift package.
+3. The release workflow then waits for approval on the `release` environment. After approval it publishes to npm, PyPI and
+    crates.io with trusted publishing (OIDC). No registry token is stored anywhere.
+
+Runtime dependency updates use the `deps:` type (`deps!:` for a major), so they release and appear under "Dependencies".
+Renovate applies this prefix itself; use it for hand-made runtime dependency changes too.
+
+### One-time setup
+
+Done once, before the first release PR is merged:
+
+1. Create a GitHub App installed on this repository only, with `Contents: write` and `Pull requests: write`. In the
+    `release-please` environment (deployments from `main` only), store its client ID as the variable `RELEASE_APP_CLIENT_ID`
+    and its private key as the secret `RELEASE_APP_PRIVATE_KEY`.
+2. Create the `release` environment with the maintainer as a required reviewer and deployments from `main` only.
+3. From a clean checkout, publish `0.1.0` by hand: `npm publish --access public` and `cargo publish`.
+4. Add trusted publishers for repository `ivuorinen/tree-sitter-shellspec`, workflow `release.yml`, environment `release`:
+    on npm and crates.io in the package settings, on PyPI as a pending publisher for `tree-sitter-shellspec`.
+5. On npm, set publishing access to "Require two-factor authentication and disallow tokens".
+6. Tag the commit from step 3 as `v0.1.0`, push the tag, and create a GitHub release for it. release-please counts versions from it.
 
 ## Reporting Issues
 

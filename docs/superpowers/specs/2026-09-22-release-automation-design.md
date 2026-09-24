@@ -50,7 +50,7 @@ push to main
     verify                   checks out the tag; all 7 manifests equal the version;
       │                      test.yml concluded success on the tag SHA; npm audit
       ▼
-    build                    npm pack, python -m build, cargo package;
+    build                    npm pack, python -m build --sdist, cargo package;
       │                      uploads the artifacts; no secrets, no id-token
       ▼
   ┌───┴──────────┬───────────────┐     environment: release (one approval)
@@ -115,8 +115,8 @@ The workflow-level permission is `contents: read`. Each job asks only for what i
 ### release-please
 
 - Runs only on push to `main`.
-- `environment: release-please`. That environment allows deployments from `main` only and holds the App ID as
-  a variable and the App private key as a secret.
+- `environment: release-please`. That environment allows deployments from `main` only and holds the App client ID
+  as a variable and the App private key as a secret. `create-github-app-token` v3 deprecates `app-id` in favour of `client-id`.
 - `actions/create-github-app-token` mints a token limited to this repository, with `contents: write` and
   `pull-requests: write`. `googleapis/release-please-action` runs with that token.
 - `GITHUB_TOKEN` gets no permissions (`permissions: {}`).
@@ -127,10 +127,11 @@ The workflow-level permission is `contents: read`. Each job asks only for what i
 - Runs when `release_created == 'true'`.
 - `permissions: contents: read, actions: read`.
 - Checks out `tag_name` with `persist-credentials: false`.
-- Fails the run unless all seven version fields equal `version`. This catches an `extra-files` updater that
-  matched nothing.
-- Fails unless the latest completed `test.yml` run for the tag SHA concluded `success`.
-- Runs `npm audit --audit-level=high`.
+- Runs `.github/scripts/check_versions.py` and fails the run unless all seven version fields equal `version`.
+  This catches an `extra-files` updater that matched nothing.
+- Runs `npm audit --package-lock-only --omit=dev --audit-level=high`.
+- Waits, up to 25 minutes, for the `test.yml` run on the tag SHA to finish, and fails unless it concluded
+  `success`. `test.yml` starts on the same push, so it is usually still running when `verify` starts.
 
 ### build
 
@@ -141,19 +142,23 @@ The workflow-level permission is `contents: read`. Each job asks only for what i
   both needed jobs are skipped, and `always()` keeps that from skipping `build` too.
 - `permissions: contents: read`. No dependency cache: a cache written by a pull request run must not reach a
   published artifact.
-- `npm ci --ignore-scripts`, then `npm rebuild tree-sitter-cli`, then `npm run generate`.
-- `npm pack` produces the npm tarball.
-- `python -m build` produces the sdist and wheel, and `twine check --strict` validates their metadata.
+- No dependency install and no `generate`: the job packs the committed sources, and `test.yml` already fails when
+  committed `src/` differs from a fresh generate.
+- `npm pack --ignore-scripts` produces the npm tarball.
+- `python -m build --sdist` produces the sdist, and `twine check --strict` validates its metadata.
+- No wheel is built: `setup.py` compiles the parser, so the wheel is `linux_x86_64`, which PyPI rejects.
 - `cargo package --locked` produces and verifies the `.crate`.
-- On release runs, uploads the three outputs as workflow artifacts. Pull request runs build and check only.
+- On release runs, uploads the npm tarball and the sdist as workflow artifacts. The crate is not uploaded, since
+  `publish-crates` publishes from the tag. Pull request runs build and check only.
 
 ### publish-npm, publish-pypi, publish-crates
 
 Shared rules:
 
-- `needs: [release-please, verify, build]`, runs only when `release_created == 'true'`.
+- `needs: [release-please, build]`, runs only when `release_created == 'true'` and `build` succeeded (`build`
+  runs only after `verify` succeeded).
 - `environment: release`, with the maintainer as a required reviewer and deployments allowed from `main` only.
-- `permissions: id-token: write` only.
+- `permissions: id-token: write`; `publish-crates` also has `contents: read` to check out the tag.
 - A job first asks its registry whether `version` is already published. If it is, the job logs a skip and
   passes. A re-run after a partial failure therefore publishes only what is missing, and the hand-published
   `0.1.0` is never uploaded twice.
@@ -164,7 +169,7 @@ Per registry:
   11.5.1. Downloads the tarball and runs `npm publish <tarball> --access public`, using the `next` dist-tag for a
   prerelease version. Provenance is generated automatically. The trusted publisher on npmjs.com names the
   workflow file `release.yml` and the environment `release`.
-- **PyPI:** downloads `dist/` and runs `pypa/gh-action-pypi-publish`, which publishes with trusted publishing
+- **PyPI:** downloads the sdist into `dist/` and runs `pypa/gh-action-pypi-publish`, which publishes with trusted publishing
   and attaches PEP 740 attestations by default. The pending publisher names `release.yml` and `release`.
 - **crates.io:** `rust-lang/crates-io-auth-action` exchanges the OIDC token for a short-lived crates.io token.
   Cargo cannot upload a prebuilt `.crate` file, so this job checks out `tag_name` and runs
@@ -185,7 +190,7 @@ repository.
 Done after the implementation PR merges, before the first release PR is merged:
 
 1. Create a GitHub App owned by the maintainer, installed on this repository only, with `contents: write` and `pull-requests: write`.
-    Store its App ID as a variable and its private key as a secret in the `release-please` environment.
+    Store its App client ID as a variable and its private key as a secret in the `release-please` environment.
 2. Create the `release` environment: the maintainer as a required reviewer, deployments allowed from `main` only.
 3. From a clean checkout of the merge commit, publish `0.1.0` by hand with `npm publish --access public` and `cargo publish`.
 4. Add the trusted publishers: npm and crates.io on their package settings pages, PyPI as a pending publisher under the account's Publishing page.
@@ -201,9 +206,10 @@ PyPI receives its first version from the first CI release, so its first version 
 - `actionlint` and zizmor pass on the new workflow, with no zizmor ignores for registry tokens.
 - A local `npx release-please release-pr --dry-run` against a branch with a test `deps:` commit produces a patch
   release PR that includes a Dependencies section and updates all seven version fields.
-- The `build` job runs on the implementation PR itself and must pass: `npm pack`, `python -m build` with
+- The `build` job runs on the implementation PR itself and must pass: `npm pack`, `python -m build --sdist` with
   `twine check --strict`, and `cargo package --locked`.
-- On a throwaway branch, one version field set to the wrong value makes the `verify` check fail.
+- Unit tests in `.github/scripts/test_check_versions.py` show the `verify` version check fails when one
+  manifest carries a different version.
 
 ## Documentation
 
