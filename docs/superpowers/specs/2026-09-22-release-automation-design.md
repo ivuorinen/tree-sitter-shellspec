@@ -147,7 +147,8 @@ The workflow-level permission is `contents: read`. Each job asks only for what i
 - `npm pack --ignore-scripts` produces the npm tarball.
 - `python -m build --sdist` produces the sdist, and `twine check --strict` validates its metadata.
 - No wheel is built: `setup.py` compiles the parser, so the wheel is `linux_x86_64`, which PyPI rejects.
-- `cargo package --locked` produces and verifies the `.crate`.
+- `cargo package` produces and verifies the `.crate`. There is no `--locked`: `Cargo.lock` is not committed for
+  this library crate, so the flag would assert nothing, and Cargo documents it as an error without a lockfile.
 - On release runs, uploads the npm tarball and the sdist as workflow artifacts. The crate is not uploaded, since
   `publish-crates` publishes from the tag. Pull request runs build and check only.
 
@@ -173,7 +174,7 @@ Per registry:
   and attaches PEP 740 attestations by default. The pending publisher names `release.yml` and `release`.
 - **crates.io:** `rust-lang/crates-io-auth-action` exchanges the OIDC token for a short-lived crates.io token.
   Cargo cannot upload a prebuilt `.crate` file, so this job checks out `tag_name` and runs
-  `cargo publish --locked`. Cargo runs no install scripts, and the build script only compiles the bundled
+  `cargo publish`. Cargo runs no install scripts, and the build script only compiles the bundled
   C sources. The trusted publisher names `release.yml` and `release`.
 
 All actions are pinned to a full commit SHA with the version in a trailing comment, as in the rest of the
@@ -207,7 +208,7 @@ PyPI receives its first version from the first CI release, so its first version 
 - A local `npx release-please release-pr --dry-run` against a branch with a test `deps:` commit produces a patch
   release PR that includes a Dependencies section and updates all seven version fields.
 - The `build` job runs on the implementation PR itself and must pass: `npm pack`, `python -m build --sdist` with
-  `twine check --strict`, and `cargo package --locked`.
+  `twine check --strict`, and `cargo package`.
 - Unit tests in `.github/scripts/test_check_versions.py` show the `verify` version check fails when one
   manifest carries a different version.
 

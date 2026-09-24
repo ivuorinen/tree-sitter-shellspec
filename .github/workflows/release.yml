@@ -148,8 +148,10 @@ jobs:
           python -m twine check --strict dist/*
 
       # Builds and verifies the crate; publish-crates runs cargo publish from the tag itself.
+      # No --locked: Cargo.lock is not committed for this library crate, so the flag asserts
+      # nothing, and Cargo documents it as an error when the lockfile is missing.
       - name: Package crate
-        run: cargo package --locked
+        run: cargo package
 
       - name: Upload npm tarball
         if: github.event_name == 'push'
@@ -285,4 +287,5 @@ jobs:
         if: steps.exists.outputs.found != 'true'
         env:
           CARGO_REGISTRY_TOKEN: ${{ steps.auth.outputs.token }}
-        run: cargo publish --locked
+        # No --locked, for the same reason as the Package crate step in build.
+        run: cargo publish
