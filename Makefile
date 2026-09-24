@@ -1,6 +1,10 @@
 LANGUAGE_NAME := tree-sitter-shellspec
 HOMEPAGE_URL := https://github.com/ivuorinen/tree-sitter-shellspec
+# Block markers, not a trailing marker comment: make keeps the space before an inline
+# comment in the value, which would turn VERSION into "0.1.0 " and break library names.
+# x-release-please-start-version
 VERSION := 0.1.0
+# x-release-please-end
 DESCRIPTION := ShellSpec grammar for tree-sitter (extends bash)
 
 # repository
