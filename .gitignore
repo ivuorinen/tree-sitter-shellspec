@@ -55,3 +55,9 @@ build/
 __pycache__/
 *.py[cod]
 .venv/
+
+# Packaging output. `python -m build` writes dist/, `cargo package` writes target/ and,
+# because this crate is a library, generates a Cargo.lock that is not committed.
+dist/
+target/
+Cargo.lock
