@@ -23,6 +23,45 @@
         "major"
       ],
       "commitMessagePrefix": "chore(deps): "
+    },
+    {
+      "description": "Runtime deps change what users install, so they release as 'deps:' (Dependencies, patch). Keep last: last match wins.",
+      "matchManagers": [
+        "npm",
+        "cargo",
+        "pep621"
+      ],
+      "matchDepTypes": [
+        "dependencies",
+        "peerDependencies",
+        "project.dependencies",
+        "project.optional-dependencies"
+      ],
+      "matchUpdateTypes": [
+        "minor",
+        "patch",
+        "pin",
+        "digest"
+      ],
+      "commitMessagePrefix": "deps: "
+    },
+    {
+      "description": "A runtime dep major (e.g. tree-sitter-bash) can change parse trees: mark it breaking (minor bump below 1.0.0).",
+      "matchManagers": [
+        "npm",
+        "cargo",
+        "pep621"
+      ],
+      "matchDepTypes": [
+        "dependencies",
+        "peerDependencies",
+        "project.dependencies",
+        "project.optional-dependencies"
+      ],
+      "matchUpdateTypes": [
+        "major"
+      ],
+      "commitMessagePrefix": "deps!: "
     }
   ]
 }
