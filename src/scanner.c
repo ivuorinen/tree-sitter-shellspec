@@ -287,9 +287,12 @@ static bool scan_heredoc_end_identifier(Heredoc *heredoc, TSLexer *lexer) {
 //
 // The body is split into tokens so the grammar can parse expansions itself:
 // in a non-raw heredoc, text before a `$name`, `${...}` or `$(...)` is emitted
-// as `middle_type` and marks the heredoc as started. A body with no expansion
-// is emitted whole as `end_type`, ending at the delimiter line. A raw heredoc
-// (quoted or escaped delimiter) keeps `$` as plain text.
+// as `middle_type` and marks the heredoc as started. A non-raw body is emitted
+// whole as `end_type`, ending at the delimiter line, only if it contains no
+// unescaped `$`: any unescaped `$` after body text marks the heredoc started,
+// even a literal one such as `$5`, and the delimiter line then ends the body
+// as `middle_type`. A raw heredoc (quoted or escaped delimiter) keeps `$` as
+// plain text.
 //
 // scan() uses it in two phases: once with HEREDOC_BODY_BEGINNING and
 // SIMPLE_HEREDOC_BODY before the body has started, then with HEREDOC_CONTENT
@@ -324,9 +327,10 @@ static bool scan_heredoc_content(Scanner *scanner, TSLexer *lexer,
     }
 
     case '$': {
-      // Stop before an expansion so the grammar parses it. Text read so far is
-      // emitted as middle_type; a `$` that is not followed by a name, `{` or
-      // `(` is plain text and scanning continues.
+      // Stop before an expansion so the grammar parses it: text read so far
+      // is emitted as middle_type. The heredoc is marked started before the
+      // next character is checked, so a `$` not followed by a name, `{` or
+      // `(` stays in the text but still leaves the heredoc started.
       if (heredoc->is_raw) {
         did_advance = true;
         advance(lexer);
