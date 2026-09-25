@@ -26,10 +26,28 @@ It enables syntax highlighting, code navigation, and tooling integration for She
 
 ### Using npm
 
-The package is not published to npm yet. After the first release:
-
 ```bash
 npm install @ivuorinen/tree-sitter-shellspec
+```
+
+### Using pip
+
+```bash
+pip install tree-sitter-shellspec
+```
+
+The PyPI package is a source distribution, so installing it compiles the parser and needs a C compiler.
+
+### Using Cargo
+
+```bash
+cargo add tree-sitter-shellspec
+```
+
+### Using Go
+
+```bash
+go get github.com/ivuorinen/tree-sitter-shellspec@latest
 ```
 
 ### Manual Installation
