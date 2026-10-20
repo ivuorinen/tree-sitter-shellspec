@@ -60,6 +60,11 @@ export default grammar(bashGrammar, {
       [$.shellspec_utility_block],
     ]),
 
+  // tree-sitter-bash lists `_statement` and `_primary_expression` under both `inline` and
+  // `supertypes`. The CLI inlines them, ignores the supertype entry and warns, so dropping
+  // them here matches what it generates already and removes the warning.
+  supertypes: (_, previous) => previous.filter((rule) => rule.name !== "_statement" && rule.name !== "_primary_expression"),
+
   rules: {
     // tree-sitter-bash 0.25.1 omits the POSIX `<>` (open for reading and writing)
     // operator from file_redirect: its choice lists < > >> &> &>> <& >& >| and the
