@@ -339,7 +339,7 @@ npm run dev          # Generate + test
 npm run lint                    # Check code style
 npm run lint:editorconfig       # Check EditorConfig compliance
 npm run format                  # Prettier on files changed since main (pretty-quick)
-pre-commit run markdownlint --all-files  # Lint and fix markdown
+prek run markdownlint --all-files  # Lint and fix markdown
 
 # Utilities
 npm run clean        # Clean generated files
