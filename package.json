@@ -33,7 +33,7 @@
     "dev": "npm run generate && npm run test",
     "lint": "npx mega-linter-runner@10.1.0",
     "lint:editorconfig": "prek run editorconfig-checker --all-files",
-    "format": "prek run --stage manual pretty-quick-branch",
+    "format": "prek run --stage manual --all-files pretty-quick-branch",
     "clean": "rm -rf src/parser.c src/grammar.json src/node-types.json",
     "rebuild": "npm run clean && npm run generate"
   },
