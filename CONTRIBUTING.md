@@ -21,6 +21,8 @@ Thank you for your interest in contributing to tree-sitter-shellspec! This docum
 - [Node.js](https://nodejs.org/) (v22 or later)
 - Tree-sitter CLI (provided via devDependency) — use `npx tree-sitter <cmd>`
 - A C/C++ compiler, `make` and Python 3 — `npm install` builds the Node binding with node-gyp
+- [prek](https://github.com/j178/prek) or [pre-commit](https://pre-commit.com/) — runs the `.pre-commit-config.yaml` hooks;
+  `npm run lint:editorconfig` and `npm run format` call prek
 - [Git](https://git-scm.com/)
 - Basic knowledge of [Tree-sitter grammars](https://tree-sitter.github.io/tree-sitter/creating-parsers)
 - Familiarity with [ShellSpec](https://shellspec.info/) syntax
@@ -80,7 +82,7 @@ npm run rebuild
 
 # Check code style
 npm run lint
-npm run lint:markdown
+pre-commit run markdownlint --all-files
 ```
 
 ## Grammar Development
@@ -198,7 +200,7 @@ npx tree-sitter test --debug
 ### Before Submitting
 
 1. **Ensure all tests pass:** `npm test`
-2. **Check code style:** `npm run lint && npm run lint:editorconfig && npm run lint:markdown`
+2. **Check code style:** `npm run lint && npm run lint:editorconfig && pre-commit run markdownlint --all-files`
 3. **Update documentation** if needed
 4. **Test with real ShellSpec files** when possible
 5. **Run the full development cycle:** `npm run rebuild`

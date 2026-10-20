@@ -53,11 +53,13 @@ npx tree-sitter parse path/to/file.shellspec
 npm run lint
 
 # Fix markdown issues
-npm run lint:markdown
+prek run markdownlint --all-files
 
-# Run pre-commit hooks manually
-npm run precommit
+# Run all .pre-commit-config.yaml hooks manually
+prek run --all-files
 ```
+
+Use `prek` for hooks, not `pre-commit`; it reads the same `.pre-commit-config.yaml`.
 
 ## Grammar Architecture
 

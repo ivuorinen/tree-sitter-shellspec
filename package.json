@@ -32,12 +32,8 @@
     "build": "npx tree-sitter build .",
     "dev": "npm run generate && npm run test",
     "lint": "npx mega-linter-runner@10.1.0",
-    "lint:markdown": "markdownlint . --config .markdownlint.json --ignore node_modules",
-    "lint:markdown:fix": "markdownlint . --config .markdownlint.json --ignore node_modules --fix",
-    "lint:editorconfig": "editorconfig-checker",
-    "format": "prettier --write .",
-    "format:check": "prettier --check .",
-    "precommit": "pre-commit run --all-files",
+    "lint:editorconfig": "prek run editorconfig-checker --all-files",
+    "format": "prek run pretty-quick --all-files",
     "clean": "rm -rf src/parser.c src/grammar.json src/node-types.json",
     "rebuild": "npm run clean && npm run generate"
   },
@@ -55,9 +51,6 @@
     }
   },
   "devDependencies": {
-    "editorconfig-checker": "^7.0.0",
-    "markdownlint-cli": "^0.49.1",
-    "prettier": "^3.6.2",
     "tree-sitter-cli": "^0.27.0"
   },
   "allowScripts": {

@@ -53,3 +53,19 @@ repos:
       - id: checkov
         args:
           - "--quiet"
+
+  - repo: https://github.com/editorconfig-checker/editorconfig-checker.python
+    rev: 3.11.1
+    hooks:
+      - id: editorconfig-checker
+
+  # Prettier has no maintained hook repo (pre-commit/mirrors-prettier is archived).
+  # pretty-quick picks the changed files itself, so prek passes none.
+  - repo: local
+    hooks:
+      - id: pretty-quick
+        name: pretty-quick
+        entry: pretty-quick --branch main
+        language: node
+        additional_dependencies: [pretty-quick@4.2.2]
+        pass_filenames: false

@@ -304,6 +304,7 @@ End
 - [Node.js](https://nodejs.org/) (v22 or later)
 - Tree-sitter CLI (provided via devDependency) — use `npx tree-sitter <cmd>`
 - A C/C++ compiler, `make` and Python 3 — `npm install` builds the Node binding with node-gyp
+- [prek](https://github.com/j178/prek) — runs the `.pre-commit-config.yaml` hooks; `npm run lint:editorconfig` and `npm run format` call it
 
 ### Setup
 
@@ -331,8 +332,8 @@ npm run dev          # Generate + test
 # Linting and formatting
 npm run lint                    # Check code style
 npm run lint:editorconfig       # Check EditorConfig compliance
-npm run lint:markdown           # Check markdown style
-npm run format                  # Format code with prettier
+npm run format                  # Prettier on files changed since main (pretty-quick)
+pre-commit run markdownlint --all-files  # Lint and fix markdown
 
 # Utilities
 npm run clean        # Clean generated files

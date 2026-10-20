@@ -56,7 +56,7 @@ Run comprehensive pre-release checks before tagging a release.
 6. **Check EditorConfig compliance**:
 
     ```bash
-    npx editorconfig-checker
+    prek run editorconfig-checker --all-files
     ```
 
 7. **Summary**: Report pass/fail for each check, with details on any failures. All checks must pass for release.
