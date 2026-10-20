@@ -177,7 +177,7 @@ npx tree-sitter test --debug
 
 - Use **consistent indentation** (2 spaces)
 - Add **descriptive comments** for complex rules
-- Use **meaningful rule names** (e.g., `shellspec_describe_block`)
+- Prefix **ShellSpec rule names** with `shellspec_` (e.g., `shellspec_describe_block`)
 - Group **related rules** together
 - Follow **tree-sitter conventions**
 

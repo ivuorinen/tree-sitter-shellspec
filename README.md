@@ -112,12 +112,18 @@ Before 'variable=value'    # Inline code
 #### Data Blocks
 
 ```shellspec
-Data
+Data            # Data:raw is the same; Data:expand expands variables
   #|item1 value1
   #|item2 value2
 End
 
-Data < input.txt  # File contents as stdin
+Data | tr 'a-z' 'A-Z'  # Pipe the lines through a filter
+  #|item1
+End
+
+Data get_data arg1     # Function output as stdin (takes a filter too)
+Data 'inline data'     # String as stdin
+Data < input.txt       # File contents as stdin
 ```
 
 #### Parameters
