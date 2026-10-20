@@ -53,18 +53,20 @@ npx tree-sitter parse path/to/file.shellspec
 npm run lint
 
 # Fix markdown issues
-npm run lint:markdown
+prek run markdownlint --all-files
 
-# Run pre-commit hooks manually
-npm run precommit
+# Run all .pre-commit-config.yaml hooks manually
+prek run --all-files
 ```
+
+Use `prek` for hooks, not `pre-commit`; it reads the same `.pre-commit-config.yaml`.
 
 ## Grammar Architecture
 
 ### Core Grammar Structure
 
-The grammar extends `tree-sitter-bash` with 28 ShellSpec-specific rules (block, statement, `%` directive
-and helper rules). README.md "Grammar Structure" lists every rule.
+The grammar extends `tree-sitter-bash` with ShellSpec-specific block, statement, `%` directive
+and helper rules. README.md "Grammar Structure" lists every rule.
 
 ### Grammar Pattern
 
@@ -82,10 +84,8 @@ prec.right(1, seq(
 
 ### Conflict Management
 
-The generated grammar has 7 conflicts:
-
-- 6 inherited from tree-sitter-bash through `previous` (grammar.js does not re-declare them)
-- 1 ShellSpec-specific: `[$.shellspec_utility_block]` (Parameters blocks enter the shared statement repeat directly after the keyword)
+`conflicts` in grammar.js inherits tree-sitter-bash's conflicts through `previous` (it does not re-declare them)
+and appends the ShellSpec-specific ones, each with a comment giving its reason.
 
 When adding new rules, minimize new conflicts. Test thoroughly with `npm test` after grammar changes.
 
@@ -117,9 +117,9 @@ Supported ShellSpec syntax is documented in README.md "Grammar Support".
 
 ### Quality Gates
 
-- **Minimum tests**: 115, enforced by the CI coverage job (currently 150 tests passing)
+- **Minimum tests**: the CI coverage job in `test.yml` fails when the test count drops below its threshold
 - **Coverage**: All ShellSpec constructs must be tested
-- **CI validation**: Tests run on Node 22 and 24
+- **CI validation**: Tests run on every Node version in the `test.yml` matrix
 
 ### Test Structure
 
@@ -161,7 +161,7 @@ Use the `/debug-parse-failure` skill.
 ## CI/CD Pipeline
 
 Workflows live in `.github/workflows/`. `test.yml` regenerates the parser, fails when committed `src/` differs,
-and runs the test suite on Node 22 and 24, the spec-file parse check and the coverage gate; `pr-lint.yml` runs
+and runs the test suite across its Node version matrix, the spec-file parse check and the coverage gate; `pr-lint.yml` runs
 MegaLinter. Disabled linters and the reason for each are listed in `.mega-linter.yml`.
 `release.yml` runs release-please on pushes to `main` and, when a release PR merges, verifies the manifest versions
 (`.github/scripts/check_versions.py`), builds the npm tarball, Python sdist and crate, and publishes all three through OIDC trusted

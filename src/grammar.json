@@ -9734,9 +9734,7 @@
     "_redirect"
   ],
   "supertypes": [
-    "_statement",
-    "_expression",
-    "_primary_expression"
+    "_expression"
   ],
   "reserved": {}
 }

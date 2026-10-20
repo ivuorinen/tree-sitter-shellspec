@@ -112,12 +112,18 @@ Before 'variable=value'    # Inline code
 #### Data Blocks
 
 ```shellspec
-Data
+Data            # Data:raw is the same; Data:expand expands variables
   #|item1 value1
   #|item2 value2
 End
 
-Data < input.txt  # File contents as stdin
+Data | tr 'a-z' 'A-Z'  # Pipe the lines through a filter
+  #|item1
+End
+
+Data get_data arg1     # Function output as stdin (takes a filter too)
+Data 'inline data'     # String as stdin
+Data < input.txt       # File contents as stdin
 ```
 
 #### Parameters
@@ -304,6 +310,7 @@ End
 - [Node.js](https://nodejs.org/) (v22 or later)
 - Tree-sitter CLI (provided via devDependency) — use `npx tree-sitter <cmd>`
 - A C/C++ compiler, `make` and Python 3 — `npm install` builds the Node binding with node-gyp
+- [prek](https://github.com/j178/prek) — runs the `.pre-commit-config.yaml` hooks; `npm run lint:editorconfig` and `npm run format` call it
 
 ### Setup
 
@@ -331,8 +338,8 @@ npm run dev          # Generate + test
 # Linting and formatting
 npm run lint                    # Check code style
 npm run lint:editorconfig       # Check EditorConfig compliance
-npm run lint:markdown           # Check markdown style
-npm run format                  # Format code with prettier
+npm run format                  # Prettier on files changed since main (pretty-quick)
+prek run markdownlint --all-files  # Lint and fix markdown
 
 # Utilities
 npm run clean        # Clean generated files

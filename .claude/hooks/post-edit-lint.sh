@@ -39,7 +39,7 @@ case "$file" in
 esac
 
 # EditorConfig compliance for the edited file.
-if ! out=$(npx editorconfig-checker "$file" 2>&1); then
+if ! out=$(prek run editorconfig-checker --files "$file" 2>&1); then
   printf 'post-edit-lint: EditorConfig violations in %s:\n%s\n' "$file" "$out" >&2
   status=2
 fi

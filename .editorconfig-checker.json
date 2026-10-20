@@ -5,7 +5,6 @@
     "^src/(parser\\.c|grammar\\.json|node-types\\.json|tree_sitter/)",
     "^bindings/",
     "^(binding\\.gyp|CMakeLists\\.txt|Makefile|Cargo\\.toml|Package\\.swift|go\\.mod|pyproject\\.toml|setup\\.py)$",
-    "^\\.serena/",
     "^docs/audit/findings/",
     "package-lock\\.json$"
   ]

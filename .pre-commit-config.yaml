@@ -48,8 +48,34 @@ repos:
         args: ["-shellcheck="]
 
   - repo: https://github.com/bridgecrewio/checkov.git
-    rev: "3.3.19"
+    rev: "3.3.29"
     hooks:
       - id: checkov
         args:
           - "--quiet"
+
+  - repo: https://github.com/editorconfig-checker/editorconfig-checker.python
+    rev: 3.11.1
+    hooks:
+      - id: editorconfig-checker
+
+  # Prettier has no maintained hook repo (pre-commit/mirrors-prettier is archived).
+  # pretty-quick picks the files itself, so prek passes none. The commit hook formats
+  # staged files only and leaves the index to prek; outside --staged, pretty-quick also
+  # formats untracked files. `npm run format` runs the manual-stage hook on every file
+  # changed since main.
+  - repo: local
+    hooks:
+      - id: pretty-quick
+        name: pretty-quick
+        entry: pretty-quick --staged --no-restage
+        language: node
+        additional_dependencies: [pretty-quick@4.2.2]
+        pass_filenames: false
+      - id: pretty-quick-branch
+        name: pretty-quick (changed since main)
+        entry: pretty-quick --branch main
+        language: node
+        additional_dependencies: [pretty-quick@4.2.2]
+        pass_filenames: false
+        stages: [manual]
