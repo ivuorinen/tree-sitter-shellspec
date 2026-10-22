@@ -1,5 +1,5 @@
 ---
-# Generated parser files must stay byte-identical to `npm run generate` output (CI diffs them),
+# Generated parser files must stay byte-identical to `mise run generate` output (CI diffs them),
 # so no fixer hook may touch them.
 exclude: ^src/(parser\.c|grammar\.json|node-types\.json|tree_sitter/)
 repos:
@@ -62,7 +62,7 @@ repos:
   # Prettier has no maintained hook repo (pre-commit/mirrors-prettier is archived).
   # pretty-quick picks the files itself, so prek passes none. The commit hook formats
   # staged files only and leaves the index to prek; outside --staged, pretty-quick also
-  # formats untracked files. `npm run format` runs the manual-stage hook on every file
+  # formats untracked files. `mise run format` runs the manual-stage hook on every file
   # changed since main.
   - repo: local
     hooks:
