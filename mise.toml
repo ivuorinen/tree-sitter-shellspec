@@ -21,7 +21,7 @@ lockfile = false
 node = "24.22.1"
 # The version CI tests and packages with. pyproject.toml's requires-python >=3.10 is the
 # floor for users of the Python binding and is not tied to this pin.
-python = "3.14.8"
+python = "3.15.0"
 # Builds and publishes the crate in release.yml.
 rust = "1.99.0"
 # The generator CLI. Run it through `mise run generate`, never `tree-sitter generate`
