@@ -13,17 +13,17 @@ Run comprehensive pre-release checks before tagging a release.
 1. **Run all corpus tests**:
 
     ```bash
-    npm test
+    mise run test
     ```
 
-    Must be 100% passing. Report the total test count (must be >= 115, the threshold the CI coverage job enforces).
+    Must be 100% passing. Report the total test count (must be >= 115, the threshold `mise run test:count` enforces in CI).
 
 2. **Verify spec files parse cleanly** (`--quiet` exits non-zero on ERROR and MISSING nodes):
 
     ```bash
     failed_files=0
     for f in test/spec/*.sh; do
-      if ! npx tree-sitter parse --quiet "$f" > /dev/null; then
+      if ! mise exec -- tree-sitter parse --quiet "$f" > /dev/null; then
         echo "PARSE ERRORS in $f"
         failed_files=$((failed_files + 1))
       fi
@@ -44,7 +44,7 @@ Run comprehensive pre-release checks before tagging a release.
 4. **Build the parser**:
 
     ```bash
-    npm run build
+    mise run build
     ```
 
     Must succeed without errors.

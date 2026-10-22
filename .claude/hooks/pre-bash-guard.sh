@@ -2,17 +2,18 @@
 # Pre-bash guard: blocks Bash commands that write to generated parser files.
 #
 # pre-edit-guard.sh only sees Edit/Write/NotebookEdit calls, so shell commands
-# (`sed -i`, redirects, cp/mv/rm, a globally installed `tree-sitter generate`)
-# could rewrite src/parser.c, src/grammar.json, src/node-types.json or
-# src/tree_sitter/ unnoticed. During an audit a global CLI did exactly that: it
-# regenerated those files with the wrong tree-sitter version and dropped the
-# parser.h patch that scripts/post-generate.sh applies.
+# (`sed -i`, redirects, cp/mv/rm, a direct `tree-sitter generate`) could rewrite
+# src/parser.c, src/grammar.json, src/node-types.json or src/tree_sitter/
+# unnoticed. During an audit a global CLI did exactly that: it regenerated those
+# files with the wrong tree-sitter version and dropped the parser.h patch that
+# scripts/post-generate.sh applies. mise now pins the CLI, but any direct
+# `tree-sitter generate` — bare, npx, node_modules/.bin or `mise exec` — still
+# skips that patch, so only `mise run generate` regenerates.
 #
 # Claude Code passes the command as JSON on stdin (tool_input.command). Only
 # exit 2 blocks a PreToolUse call, so the guard exits 2 on a violation and on
 # input it cannot parse (fail closed). Restoring committed files with
-# `git checkout`/`git restore`, and the pinned `npm run generate` or
-# `npx tree-sitter generate`, stay allowed.
+# `git checkout`/`git restore`, and `mise run generate`, stay allowed.
 
 set -euo pipefail
 
@@ -59,12 +60,13 @@ process.stdin.on("data", (chunk) => (raw += chunk)).on("end", () => {
         reasons.add("runs an interpreter that names a generated file");
       }
     }
-    if (/(^|[\s(])tree-sitter\s+generate\b/.test(segment) && !/(npx\s+|node_modules\/\.bin\/)tree-sitter\s+generate\b/.test(segment)) {
-      reasons.add("runs a global tree-sitter generate instead of the pinned CLI");
+    // `gen` and `g` are aliases of the `generate` subcommand.
+    if (/(^|[\s(\/])tree-sitter\s+(generate|gen|g)\b/.test(segment)) {
+      reasons.add("runs tree-sitter generate directly, which skips scripts/post-generate.sh");
     }
   }
   if (reasons.size) {
-    console.error(`BLOCKED: this command ${[...reasons].join("; ")}. Edit grammar.js and run npm run generate.`);
+    console.error(`BLOCKED: this command ${[...reasons].join("; ")}. Edit grammar.js and run mise run generate.`);
     process.exit(2);
   }
 });

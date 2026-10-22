@@ -28,7 +28,7 @@ Ensure `queries/highlights.scm` has syntax highlighting patterns for all grammar
     - Include and `%` directives → `@keyword.directive`
 
 5. **Verify**:
-    - Run `npx tree-sitter query queries/highlights.scm test/spec/01.very_simple_spec.sh` and confirm every
+    - Run `mise exec -- tree-sitter query queries/highlights.scm test/spec/01.very_simple_spec.sh` and confirm every
       changed keyword is captured.
-    - Add or extend assertions in `test/highlight/` for every changed keyword, then run `npx tree-sitter test`
+    - Add or extend assertions in `test/highlight/` for every changed keyword, then run `mise run test`
       (it runs the highlight tests too). All tests must pass.

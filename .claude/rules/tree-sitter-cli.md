@@ -1,4 +1,4 @@
 # Tree-sitter CLI
 
-Use the pinned CLI through `npm run <script>` or `npx tree-sitter`.
-Never run a globally installed `tree-sitter generate`: its version differs from the pinned devDependency and it skips `scripts/post-generate.sh`.
+The CLI version is pinned in `mise.toml`; run commands as `mise run <task>` (`mise tasks` lists them).
+Never run `tree-sitter generate` directly in any form (bare, `npx`, `mise exec`): only `mise run generate` applies `scripts/post-generate.sh`.
