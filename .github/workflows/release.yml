@@ -21,6 +21,12 @@ concurrency:
 permissions:
   contents: read
 
+# The package steps run tasks from mise.toml, so `mise run package:<name>` reproduces
+# them locally with the same pinned toolchain.
+env:
+  # renovate: datasource=github-releases depName=jdx/mise
+  MISE_VERSION: v2026.10.8
+
 jobs:
   release-please:
     name: 🏷️ Release Please
@@ -123,35 +129,28 @@ jobs:
           ref: ${{ needs.release-please.outputs.tag_name }}
           persist-credentials: false
 
-      # zizmor: ignore[cache-poisoning] no cache input is set, so nothing is restored
-      - name: Setup Node.js 24
-        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+      # cache: false — a release build must not restore anything a pull request could have
+      # written to the Actions cache.
+      - name: Setup mise
+        uses: jdx/mise-action@08ae2a091c038e1e05ec6f5115dc5c69d5a2a6b8 # v5.1.2
         with:
-          node-version: 24
+          version: ${{ env.MISE_VERSION }}
+          cache: false
 
       # Packs the committed sources; test.yml fails when committed src/ differs from a fresh
       # generate, so no generate step and no dependency install run here.
       - name: Pack npm tarball
-        run: npm pack --ignore-scripts
+        run: mise run package:npm
 
-      - name: Setup Python
-        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
-        with:
-          python-version: "3.14"
-
-      # sdist only: setup.py compiles the parser, so a wheel built here is linux_x86_64,
-      # which PyPI rejects. Platform wheels come with the binary builds.
+      # sdist only; see .mise/tasks/package/python.sh.
       - name: Build Python sdist
-        run: |
-          python -m pip install build==1.6.1 twine==7.0.0
-          python -m build --sdist
-          python -m twine check --strict dist/*
+        run: mise run package:python
 
       # Builds and verifies the crate; publish-crates runs cargo publish from the tag itself.
       # No --locked: Cargo.lock is not committed for this library crate, so the flag asserts
       # nothing, and Cargo documents it as an error when the lockfile is missing.
       - name: Package crate
-        run: cargo package
+        run: mise run package:crate
 
       - name: Upload npm tarball
         if: github.event_name == 'push'
@@ -256,6 +255,8 @@ jobs:
     permissions:
       contents: read # required to check out the tag
       id-token: write # required for crates.io trusted publishing
+    env:
+      MISE_ENABLE_TOOLS: rust
 
     steps:
       - name: Check whether the version exists
@@ -277,6 +278,15 @@ jobs:
         with:
           ref: ${{ needs.release-please.outputs.tag_name }}
           persist-credentials: false
+
+      # Only rust (MISE_ENABLE_TOOLS on the job): this job runs cargo directly, so the rest
+      # of the toolchain is not needed.
+      - name: Setup mise
+        if: steps.exists.outputs.found != 'true'
+        uses: jdx/mise-action@08ae2a091c038e1e05ec6f5115dc5c69d5a2a6b8 # v5.1.2
+        with:
+          version: ${{ env.MISE_VERSION }}
+          cache: false
 
       - name: Get a short-lived crates.io token
         if: steps.exists.outputs.found != 'true'

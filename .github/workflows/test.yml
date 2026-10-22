@@ -14,6 +14,12 @@ concurrency:
 
 permissions: {}
 
+# Every step runs a task from mise.toml or .mise/tasks/, so `mise run <task>` reproduces
+# it locally. mise installs the toolchain pinned there; Go comes from go.mod.
+env:
+  # renovate: datasource=github-releases depName=jdx/mise
+  MISE_VERSION: v2026.10.8
+
 jobs:
   test:
     name: 🧪 Test Suite
@@ -27,149 +33,49 @@ jobs:
         node-version: [22, 24]
       fail-fast: false
 
+    # Job-level, so mise-action and every `mise run` step use the matrix node; every
+    # other tool keeps its mise.toml pin.
+    env:
+      MISE_NODE_VERSION: ${{ matrix.node-version }}
+
     steps:
       - name: Checkout Repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
 
-      - name: Setup Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+      # The default cache key ignores MISE_NODE_VERSION, so without the per-leg prefix both
+      # legs would share one cache entry and one of them would always miss.
+      - name: Setup mise (node ${{ matrix.node-version }})
+        uses: jdx/mise-action@08ae2a091c038e1e05ec6f5115dc5c69d5a2a6b8 # v5.1.2
         with:
-          node-version: ${{ matrix.node-version }}
-
-      - name: Cache Node.js dependencies
-        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-        id: cache-npm
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ matrix.node-version }}-${{ hashFiles('package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-${{ matrix.node-version }}-
-            ${{ runner.os }}-node-
+          version: ${{ env.MISE_VERSION }}
+          cache_key_prefix: mise-v1-node${{ matrix.node-version }}
 
       # Plain `npm ci`: a lockfile that drifted from package.json fails the job instead of
       # being re-resolved by a fallback install.
       - name: Install Dependencies
-        run: npm ci
-        shell: bash
+        run: mise run install
 
-      # src/scanner.c is derived from tree-sitter-bash's scanner. Its TokenType enum must list
-      # the external tokens in the same order as the pinned tree-sitter-bash grammar.
-      # Whitespace is stripped because the local copy is re-indented to 2 spaces.
       - name: Verify Scanner Token Enum Matches tree-sitter-bash
-        run: |
-          enum_tokens() { sed -n '/^enum TokenType/,/^};/p' "$1" | tr -d ' \t'; }
-          diff <(enum_tokens node_modules/tree-sitter-bash/src/scanner.c) <(enum_tokens src/scanner.c)
-        shell: bash
+        run: mise run check:scanner
 
-      # Always regenerate: a cached src/parser.c keyed without the lockfile could hand the
-      # tests a parser built by a different tree-sitter-cli or tree-sitter-bash version.
+      # Always regenerate: a cached src/parser.c could hand the tests a parser built by a
+      # different tree-sitter CLI or tree-sitter-bash version.
       - name: Generate Grammar
-        run: npm run generate
-        shell: bash
+        run: mise run generate
 
-      # Fails when grammar.js changed but the committed src/ output was not regenerated,
-      # so CI never tests (or releases) a parser that differs from the committed one.
-      # `git status --porcelain`, not `git diff --exit-code`: diff only sees tracked
-      # files, so a generator that emits a *new* output under src/ would leave it
-      # untracked and the gate would pass while the build used an uncommitted file.
       - name: Verify Committed Generated Files
-        run: |
-          changes=$(git status --porcelain -- src/)
-          if [ -n "$changes" ]; then
-            echo "::error::src/ differs from the committed output; run 'npm run generate' and commit."
-            printf '%s\n' "$changes"
-            exit 1
-          fi
-        shell: bash
+        run: mise run check:generated
 
-      - name: Test Parser with Sample Code
-        run: |
-          npm run build
+      - name: Run Tests and Check the Test Count
+        run: mise run test:count
 
-          cat << 'EOF' > test_sample.shellspec
-          #!/usr/bin/env shellspec
-
-          Describe 'Calculator'
-            Include ./lib/calculator.sh
-
-            Before 'setup_calculator'
-            After 'cleanup_calculator'
-
-            Context 'when adding numbers'
-              It 'adds two positive numbers'
-                When call add 2 3
-                The output should eq 5
-              End
-
-              It 'handles zero'
-                When call add 0 5
-                The output should eq 5
-              End
-            End
-
-            Context 'when input is invalid'
-              Skip if "validation not implemented" ! command -v validate
-
-              It 'handles empty input'
-                When call add "" ""
-                The status should be failure
-              End
-            End
-          End
-
-          It 'works without describe block'
-            When call echo "test"
-            The output should eq "test"
-          End
-          EOF
-
-          npx tree-sitter parse test_sample.shellspec --quiet || {
-            echo "❌ Parser failed on sample ShellSpec code"
-            exit 1
-          }
-          echo "✅ Parser successfully handled sample code"
-        shell: bash
-
-      # Real-world ShellSpec files. `tree-sitter parse --quiet` exits non-zero on ERROR and
-      # MISSING nodes alike; grepping the output for "ERROR" misses MISSING nodes.
       - name: Parse Real ShellSpec Spec Files
-        run: |
-          failed=0
-          for f in test/spec/*.sh; do
-            npx tree-sitter parse --quiet "$f" > /dev/null || { echo "❌ parse errors: $f"; failed=1; }
-          done
-          exit "$failed"
-        shell: bash
+        run: mise run test:spec
 
-      # test/spec/ is a copy of ShellSpec's tutorial `examples/`, which exercises each
-      # construct in its simplest documented form. The framework's own regression suite
-      # is harder and is where real usage lives: it once had 8 failing files that the
-      # tutorial corpus could not surface (bracket test arguments, `When I run`,
-      # `Skip "reason" if`, `Include` with arguments, multi-argument `Data`, `<>`).
-      # Pinned to a commit on purpose — a moving ref, a tag included, would let an
-      # upstream push or retag turn this build red on its own.
       - name: Parse the upstream ShellSpec suite
-        env:
-          SHELLSPEC_REF: "90e48c950239f3b8a9fdfa3e869592872c77b981" # 0.28.1
-        run: |
-          git init --quiet .tmp-shellspec
-          git -C .tmp-shellspec fetch --quiet --depth 1 \
-            https://github.com/shellspec/shellspec "$SHELLSPEC_REF"
-          git -C .tmp-shellspec checkout --quiet --detach FETCH_HEAD
-          failed=0
-          count=0
-          while IFS= read -r f; do
-            count=$((count + 1))
-            npx tree-sitter parse --quiet "$f" > /dev/null || { echo "❌ parse errors: $f"; failed=1; }
-          done <<EOF
-          $(find .tmp-shellspec/spec .tmp-shellspec/examples -name '*.sh' | sort)
-          EOF
-          echo "parsed $count upstream files"
-          rm -rf .tmp-shellspec
-          exit "$failed"
-        shell: bash
+        run: mise run test:upstream
 
   # The corpus tests run through the tree-sitter CLI's own runtime, so they cannot catch
   # a binding whose declared runtime is too old for the grammar's ABI. That gap is not
@@ -190,147 +96,13 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Setup Node.js
-        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+      - name: Setup mise
+        uses: jdx/mise-action@08ae2a091c038e1e05ec6f5115dc5c69d5a2a6b8 # v5.1.2
         with:
-          node-version: 24
+          version: ${{ env.MISE_VERSION }}
 
       - name: Install Dependencies
-        run: npm ci
-        shell: bash
+        run: mise run install
 
-      - name: Build the native addon
-        run: npm run build
-        shell: bash
-
-      # `tree-sitter` is declared as an OPTIONAL peerDependency, and npm refuses to add
-      # one to node_modules: `npm i --no-save tree-sitter` exits 0 and installs nothing,
-      # as do --legacy-peer-deps and --force. Installing into a separate prefix and
-      # symlinking it in is what actually works, and leaves package.json and
-      # package-lock.json untouched. The explicit resolve check is the point of the
-      # step: without it a silent no-op would leave the test below passing vacuously.
-      - name: Install the tree-sitter runtime
-        run: |
-          npm i --prefix "$RUNNER_TEMP/ts-runtime" tree-sitter@^0.25
-          ln -s "$RUNNER_TEMP/ts-runtime/node_modules/tree-sitter" node_modules/tree-sitter
-          node -e "console.log('tree-sitter runtime', require('tree-sitter/package.json').version)" || {
-            echo "::error::tree-sitter runtime is not resolvable; the Node binding test would pass without testing anything"
-            exit 1
-          }
-        shell: bash
-
-      - name: Node binding
-        run: node --test bindings/node/binding_test.js
-        shell: bash
-
-      - name: Setup Python
-        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
-        with:
-          python-version: "3.14"
-
-      - name: Python binding
-        run: |
-          python -m pip install --upgrade pip
-          pip install '.[core]'
-          python -c "import tree_sitter; print('tree-sitter runtime', tree_sitter.__version__)"
-          python -m unittest discover -s bindings/python/tests -v
-        shell: bash
-
-      - name: Setup Go
-        uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
-        with:
-          go-version-file: go.mod
-
-      - name: Go binding
-        run: go test -v ./bindings/go/
-        shell: bash
-
-  coverage:
-    name: 📊 Test Coverage
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
-    needs: test
-    permissions:
-      contents: read # required to check out the repository
-
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          persist-credentials: false
-
-      - name: Setup Node.js
-        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
-        with:
-          node-version: 24
-
-      - name: Cache Node.js dependencies
-        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-24-${{ hashFiles('package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-24-
-            ${{ runner.os }}-node-
-
-      - name: Install Dependencies
-        run: npm ci
-
-      - name: Test Coverage Analysis
-        id: coverage
-        run: |
-          echo "## Test Coverage Report" > coverage_report.md
-          echo "" >> coverage_report.md
-
-          # Run tests and capture output with exit code
-          set +e  # Don't exit on test failure
-          TEST_OUTPUT=$(npm test 2>&1)
-          TEST_EXIT=$?
-          set -e  # Re-enable exit on error
-
-          # grep -c already prints 0 when nothing matches; `|| true` only swallows its exit 1
-          TOTAL_TESTS=$(echo "$TEST_OUTPUT" | grep -cE "^\s+[0-9]+\." || true)
-          PASSING_TESTS=$(echo "$TEST_OUTPUT" | grep -cE "^\s+[0-9]+\. ✓" || true)
-          FAILING_TESTS=$(echo "$TEST_OUTPUT" | grep -cE "^\s+[0-9]+\. ✗" || true)
-
-          {
-            echo "- **Total Tests:** $TOTAL_TESTS"
-            echo "- **Passing:** $PASSING_TESTS ✅"
-            echo "- **Failing:** $FAILING_TESTS ❌"
-          } >> coverage_report.md
-
-          if [ "$TOTAL_TESTS" -gt 0 ]; then
-            COVERAGE_PERCENT=$(( (PASSING_TESTS * 100) / TOTAL_TESTS ))
-            echo "- **Coverage:** $COVERAGE_PERCENT%" >> coverage_report.md
-          else
-            COVERAGE_PERCENT=0
-          fi
-
-          {
-            echo ""
-            echo "### Test Files"
-          } >> coverage_report.md
-          echo "$TEST_OUTPUT" | grep -E "^[[:space:]]+[A-Za-z0-9._/\\-]+:" | sed 's/^/- /' >> coverage_report.md
-
-          cat coverage_report.md
-
-          # Set outputs
-          {
-            echo "total-tests=$TOTAL_TESTS"
-            echo "passing-tests=$PASSING_TESTS"
-            echo "coverage-percent=$COVERAGE_PERCENT"
-          } >> "$GITHUB_OUTPUT"
-
-          # Validate test coverage requirements
-          if [ "${TOTAL_TESTS:-0}" -lt 115 ]; then
-            echo "❌ Expected at least 115 tests, found ${TOTAL_TESTS:-0}"
-            exit 1
-          fi
-
-          if [ "${FAILING_TESTS:-0}" -gt 0 ] || [ "$TEST_EXIT" -ne 0 ]; then
-            echo "❌ Found ${FAILING_TESTS:-0} failing tests or test runner failed (exit code: $TEST_EXIT)"
-            exit 1
-          fi
-
-          echo "✅ Test coverage is acceptable: $PASSING_TESTS/$TOTAL_TESTS tests passing ($COVERAGE_PERCENT%)"
-        shell: bash
+      - name: Node, Python and Go bindings
+        run: mise run test:bindings
