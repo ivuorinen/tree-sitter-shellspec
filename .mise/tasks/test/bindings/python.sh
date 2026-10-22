@@ -15,5 +15,7 @@ trap 'rm -rf "$egg_info"' EXIT
 python -m venv "$venv"
 "$venv/bin/python" -m pip install --quiet --upgrade pip
 "$venv/bin/python" -m pip install --quiet '.[core]'
-"$venv/bin/python" -c "import tree_sitter; print('tree-sitter runtime', tree_sitter.__version__)"
+# importlib.metadata, not tree_sitter.__version__: py-tree-sitter only added that in
+# 0.26.0, and pyproject.toml's tree-sitter~=0.25 also allows 0.25.x.
+"$venv/bin/python" -c "from importlib.metadata import version; print('tree-sitter runtime', version('tree-sitter'))"
 "$venv/bin/python" -m unittest discover -s bindings/python/tests -v
