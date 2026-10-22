@@ -10,7 +10,7 @@ Run the full grammar validation workflow:
 1. **Generate the parser** from grammar.js:
 
     ```bash
-    npm run generate
+    mise run generate
     ```
 
     If generation fails, stop and report the error.
@@ -18,7 +18,7 @@ Run the full grammar validation workflow:
 2. **Run all corpus tests**:
 
     ```bash
-    npm test
+    mise run test
     ```
 
     All tests must pass (100% success rate required). If any fail, report which tests failed.
@@ -27,9 +27,9 @@ Run the full grammar validation workflow:
 
     ```bash
     for f in test/spec/*.sh; do
-      if ! npx tree-sitter parse --quiet "$f" > /dev/null; then
+      if ! mise exec -- tree-sitter parse --quiet "$f" > /dev/null; then
         echo "PARSE ERRORS in $f"
-        npx tree-sitter parse "$f" 2>&1 | grep -E 'ERROR|MISSING'
+        mise exec -- tree-sitter parse "$f" 2>&1 | grep -E 'ERROR|MISSING'
       fi
     done
     ```

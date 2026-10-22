@@ -18,11 +18,11 @@ Thank you for your interest in contributing to tree-sitter-shellspec! This docum
 
 ### Prerequisites
 
-- [Node.js](https://nodejs.org/) (v22 or later)
-- Tree-sitter CLI (provided via devDependency) — use `npx tree-sitter <cmd>`
-- A C/C++ compiler, `make` and Python 3 — `npm install` builds the Node binding with node-gyp
-- [prek](https://github.com/j178/prek) — runs the `.pre-commit-config.yaml` hooks; `npm run lint:editorconfig` and `npm run format`
-  call it. [pre-commit](https://pre-commit.com/) also reads that file, but those scripts need prek
+- [mise](https://mise.jdx.dev/) — `mise install` provides the pinned Node.js, Python, Rust, tree-sitter CLI and
+  [prek](https://github.com/j178/prek) from `mise.toml`, and Go from `go.mod`
+  [activated in your shell](https://mise.jdx.dev/getting-started.html#activate-mise) (`mise activate`), so `node`
+  and `prek` are on `PATH` for direct commands and the `.claude/hooks/` scripts
+- A C/C++ compiler and `make` — `mise run install` builds the Node binding with node-gyp
 - [Git](https://git-scm.com/)
 - Basic knowledge of [Tree-sitter grammars](https://tree-sitter.github.io/tree-sitter/creating-parsers)
 - Familiarity with [ShellSpec](https://shellspec.info/) syntax
@@ -45,43 +45,46 @@ git remote add upstream https://github.com/ivuorinen/tree-sitter-shellspec.git
 
 ## Development Setup
 
-1. **Install dependencies:**
+1. **Install the toolchain and dependencies:**
 
 ```bash
-npm install
+mise install
+mise run install
 ```
 
 1. **Generate the grammar:**
 
 ```bash
-npm run generate
+mise run generate
 ```
 
 1. **Run tests:**
 
 ```bash
-npm test
+mise run test
 ```
 
 1. **Build the parser:**
 
 ```bash
-npm run build
+mise run build
 ```
 
 ### Development Workflow
 
-Use the provided npm scripts for common development tasks:
+Every command is a mise task; `mise tasks` lists them all, including the CI gates (`test:count`,
+`test:spec`, `test:upstream`, `test:bindings`). The `Makefile` remains the C-library build and install
+entry point. Common tasks:
 
 ```bash
 # Development loop (generate + test)
-npm run dev
+mise run dev
 
 # Clean and regenerate the parser
-npm run rebuild
+mise run rebuild
 
 # Check code style
-npm run lint
+mise run lint
 prek run markdownlint --all-files
 ```
 
@@ -100,8 +103,8 @@ The grammar in `grammar.js` extends [tree-sitter-bash](https://github.com/tree-s
 ### Making Grammar Changes
 
 1. **Edit `grammar.js`** with your changes
-2. **Generate the parser:** `npm run generate`
-3. **Test your changes:** `npm test`
+2. **Generate the parser:** `mise run generate`
+3. **Test your changes:** `mise run test`
 4. **Add test cases** in `test/corpus/` for new functionality
 5. **Update documentation** if needed
 
@@ -146,14 +149,14 @@ ShellSpec code here
 
 ```bash
 # Run all tests
-npm test
+mise run test
 
 # Test specific patterns
-npx tree-sitter test -i "describe_blocks"
-npx tree-sitter test -i "real_world_patterns"
+mise run test --file-name describe_blocks.txt
+mise run test --file-name real_world_patterns.txt
 
 # Test with debug output
-npx tree-sitter test --debug
+mise run test --debug
 ```
 
 ### Test Coverage Requirements
@@ -199,11 +202,11 @@ npx tree-sitter test --debug
 
 ### Before Submitting
 
-1. **Ensure all tests pass:** `npm test`
-2. **Check code style:** `npm run lint && npm run lint:editorconfig && prek run markdownlint --all-files`
+1. **Ensure all tests pass:** `mise run test`
+2. **Check code style:** `mise run lint && mise run lint:editorconfig && prek run markdownlint --all-files`
 3. **Update documentation** if needed
 4. **Test with real ShellSpec files** when possible
-5. **Run the full development cycle:** `npm run rebuild`
+5. **Run the full development cycle:** `mise run rebuild`
 
 ### Pull Request Process
 

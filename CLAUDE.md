@@ -13,44 +13,63 @@ the pinned tree-sitter CLI, and grammar naming conventions.
 
 ## Development Commands
 
+`mise.toml` pins the toolchain (node, python, rust, the tree-sitter CLI, prek; Go comes from `go.mod`) and
+defines every command as a mise task. `mise tasks` lists them; multi-line tasks live in `.mise/tasks/`.
+CI runs the same tasks. The `Makefile` is the C-library build/install entry point for packagers, not a
+development command runner.
+
+### Setup
+
+```bash
+mise install          # pinned toolchain; activate mise in the shell (`mise activate`):
+                      # the .claude/hooks scripts call node and prek directly
+mise run install      # npm ci: tree-sitter-bash for grammar.js, the Node addon
+```
+
 ### Core Workflow
 
 ```bash
 # Generate parser from grammar.js
-npm run generate
+mise run generate
 
 # Run all tests
-npm test
+mise run test
 
 # Combined generate + test workflow
-npm run dev
+mise run dev
 
 # Build the parser
-npm run build
+mise run build
 
 # Full rebuild (clean + generate)
-npm run rebuild
+mise run rebuild
 ```
 
 ### Testing
 
 ```bash
 # Run all tests
-npm test
+mise run test
 
-# Test specific patterns (use tree-sitter CLI via npx)
-npx tree-sitter test -i "describe_blocks"
-npx tree-sitter test -i "real_world_patterns"
+# Run one corpus file (extra arguments go to `tree-sitter test`)
+mise run test --file-name describe_blocks.txt
+mise run test --file-name real_world_patterns.txt
 
 # Parse a specific file to test grammar
-npx tree-sitter parse path/to/file.shellspec
+mise run parse path/to/file.shellspec
+
+# The CI gates
+mise run test:count       # tests plus the minimum test count
+mise run test:spec        # every test/spec/*.sh parses cleanly
+mise run test:upstream    # the upstream ShellSpec suite parses cleanly
+mise run test:bindings    # Node, Python and Go bindings load the grammar
 ```
 
 ### Code Quality
 
 ```bash
 # Run all linters (MegaLinter)
-npm run lint
+mise run lint
 
 # Fix markdown issues
 prek run markdownlint --all-files
@@ -87,7 +106,7 @@ prec.right(1, seq(
 `conflicts` in grammar.js inherits tree-sitter-bash's conflicts through `previous` (it does not re-declare them)
 and appends the ShellSpec-specific ones, each with a comment giving its reason.
 
-When adding new rules, minimize new conflicts. Test thoroughly with `npm test` after grammar changes.
+When adding new rules, minimize new conflicts. Test thoroughly with `mise run test` after grammar changes.
 
 ### Grammar Gotchas
 
@@ -117,7 +136,7 @@ Supported ShellSpec syntax is documented in README.md "Grammar Support".
 
 ### Quality Gates
 
-- **Minimum tests**: the CI coverage job in `test.yml` fails when the test count drops below its threshold
+- **Minimum tests**: `mise run test:count` (run by `test.yml`) fails when the test count drops below its threshold
 - **Coverage**: All ShellSpec constructs must be tested
 - **CI validation**: Tests run on every Node version in the `test.yml` matrix
 
@@ -133,6 +152,9 @@ The corpus test format is described in CONTRIBUTING.md "Adding Test Cases".
 
 - Use JSDoc comments for file headers
 - Include TypeScript reference for tree-sitter DSL: `/// <reference types="tree-sitter-cli/dsl" />`
+  (the `tree-sitter-cli` devDependency is kept for these types only; the CLI binary comes from mise. Its install
+  script is denied in `allowScripts`, which npm 11+ honours; npm 10 (node 22) still runs it, harmlessly, since
+  mise's CLI is first on `PATH`)
 - Use descriptive field names (e.g., `field("description", ...)`)
 - Use `prec.right()` for right-associative block structures
 
@@ -141,10 +163,10 @@ The corpus test format is described in CONTRIBUTING.md "Adding Test Cases".
 ### Making Grammar Changes
 
 1. **Edit `grammar.js`** - Make your changes
-2. **Generate parser** - `npm run generate`
-3. **Test changes** - `npm test`
-4. **Lint code** - `npm run lint` (must pass)
-5. **Build parser** - `npm run build`
+2. **Generate parser** - `mise run generate`
+3. **Test changes** - `mise run test`
+4. **Lint code** - `mise run lint` (must pass)
+5. **Build parser** - `mise run build`
 
 ### Adding New ShellSpec Constructs
 
@@ -160,9 +182,9 @@ Use the `/debug-parse-failure` skill.
 
 ## CI/CD Pipeline
 
-Workflows live in `.github/workflows/`. `test.yml` regenerates the parser, fails when committed `src/` differs,
-and runs the test suite across its Node version matrix, the spec-file parse check and the coverage gate; `pr-lint.yml` runs
-MegaLinter. Disabled linters and the reason for each are listed in `.mega-linter.yml`.
+Workflows live in `.github/workflows/` and run mise tasks through `jdx/mise-action`. `test.yml` regenerates the parser,
+fails when committed `src/` differs, and runs the test-count gate and the spec-file and upstream parse checks across its
+Node version matrix, then the binding tests; `pr-lint.yml` runs MegaLinter. Disabled linters and the reason for each are listed in `.mega-linter.yml`.
 `release.yml` runs release-please on pushes to `main` and, when a release PR merges, verifies the manifest versions
 (`.github/scripts/check_versions.py`), builds the npm tarball, Python sdist and crate, and publishes all three through OIDC trusted
 publishing after approval on the `release` environment. Its build job also runs on pull requests as a packaging check.
@@ -180,7 +202,7 @@ Hook scripts are in `.claude/hooks/`, invoked by `.claude/settings.json`:
 - **`pre-edit-guard.sh`** (PreToolUse on Edit/Write/NotebookEdit): Blocks edits to generated files
   (`src/parser.c`, `src/grammar.json`, `src/node-types.json`, `src/tree_sitter/`) and lock files
 - **`pre-bash-guard.sh`** (PreToolUse on Bash): Blocks shell commands that write to those generated
-  files or run a global `tree-sitter generate`
+  files or run `tree-sitter generate` directly (only `mise run generate` applies `scripts/post-generate.sh`)
 - **`post-edit-lint.sh`** (PostToolUse): Auto-regenerates parser after
   `grammar.js` edits, checks EditorConfig compliance, validates corpus format
 

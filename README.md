@@ -55,9 +55,12 @@ go get github.com/ivuorinen/tree-sitter-shellspec@latest
 ```bash
 git clone https://github.com/ivuorinen/tree-sitter-shellspec.git
 cd tree-sitter-shellspec
-npm install
-npm run build
+mise install
+mise run install
+mise run build
 ```
+
+To build and install the C library instead, run `make` and `make install`.
 
 ## Grammar Support
 
@@ -307,43 +310,49 @@ End
 
 ### Prerequisites
 
-- [Node.js](https://nodejs.org/) (v22 or later)
-- Tree-sitter CLI (provided via devDependency) — use `npx tree-sitter <cmd>`
-- A C/C++ compiler, `make` and Python 3 — `npm install` builds the Node binding with node-gyp
-- [prek](https://github.com/j178/prek) — runs the `.pre-commit-config.yaml` hooks; `npm run lint:editorconfig` and `npm run format` call it
+- [mise](https://mise.jdx.dev/) — `mise install` provides the pinned Node.js, Python, Rust, tree-sitter CLI and
+  [prek](https://github.com/j178/prek) from `mise.toml`, and Go from `go.mod`
+  [activated in your shell](https://mise.jdx.dev/getting-started.html#activate-mise) (`mise activate`), so `node`
+  and `prek` are on `PATH` for direct commands
+- A C/C++ compiler and `make` — `mise run install` builds the Node binding with node-gyp
 
 ### Setup
 
 ```bash
 git clone https://github.com/ivuorinen/tree-sitter-shellspec.git
 cd tree-sitter-shellspec
-npm install
+mise install
+mise run install
 ```
 
-### Available Scripts
+### Available Tasks
+
+Every command is a mise task, and CI runs the same tasks. `mise tasks` lists them all, including the CI
+gates (`test:count`, `test:spec`, `test:upstream`, `test:bindings`). The `Makefile` remains the C-library
+build and install entry point.
 
 ```bash
 # Generate parser from grammar
-npm run generate
+mise run generate
 
 # Run test suite
-npm test
+mise run test
 
 # Build the parser
-npm run build
+mise run build
 
 # Development workflow
-npm run dev          # Generate + test
+mise run dev          # Generate + test
 
 # Linting and formatting
-npm run lint                    # Check code style
-npm run lint:editorconfig       # Check EditorConfig compliance
-npm run format                  # Prettier on files changed since main (pretty-quick)
+mise run lint                    # Check code style
+mise run lint:editorconfig       # Check EditorConfig compliance
+mise run format                  # Prettier on files changed since main (pretty-quick)
 prek run markdownlint --all-files  # Lint and fix markdown
 
 # Utilities
-npm run clean        # Clean generated files
-npm run rebuild      # Clean + generate
+mise run clean        # Clean generated files
+mise run rebuild      # Clean + generate
 ```
 
 ### Testing
@@ -357,11 +366,11 @@ The test suite includes:
 
 ```bash
 # Run all tests
-npm test
+mise run test
 
 # Test specific patterns
-npx tree-sitter test -i "describe_blocks"
-npx tree-sitter test -i "real_world_patterns"
+mise run test --file-name describe_blocks.txt
+mise run test --file-name real_world_patterns.txt
 ```
 
 ### Grammar Structure

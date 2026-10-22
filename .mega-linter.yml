@@ -50,5 +50,7 @@ YAML_V8R_FILTER_REGEX_EXCLUDE: "mega-linter\\.yml"
 # regenerated. IGNORE_GENERATED_FILES does not cover it: MegaLinter looks for an
 # `@generated` marker in the file body, not the linguist-generated mark in
 # .gitattributes. Same rationale as src/ above.
+# test/spec/ and bindings/ are anchored to the repository root so the mise file tasks
+# .mise/tasks/test/spec.sh and .mise/tasks/test/bindings/*.sh are still linted.
 FILTER_REGEX_EXCLUDE: >-
-  (node_modules|test/spec|src/|bindings/|megalinter-reports|\.claude|docs/audit/findings)
+  (node_modules|^test/spec/|src/|^bindings/|megalinter-reports|\.claude|docs/audit/findings)

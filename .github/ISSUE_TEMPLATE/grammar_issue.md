@@ -38,7 +38,7 @@ Describe or show what the parse tree should look like:
 
 ### Grammar generation output
 
-If this causes issues during `npm run generate`, include any conflict warnings or errors:
+If this causes issues during `mise run generate`, include any conflict warnings or errors:
 
 ```text
 # Grammar generation output here

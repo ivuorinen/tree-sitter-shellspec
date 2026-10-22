@@ -17,7 +17,7 @@ Diagnose why a ShellSpec file or snippet doesn't parse correctly.
 1. **Parse the file/snippet** and identify ERROR and MISSING nodes:
 
     ```bash
-    npx tree-sitter parse <file> 2>&1
+    mise exec -- tree-sitter parse <file> 2>&1
     ```
 
     If debugging a snippet, write it to a temp file first.
@@ -40,13 +40,13 @@ Diagnose why a ShellSpec file or snippet doesn't parse correctly.
 
 5. **Test a fix**:
     - Edit `grammar.js` with the proposed fix
-    - Run `npm run generate && npm test` to verify no regressions
+    - Run `mise run generate && mise run test` to verify no regressions
     - Re-parse the original file to confirm the fix works
 
 6. **Verify broadly**: Run the full spec file check (`--quiet` exits non-zero on ERROR and MISSING nodes):
 
     ```bash
     for f in test/spec/*.sh; do
-      npx tree-sitter parse --quiet "$f" > /dev/null || echo "PARSE ERRORS in $f"
+      mise exec -- tree-sitter parse --quiet "$f" > /dev/null || echo "PARSE ERRORS in $f"
     done
     ```

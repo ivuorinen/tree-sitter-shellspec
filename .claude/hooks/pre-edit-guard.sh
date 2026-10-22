@@ -4,8 +4,8 @@
 # Claude Code passes hook input as JSON on stdin (tool_input.file_path is always
 # absolute); it does not export the path as an environment variable. Only exit 2
 # blocks a PreToolUse call, so the guard exits 2 on a protected path and also on
-# input it cannot parse (fail closed). JSON is parsed with node because the
-# project's npm scripts already require it; jq is not a declared prerequisite.
+# input it cannot parse (fail closed). JSON is parsed with node because mise.toml
+# already pins it; jq is not a declared prerequisite.
 
 set -euo pipefail
 
@@ -24,7 +24,7 @@ process.stdin.on("data", (d) => (s += d)).on("end", () => {
 
 case "$file" in
   */src/parser.c | */src/grammar.json | */src/node-types.json | */src/tree_sitter/*)
-    echo "BLOCKED: $file is generated; edit grammar.js and run npm run generate" >&2
+    echo "BLOCKED: $file is generated; edit grammar.js and run mise run generate" >&2
     exit 2
     ;;
   */package-lock.json)

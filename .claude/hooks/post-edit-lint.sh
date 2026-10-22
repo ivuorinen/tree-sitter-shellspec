@@ -31,8 +31,8 @@ status=0
 # Regenerate the parser after grammar.js changes so tests never run a stale parser.
 case "$file" in
   */grammar.js)
-    if ! out=$(npm run generate 2>&1); then
-      printf 'post-edit-lint: npm run generate failed:\n%s\n' "$(printf '%s\n' "$out" | tail -20)" >&2
+    if ! out=$(mise run generate 2>&1); then
+      printf 'post-edit-lint: mise run generate failed:\n%s\n' "$(printf '%s\n' "$out" | tail -20)" >&2
       status=2
     fi
     ;;

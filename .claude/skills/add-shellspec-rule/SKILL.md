@@ -32,13 +32,9 @@ Follow these steps to add a new ShellSpec construct to the grammar:
 5. **Update `queries/highlights.scm`**: Add highlighting patterns for any new keywords.
 
 6. **Verify**:
-    - Run `npm run generate` — check for new conflicts (minimize them)
-    - Run `npm test` — all tests must pass
-    - Run the spec file check (`--quiet` exits non-zero on ERROR and MISSING nodes):
-
-      ```bash
-      for f in test/spec/*.sh; do npx tree-sitter parse --quiet "$f" >/dev/null || echo "parse errors: $f"; done
-      ```
+    - Run `mise run generate` — check for new conflicts (minimize them)
+    - Run `mise run test` — all tests must pass
+    - Run `mise run test:spec` — it names every spec file with ERROR or MISSING nodes
 
 7. **Update documentation**:
     - Update the rule count in CLAUDE.md

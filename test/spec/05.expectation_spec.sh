@@ -1,5 +1,5 @@
 # shellcheck shell=sh
-# Sample ShellSpec file for manual parser testing (not executed by `npm test`).
+# Sample ShellSpec file for manual parser testing (not executed by `mise run test`).
 # Some examples intentionally demonstrate failing assertions.
 
 Describe 'expectation example'

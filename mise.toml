@@ -1,0 +1,104 @@
+#:schema https://mise.jdx.dev/schema/mise.json
+
+# Toolchain and development tasks for tree-sitter-shellspec: `mise install`, then
+# `mise run install` for the npm dependencies, then `mise tasks` lists every task.
+# CI runs the same tasks through jdx/mise-action. Renovate's mise manager bumps the pins.
+
+[settings]
+# Go is not listed under [tools]: its version is the `toolchain` line in go.mod, which
+# Renovate bumps. mise reads it as an exact version only when go is enabled here, and CI
+# has no global mise config to enable it.
+idiomatic_version_file_enable_tools = ["go"]
+# No mise.lock. mise-action installs with --locked whenever one exists, which fails for
+# any version the lock does not hold: test.yml's MISE_NODE_VERSION=22 leg, and every
+# Renovate bump of go.mod's toolchain line. The pins above stay exact, and the backends
+# still verify each download. Explicit, because a global `lockfile = true` would
+# otherwise write one here.
+lockfile = false
+
+[tools]
+# test.yml's matrix overrides this with MISE_NODE_VERSION to also cover node 22.
+node = "24.22.1"
+# The version CI tests and packages with. pyproject.toml's requires-python >=3.10 is the
+# floor for users of the Python binding and is not tied to this pin.
+python = "3.14.8"
+# Builds and publishes the crate in release.yml.
+rust = "1.99.0"
+# The generator CLI. Run it through `mise run generate`, never `tree-sitter generate`
+# directly: only the task applies scripts/post-generate.sh.
+tree-sitter = "0.27.1"
+# Runs the .pre-commit-config.yaml hooks (lint:editorconfig, format).
+prek = "0.5.6"
+
+# Tasks without a usage spec forward extra arguments to their command:
+# `mise run test --file-name describe_blocks.txt`, `mise run parse path/to/file_spec.sh`.
+# Multi-line scripts are file tasks under .mise/tasks/.
+
+[tasks.install]
+description = "Install the npm dependencies (tree-sitter-bash for grammar.js, the Node addon)"
+run = "npm ci"
+
+# post-generate.sh patches src/tree_sitter/parser.h after every generation; CI fails
+# when committed src/ differs from this task's output.
+[tasks.generate]
+description = "Generate the parser from grammar.js"
+run = ["tree-sitter generate", "scripts/post-generate.sh"]
+
+[tasks.test]
+description = "Run the corpus tests"
+run = "tree-sitter test"
+
+[tasks.parse]
+description = "Parse files with the grammar"
+run = "tree-sitter parse"
+
+# The playground loads tree-sitter-shellspec.wasm; `build --wasm` compiles it with emcc,
+# or with Docker or Podman when emcc is not installed.
+[tasks.web]
+description = "Build the wasm parser and open the tree-sitter playground"
+run = ["tree-sitter build --wasm", "tree-sitter playground"]
+
+[tasks.build]
+description = "Compile the parser into a shared library"
+run = "tree-sitter build ."
+
+# run arrays execute in order; depends would run generate and test in parallel.
+[tasks.dev]
+description = "Generate the parser, then run the tests"
+run = [{ task = "generate" }, { task = "test" }]
+
+[tasks.clean]
+description = "Remove the generated parser files"
+run = "rm -rf src/parser.c src/grammar.json src/node-types.json"
+
+[tasks.rebuild]
+description = "Remove the generated parser files, then generate them again"
+run = [{ task = "clean" }, { task = "generate" }]
+
+# Through npx, not [tools]: an npm: tool makes mise write its whole dependency graph to
+# .mise/locks/, a 3000-line generated YAML file that yamllint then fails on.
+[tasks.lint]
+description = "Run MegaLinter (needs Docker)"
+run = "npx --yes mega-linter-runner@10.1.0"
+
+[tasks."lint:editorconfig"]
+description = "Check EditorConfig compliance"
+run = "prek run editorconfig-checker --all-files"
+
+[tasks.format]
+description = "Run Prettier on files changed since main"
+run = "prek run --stage manual --all-files pretty-quick-branch"
+
+[tasks."test:bindings:go"]
+description = "Test the Go binding"
+run = "go test -v ./bindings/go/"
+
+# Packs the committed sources: no generate step, no install scripts.
+[tasks."package:npm"]
+description = "Pack the npm tarball"
+run = "npm pack --ignore-scripts"
+
+# No --locked: Cargo.lock is not committed for this library crate.
+[tasks."package:crate"]
+description = "Package and verify the crate"
+run = "cargo package"

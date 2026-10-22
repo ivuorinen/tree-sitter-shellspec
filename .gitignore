@@ -45,6 +45,7 @@ yarn-error.log*
 .vscode/
 .fleet/
 shellspec.so
+tree-sitter-shellspec.wasm
 build/
 .claude/settings.local.json
 
