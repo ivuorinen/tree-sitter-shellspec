@@ -39,7 +39,7 @@ jobs:
             build-mode: none
     steps:
       - name: CodeQL Analysis
-        uses: ivuorinen/actions/codeql-analysis@72823f541690a754160f719a605c945c45da1fdd # v2026.10.17
+        uses: ivuorinen/actions/codeql-analysis@3617a7792ac5df648dbb3fd3209c0f525c4e29c3 # v2026.10.21
         with:
           language: ${{ matrix.language }}
           build-mode: ${{ matrix.build-mode }}
