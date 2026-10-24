@@ -28,7 +28,7 @@ rust = "1.99.0"
 # directly: only the task applies scripts/post-generate.sh.
 tree-sitter = "0.27.1"
 # Runs the .pre-commit-config.yaml hooks (lint:editorconfig, format).
-prek = "0.5.6"
+prek = "0.5.7"
 
 # Tasks without a usage spec forward extra arguments to their command:
 # `mise run test --file-name describe_blocks.txt`, `mise run parse path/to/file_spec.sh`.
