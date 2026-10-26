@@ -23,7 +23,7 @@ node = "24.22.1"
 # floor for users of the Python binding and is not tied to this pin.
 python = "3.15.1"
 # Builds and publishes the crate in release.yml.
-rust = "1.99.0"
+rust = "1.99.1"
 # The generator CLI. Run it through `mise run generate`, never `tree-sitter generate`
 # directly: only the task applies scripts/post-generate.sh.
 tree-sitter = "0.27.1"
