@@ -18,7 +18,7 @@ permissions: {}
 # it locally. mise installs the toolchain pinned there; Go comes from go.mod.
 env:
   # renovate: datasource=github-releases depName=jdx/mise
-  MISE_VERSION: v2026.10.17
+  MISE_VERSION: v2026.10.21
 
 jobs:
   test:
