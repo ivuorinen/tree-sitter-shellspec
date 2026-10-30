@@ -47,7 +47,7 @@ jobs:
       # The default cache key ignores MISE_NODE_VERSION, so without the per-leg prefix both
       # legs would share one cache entry and one of them would always miss.
       - name: Setup mise (node ${{ matrix.node-version }})
-        uses: jdx/mise-action@8418fedb1110381a0d3ba51a7a415d7c1b884550 # v5.2.2
+        uses: jdx/mise-action@6be3c7ed4c21d4f76b208d351d95aac273ebb76d # v5.2.4
         with:
           version: ${{ env.MISE_VERSION }}
           cache_key_prefix: mise-v1-node${{ matrix.node-version }}
@@ -97,7 +97,7 @@ jobs:
           persist-credentials: false
 
       - name: Setup mise
-        uses: jdx/mise-action@8418fedb1110381a0d3ba51a7a415d7c1b884550 # v5.2.2
+        uses: jdx/mise-action@6be3c7ed4c21d4f76b208d351d95aac273ebb76d # v5.2.4
         with:
           version: ${{ env.MISE_VERSION }}
 
