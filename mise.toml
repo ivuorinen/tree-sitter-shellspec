@@ -18,7 +18,7 @@ lockfile = false
 
 [tools]
 # test.yml's matrix overrides this with MISE_NODE_VERSION to also cover node 22.
-node = "24.22.1"
+node = "26.13.0"
 # The version CI tests and packages with. pyproject.toml's requires-python >=3.10 is the
 # floor for users of the Python binding and is not tied to this pin.
 python = "3.15.2"
