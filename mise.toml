@@ -26,7 +26,7 @@ python = "3.15.2"
 rust = "1.99.1"
 # The generator CLI. Run it through `mise run generate`, never `tree-sitter generate`
 # directly: only the task applies scripts/post-generate.sh.
-tree-sitter = "0.27.1"
+tree-sitter = "0.27.2"
 # Runs the .pre-commit-config.yaml hooks (lint:editorconfig, format).
 prek = "0.5.7"
 
