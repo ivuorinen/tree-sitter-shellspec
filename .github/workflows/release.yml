@@ -132,7 +132,7 @@ jobs:
       # cache: false — a release build must not restore anything a pull request could have
       # written to the Actions cache.
       - name: Setup mise
-        uses: jdx/mise-action@d5574b52816a478f9d4e6529a3f6ff17a8a36785 # v5.2.8
+        uses: jdx/mise-action@90f833d396d0cc3674b631d2d225e306476c303a # v5.2.10
         with:
           version: ${{ env.MISE_VERSION }}
           cache: false
@@ -283,7 +283,7 @@ jobs:
       # of the toolchain is not needed.
       - name: Setup mise
         if: steps.exists.outputs.found != 'true'
-        uses: jdx/mise-action@d5574b52816a478f9d4e6529a3f6ff17a8a36785 # v5.2.8
+        uses: jdx/mise-action@90f833d396d0cc3674b631d2d225e306476c303a # v5.2.10
         with:
           version: ${{ env.MISE_VERSION }}
           cache: false
